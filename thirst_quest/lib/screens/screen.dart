@@ -181,6 +181,7 @@ class _SecondScreenState extends State<SecondScreen> {
                   ),
                   children: [
                     TileLayer(
+                      tileProvider: NetworkTileProvider(),
                       urlTemplate:
                           'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                       userAgentPackageName: 'com.example.app',
