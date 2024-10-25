@@ -6,9 +6,9 @@ import 'package:thirst_quest/api/models/auth_response.dart';
 import 'package:thirst_quest/api/models/water_bubbler.dart';
 
 class ApiClient {
-  final String baseUrl;
+  final String baseUrl = 'http://localhost:8080';
 
-  ApiClient({required this.baseUrl});
+  ApiClient();
 
   Future<List<WaterBubbler>> getBubblersByBBox(
       double minLat, double maxLat, double minLon, double maxLon) async {

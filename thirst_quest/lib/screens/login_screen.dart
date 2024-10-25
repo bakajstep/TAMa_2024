@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:thirst_quest/api/api_client.dart';
 import 'package:thirst_quest/screens/screen.dart';
+import 'package:thirst_quest/services/auth_service.dart';
 import 'package:thirst_quest/states/global_state.dart';
-import 'package:thirst_quest/states/models/identity.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -17,7 +15,7 @@ class LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _apiClient = ApiClient(baseUrl: 'http://localhost:8080');
+  final _authService = AuthService();
   String? _errorMessage;
 
   @override
@@ -32,8 +30,9 @@ class LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    final response = await _apiClient.login(
-        _usernameController.text, _passwordController.text);
+    final globalState = Provider.of<GlobalState>(context, listen: false);
+    final response = await _authService.login(
+        _usernameController.text, _passwordController.text, globalState);
 
     if (!mounted) {
       return;
@@ -45,16 +44,6 @@ class LoginScreenState extends State<LoginScreen> {
       });
       return;
     }
-
-    final globalState = Provider.of<GlobalState>(context, listen: false);
-    globalState.login(Identity(
-        id: response.user.id,
-        email: response.user.email,
-        username: response.user.username,
-        roles: response.roles));
-
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('token', response.token);
 
     if (!mounted) {
       return;
@@ -72,6 +61,9 @@ class LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Login'),
+      ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
