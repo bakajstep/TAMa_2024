@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:thirst_quest/screens/screen.dart';
+import 'package:thirst_quest/states/global_state.dart';
 
 void main() {
   runApp(const MyApp());
@@ -43,15 +44,6 @@ class MyApp extends StatelessWidget {
         },
       ),
     );
-  }
-}
-
-class GlobalState extends ChangeNotifier {
-  ColorScheme _colorScheme = ColorScheme.fromSeed(seedColor: Colors.blue);
-  ColorScheme get colorScheme => _colorScheme;
-  set colorScheme(ColorScheme value) {
-    _colorScheme = value;
-    notifyListeners();
   }
 }
 

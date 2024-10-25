@@ -4,6 +4,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:thirst_quest/main.dart';
+import 'package:thirst_quest/screens/login_screen.dart';
+import 'package:thirst_quest/states/global_state.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -40,6 +42,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final state = context.watch<GlobalState>();
+
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -56,6 +60,7 @@ class _MyHomePageState extends State<MyHomePage> {
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
+        automaticallyImplyLeading: false,
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
@@ -84,14 +89,31 @@ class _MyHomePageState extends State<MyHomePage> {
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const SecondScreen()),
-                );
-              },
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SecondScreen()),
+              ),
               child: const Text('Go to Second Screen'),
             ),
+            if (!state.user.isLoggedIn)
+              ElevatedButton(
+                  onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const LoginScreen())),
+                  child: const Text('Go to Login Screen'))
+            else
+              Column(
+                children: [
+                  Text('Welcome, ${state.user.identity!.username}'),
+                  Text('Email: ${state.user.identity!.email}'),
+                  ElevatedButton(
+                      onPressed: () {
+                        state.logout();
+                      },
+                      child: const Text('Logout')),
+                ],
+              ),
           ],
         ),
       ),
@@ -112,10 +134,10 @@ class SecondScreen extends StatefulWidget {
   const SecondScreen({super.key});
 
   @override
-  _SecondScreenState createState() => _SecondScreenState();
+  SecondScreenState createState() => SecondScreenState();
 }
 
-class _SecondScreenState extends State<SecondScreen> {
+class SecondScreenState extends State<SecondScreen> {
   LatLng? _currentPosition;
   final MapController _mapController = MapController();
 

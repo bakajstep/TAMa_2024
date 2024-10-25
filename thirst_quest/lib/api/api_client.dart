@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:http/http.dart' as http;
+import 'package:thirst_quest/api/models/auth_response.dart';
 import 'package:thirst_quest/api/models/water_bubbler.dart';
 
 class ApiClient {
@@ -25,5 +27,29 @@ class ApiClient {
 
     final List<dynamic> body = jsonDecode(response.body);
     return body.map((dynamic item) => WaterBubbler.fromJson(item)).toList();
+  }
+
+  Future<AuthResponse?> login(String email, String password) async {
+    final uri = Uri.parse('$baseUrl/api/auth/login');
+    try {
+      final response = await http.post(
+        uri,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'email': email,
+          'password': password,
+        }),
+      );
+
+      if (response.statusCode != 200) {
+        return null;
+      }
+
+      return AuthResponse.fromJson(jsonDecode(response.body));
+    } on SocketException {
+      throw Exception('No Internet connection');
+    } catch (e) {
+      throw Exception('Failed to login: $e');
+    }
   }
 }
