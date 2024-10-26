@@ -7,8 +7,8 @@ part of 'water_bubbler.dart';
 // **************************************************************************
 
 WaterBubbler _$WaterBubblerFromJson(Map<String, dynamic> json) => WaterBubbler(
-      id: json['id'] as String,
-      openStreetId: (json['openStreetId'] as num).toInt(),
+      id: json['id'] as String?,
+      openStreetId: (json['openStreetId'] as num?)?.toInt(),
       name: json['name'] as String?,
       desc: json['desc'] as String?,
       latitude: (json['latitude'] as num).toDouble(),

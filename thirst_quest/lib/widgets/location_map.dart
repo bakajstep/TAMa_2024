@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:thirst_quest/api/models/water_bubbler.dart';
+import 'package:thirst_quest/services/water_bubbler_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class LocationMap extends StatefulWidget {
@@ -17,6 +19,10 @@ class LocationMapState extends State<LocationMap> {
   LatLng _currentPosition = const LatLng(49.2273106, 16.5983539); // VUT FIT
   final MapController _mapController = MapController();
   StreamSubscription<Position>? _positionStream;
+  bool trackPosition = true;
+  final WaterBubblerService _waterBubblerService = WaterBubblerService();
+  Timer? _debounceTimer;
+  List<WaterBubbler> _waterBubblers = [];
 
   @override
   void initState() {
@@ -63,9 +69,26 @@ class LocationMapState extends State<LocationMap> {
                 distanceFilter: 2)) // Update the location every 2 meters
         .listen((Position position) => setState(() {
               _currentPosition = LatLng(position.latitude, position.longitude);
-              _mapController.move(_currentPosition,
-                  15.0); // Move the map to the current position
+              if (trackPosition) {
+                _mapController.move(_currentPosition, 15.0);
+              }
             }));
+  }
+
+  void _onPositionChanged(MapCamera position, bool hasGesture) {
+    trackPosition = false;
+
+    // Cancel the previous timer if it is still active
+    _debounceTimer?.cancel();
+
+    // Start a new timer
+    _debounceTimer = Timer(const Duration(milliseconds: 500), () async {
+      final waterBubblers = await _waterBubblerService
+          .getWaterBubblersByBBox(position.visibleBounds);
+      setState(() {
+        _waterBubblers = waterBubblers;
+      });
+    });
   }
 
   @override
@@ -78,6 +101,7 @@ class LocationMapState extends State<LocationMap> {
             options: MapOptions(
               initialCenter: _currentPosition,
               initialZoom: 15,
+              onPositionChanged: _onPositionChanged,
             ),
             children: [
               TileLayer(
@@ -121,13 +145,15 @@ class LocationMapState extends State<LocationMap> {
                     iconSize: 25.0,
                     color: Colors.black,
                     onPressed: () => _mapController.rotate(0.0),
-                    icon: const Icon(Icons.north),
+                    icon: const Icon(Icons.explore_outlined),
                   ),
                   IconButton(
                     iconSize: 25.0,
                     color: Colors.black,
-                    onPressed: () => _mapController.moveAndRotate(
-                        _currentPosition, 15.0, 0.0),
+                    onPressed: () {
+                      _mapController.moveAndRotate(_currentPosition, 15.0, 0.0);
+                      trackPosition = true;
+                    },
                     icon: const Icon(Icons.my_location),
                   )
                 ],

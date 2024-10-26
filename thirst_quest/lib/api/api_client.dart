@@ -13,8 +13,8 @@ class ApiClient {
 
   Future<List<WaterBubbler>> getBubblersByBBox(
       double minLat, double maxLat, double minLon, double maxLon) async {
-    final uri = Uri.parse('$baseUrl/api/waterbubblers');
-    uri.queryParameters.addAll({
+    final uri =
+        Uri.parse('$baseUrl/api/waterbubblers').replace(queryParameters: {
       'minLat': minLat.toString(),
       'maxLat': maxLat.toString(),
       'minLon': minLon.toString(),
