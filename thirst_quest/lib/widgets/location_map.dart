@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:thirst_quest/api/models/water_bubbler.dart';
 import 'package:thirst_quest/services/water_bubbler_service.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -32,6 +33,10 @@ class LocationMapState extends State<LocationMap> {
 
   @override
   void dispose() {
+    SharedPreferences.getInstance().then((pref) {
+      pref.setDouble('lastLatitude', _currentPosition.latitude);
+      pref.setDouble('lastLongitude', _currentPosition.longitude);
+    });
     _positionStream?.cancel();
     super.dispose();
   }
@@ -39,6 +44,14 @@ class LocationMapState extends State<LocationMap> {
   Future<void> _getCurrentLocation() async {
     bool serviceEnabled;
     LocationPermission permission;
+
+    SharedPreferences.getInstance().then((pref) {
+      double? lastLatitude = pref.getDouble('lastLatitude');
+      double? lastLongitude = pref.getDouble('lastLongitude');
+      if (lastLatitude != null && lastLongitude != null) {
+        _currentPosition = LatLng(lastLatitude, lastLongitude);
+      }
+    });
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
