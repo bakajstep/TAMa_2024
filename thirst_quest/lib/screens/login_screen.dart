@@ -4,6 +4,7 @@ import 'package:thirst_quest/screens/screen.dart';
 import 'package:thirst_quest/services/auth_service.dart';
 import 'package:thirst_quest/states/global_state.dart';
 import 'package:thirst_quest/widgets/form_error.dart';
+import 'package:thirst_quest/widgets/loading.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -18,6 +19,7 @@ class LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
   final _authService = AuthService();
   String? _errorMessage;
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -31,6 +33,10 @@ class LoginScreenState extends State<LoginScreen> {
       return;
     }
 
+    setState(() {
+      _isLoading = true;
+    });
+
     final globalState = Provider.of<GlobalState>(context, listen: false);
     final response = await _authService.login(
         _emailController.text, _passwordController.text, globalState);
@@ -42,6 +48,7 @@ class LoginScreenState extends State<LoginScreen> {
     if (response == null) {
       setState(() {
         _errorMessage = 'Invalid email or password';
+        _isLoading = false;
       });
       return;
     }
@@ -65,42 +72,45 @@ class LoginScreenState extends State<LoginScreen> {
       appBar: AppBar(
         title: const Text('Login'),
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(30.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                const Text('Login Page', style: TextStyle(fontSize: 25)),
-                const Padding(padding: EdgeInsets.symmetric(vertical: 20.0)),
-                FormError(errorMessage: _errorMessage),
-                TextFormField(
-                  controller: _emailController,
-                  decoration: const InputDecoration(labelText: 'Email'),
-                  validator: (value) => (value == null || value.isEmpty)
-                      ? 'Please enter your email'
-                      : null,
-                ),
-                TextFormField(
-                  controller: _passwordController,
-                  decoration: const InputDecoration(labelText: 'Password'),
-                  obscureText: true,
-                  validator: (value) => (value == null || value.isEmpty)
-                      ? 'Please enter your password'
-                      : null,
-                ),
-                const Padding(padding: EdgeInsets.symmetric(vertical: 16.0)),
-                ElevatedButton(
-                  onPressed: _submitForm,
-                  child: const Text('Login'),
-                ),
-              ],
+      body: Stack(children: [
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.all(30.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  const Text('Login Page', style: TextStyle(fontSize: 25)),
+                  const Padding(padding: EdgeInsets.symmetric(vertical: 20.0)),
+                  FormError(errorMessage: _errorMessage),
+                  TextFormField(
+                    controller: _emailController,
+                    decoration: const InputDecoration(labelText: 'Email'),
+                    validator: (value) => (value == null || value.isEmpty)
+                        ? 'Please enter your email'
+                        : null,
+                  ),
+                  TextFormField(
+                    controller: _passwordController,
+                    decoration: const InputDecoration(labelText: 'Password'),
+                    obscureText: true,
+                    validator: (value) => (value == null || value.isEmpty)
+                        ? 'Please enter your password'
+                        : null,
+                  ),
+                  const Padding(padding: EdgeInsets.symmetric(vertical: 16.0)),
+                  ElevatedButton(
+                    onPressed: _submitForm,
+                    child: const Text('Login'),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
-      ),
+        if (_isLoading) const Loading(),
+      ]),
     );
   }
 }

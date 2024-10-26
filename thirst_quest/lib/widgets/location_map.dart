@@ -34,11 +34,9 @@ class LocationMapState extends State<LocationMap> {
     bool serviceEnabled;
     LocationPermission permission;
 
-    // Check if location services are enabled
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      // Location services are not enabled, don't continue
-      return Future.error('Location services are disabled.');
+      return;
     }
 
     // Check for location permissions
@@ -46,15 +44,13 @@ class LocationMapState extends State<LocationMap> {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        // Permissions are denied, don't continue
-        return Future.error('Location permissions are denied');
+        return;
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
       // Permissions are denied forever, don't continue
-      return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');
+      return;
     }
 
     // Get the current location
@@ -94,12 +90,12 @@ class LocationMapState extends State<LocationMap> {
                   // Show the marker only if the location is available
                   if (_positionStream != null)
                     Marker(
-                      width: 80.0,
-                      height: 80.0,
+                      width: 50.0,
+                      height: 50.0,
                       point: _currentPosition,
-                      child: const Icon(
-                        Icons.location_on,
-                        color: Colors.red,
+                      child: Icon(
+                        Icons.my_location,
+                        color: Theme.of(context).colorScheme.primary,
                         size: 40.0,
                       ),
                     ),

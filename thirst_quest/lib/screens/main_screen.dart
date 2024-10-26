@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:thirst_quest/widgets/map.dart';
+import 'package:thirst_quest/widgets/location_map.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
