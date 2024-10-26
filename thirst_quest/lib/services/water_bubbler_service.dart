@@ -4,9 +4,11 @@ import 'package:thirst_quest/api/api_client.dart';
 import 'package:thirst_quest/api/models/water_bubbler.dart';
 
 class WaterBubblerService {
-  final _apiClient = ApiClient();
+  final ApiClient apiClient;
   LatLngBounds? _loadedBounds;
   List<WaterBubbler> _loadedBubblers = [];
+
+  WaterBubblerService({required this.apiClient});
 
   Future<List<WaterBubbler>> getWaterBubblersByBBox(LatLngBounds bounds) async {
     if (_loadedBounds != null && _loadedBounds!.containsBounds(bounds)) {
@@ -28,7 +30,7 @@ class WaterBubblerService {
 
   Future<List<WaterBubbler>> _loadBubblers(LatLngBounds bounds) async {
     final extendedBounds = _extendBounds(bounds);
-    final newBubblers = await _apiClient.getBubblersByBBox(
+    final newBubblers = await apiClient.getBubblersByBBox(
       extendedBounds.south,
       extendedBounds.north,
       extendedBounds.west,

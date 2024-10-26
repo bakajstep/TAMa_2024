@@ -4,6 +4,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:thirst_quest/api/models/water_bubbler.dart';
+import 'package:thirst_quest/di.dart';
 import 'package:thirst_quest/services/water_bubbler_service.dart';
 import 'package:thirst_quest/widgets/map_control_buttons.dart';
 import 'package:thirst_quest/widgets/map_widget.dart';
@@ -22,7 +23,7 @@ class LocationMapState extends State<LocationMap> {
   final MapController _mapController = MapController();
   StreamSubscription<Position>? _positionStream;
   bool trackPosition = true;
-  final WaterBubblerService _waterBubblerService = WaterBubblerService();
+  final _waterBubblerService = DI.get<WaterBubblerService>();
   final LocationService _locationService = LocationService();
   Timer? _debounceTimer;
   List<WaterBubbler> _waterBubblers = [];

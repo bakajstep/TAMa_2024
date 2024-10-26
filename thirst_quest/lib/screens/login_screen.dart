@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:thirst_quest/di.dart';
 import 'package:thirst_quest/screens/screen.dart';
 import 'package:thirst_quest/services/auth_service.dart';
 import 'package:thirst_quest/states/global_state.dart';
@@ -17,7 +18,7 @@ class LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _authService = AuthService();
+  final _authService = DI.get<AuthService>();
   String? _errorMessage;
   bool _isLoading = false;
 

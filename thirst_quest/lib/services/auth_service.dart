@@ -6,7 +6,9 @@ import 'package:thirst_quest/states/models/identity.dart';
 
 class AuthService {
   static const _tokenKey = 'token';
-  final apiClient = ApiClient();
+  final ApiClient apiClient;
+
+  AuthService({required this.apiClient});
 
   Future<AuthResponse?> login(
       String email, String password, GlobalState globalState) async {
