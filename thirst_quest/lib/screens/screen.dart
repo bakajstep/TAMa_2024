@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:thirst_quest/main.dart';
 import 'package:thirst_quest/screens/login_screen.dart';
+import 'package:thirst_quest/screens/main_screen.dart';
 import 'package:thirst_quest/screens/register_screen.dart';
 import 'package:thirst_quest/states/global_state.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -90,7 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ElevatedButton(
               onPressed: () => Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const SecondScreen()),
+                MaterialPageRoute(builder: (context) => const MainScreen()),
               ),
               child: const Text('Go to Second Screen'),
             ),
@@ -132,108 +129,5 @@ class _MyHomePageState extends State<MyHomePage> {
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
-  }
-}
-
-class SecondScreen extends StatefulWidget {
-  const SecondScreen({super.key});
-
-  @override
-  SecondScreenState createState() => SecondScreenState();
-}
-
-class SecondScreenState extends State<SecondScreen> {
-  LatLng? _currentPosition;
-  final MapController _mapController = MapController();
-
-  @override
-  void initState() {
-    super.initState();
-    _getCurrentLocation();
-  }
-
-  Future<void> _getCurrentLocation() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    // Check if location services are enabled
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      // Location services are not enabled, don't continue
-      return Future.error('Location services are disabled.');
-    }
-
-    // Check for location permissions
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        // Permissions are denied, don't continue
-        return Future.error('Location permissions are denied');
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      // Permissions are denied forever, don't continue
-      return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');
-    }
-
-    // Get the current location
-    Position position = await Geolocator.getCurrentPosition();
-    setState(() {
-      _currentPosition = LatLng(position.latitude, position.longitude);
-      _mapController.move(_currentPosition!, 13.0);
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          foregroundColor: Theme.of(context).colorScheme.onPrimary,
-          title: const Text('Second Screen'),
-        ),
-        body: Center(
-          child: Column(
-            children: [
-              Expanded(
-                child: FlutterMap(
-                  mapController: _mapController,
-                  options: MapOptions(
-                    initialCenter:
-                        _currentPosition ?? LatLng(51.509364, -0.128928),
-                    initialZoom: 9.2,
-                  ),
-                  children: [
-                    TileLayer(
-                      tileProvider: NetworkTileProvider(),
-                      urlTemplate:
-                          'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                      userAgentPackageName: 'com.example.app',
-                    ),
-                    RichAttributionWidget(
-                      attributions: [
-                        TextSourceAttribution(
-                          'OpenStreetMap contributors',
-                          onTap: () => launchUrl(
-                              Uri.parse('https://openstreetmap.org/copyright')),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              const Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Text(
-                  'This is some text below the map.',
-                  style: TextStyle(fontSize: 16),
-                ),
-              ),
-            ],
-          ),
-        ));
   }
 }
