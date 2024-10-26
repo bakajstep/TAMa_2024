@@ -14,7 +14,7 @@ class LocationMap extends StatefulWidget {
 }
 
 class LocationMapState extends State<LocationMap> {
-  LatLng _currentPosition = const LatLng(51.509364, -0.128928);
+  LatLng _currentPosition = const LatLng(49.2273106, 16.5983539); // VUT FIT
   final MapController _mapController = MapController();
   StreamSubscription<Position>? _positionStream;
 
@@ -68,7 +68,7 @@ class LocationMapState extends State<LocationMap> {
         .listen((Position position) => setState(() {
               _currentPosition = LatLng(position.latitude, position.longitude);
               _mapController.move(_currentPosition,
-                  13.0); // Move the map to the current position
+                  15.0); // Move the map to the current position
             }));
   }
 
@@ -81,7 +81,7 @@ class LocationMapState extends State<LocationMap> {
             mapController: _mapController,
             options: MapOptions(
               initialCenter: _currentPosition,
-              initialZoom: 9.2,
+              initialZoom: 15,
             ),
             children: [
               TileLayer(
@@ -91,16 +91,18 @@ class LocationMapState extends State<LocationMap> {
               ),
               MarkerLayer(
                 markers: [
-                  Marker(
-                    width: 80.0,
-                    height: 80.0,
-                    point: _currentPosition,
-                    child: const Icon(
-                      Icons.location_on,
-                      color: Colors.red,
-                      size: 40.0,
+                  // Show the marker only if the location is available
+                  if (_positionStream != null)
+                    Marker(
+                      width: 80.0,
+                      height: 80.0,
+                      point: _currentPosition,
+                      child: const Icon(
+                        Icons.location_on,
+                        color: Colors.red,
+                        size: 40.0,
+                      ),
                     ),
-                  ),
                 ],
               ),
               RichAttributionWidget(
@@ -128,8 +130,8 @@ class LocationMapState extends State<LocationMap> {
                   IconButton(
                     iconSize: 25.0,
                     color: Colors.black,
-                    onPressed: () =>
-                        _mapController.move(_currentPosition, 13.0),
+                    onPressed: () => _mapController.moveAndRotate(
+                        _currentPosition, 15.0, 0.0),
                     icon: const Icon(Icons.my_location),
                   )
                 ],

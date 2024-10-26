@@ -82,8 +82,8 @@ class RegisterScreenState extends State<RegisterScreen> {
         title: const Text('Register'),
       ),
       body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(30.0),
+        child: SingleChildScrollView(
+          padding: EdgeInsets.all(16.0),
           child: Form(
             key: _formKey,
             child: Column(

@@ -4,9 +4,10 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:thirst_quest/api/models/auth_response.dart';
 import 'package:thirst_quest/api/models/water_bubbler.dart';
+import 'package:thirst_quest/config.dart';
 
 class ApiClient {
-  final String baseUrl = 'http://localhost:8080';
+  final String baseUrl = Config.apiUrl;
 
   ApiClient();
 
