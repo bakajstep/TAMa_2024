@@ -5,11 +5,12 @@ import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:thirst_quest/main.dart';
 import 'package:thirst_quest/screens/login_screen.dart';
+import 'package:thirst_quest/screens/register_screen.dart';
 import 'package:thirst_quest/states/global_state.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  const MyHomePage({super.key});
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -19,8 +20,6 @@ class MyHomePage extends StatefulWidget {
   // case the title) provided by the parent (in this case the App widget) and
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
-
-  final String title;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -59,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: const Text('Thirst Quest'),
         automaticallyImplyLeading: false,
       ),
       body: Center(
@@ -95,6 +94,12 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               child: const Text('Go to Second Screen'),
             ),
+            ElevatedButton(
+                onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const RegisterScreen())),
+                child: const Text('Go to Register Screen')),
             if (!state.user.isLoggedIn)
               ElevatedButton(
                   onPressed: () => Navigator.push(

@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
               colorScheme: globalState.colorScheme,
               useMaterial3: true,
             ),
-            home: const MyHomePage(title: 'Flutter Demo Home Page'),
+            home: const MyHomePage(),
           );
         },
       ),

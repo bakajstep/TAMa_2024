@@ -9,9 +9,21 @@ class AuthService {
   final apiClient = ApiClient();
 
   Future<AuthResponse?> login(
-      String username, String password, GlobalState globalState) async {
-    final response = await apiClient.login(username, password);
+      String email, String password, GlobalState globalState) async {
+    final response = await apiClient.login(email, password);
 
+    return _handleAuthResponse(response, globalState);
+  }
+
+  Future<AuthResponse?> register(String email, String username, String password,
+      GlobalState globalState) async {
+    final response = await apiClient.register(email, username, password);
+
+    return _handleAuthResponse(response, globalState);
+  }
+
+  Future<AuthResponse?> _handleAuthResponse(
+      AuthResponse? response, GlobalState globalState) async {
     if (response == null) {
       return null;
     }

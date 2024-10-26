@@ -52,4 +52,30 @@ class ApiClient {
       throw Exception('Failed to login: $e');
     }
   }
+
+  Future<AuthResponse?> register(
+      String email, String username, String password) async {
+    final uri = Uri.parse('$baseUrl/api/auth/register');
+    try {
+      final response = await http.post(
+        uri,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'email': email,
+          'username': username,
+          'password': password,
+        }),
+      );
+
+      if (response.statusCode != 200) {
+        return null;
+      }
+
+      return AuthResponse.fromJson(jsonDecode(response.body));
+    } on SocketException {
+      throw Exception('No Internet connection');
+    } catch (e) {
+      throw Exception('Failed to register: $e');
+    }
+  }
 }

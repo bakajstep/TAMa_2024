@@ -15,7 +15,8 @@ class GlobalState extends ChangeNotifier {
     notifyListeners();
   }
 
-  ColorScheme _colorScheme = ColorScheme.fromSwatch(primarySwatch: Colors.blue);
+  ColorScheme _colorScheme =
+      ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 22, 98, 160));
 
   ColorScheme get colorScheme => _colorScheme;
 
