@@ -1,3 +1,4 @@
+import 'package:geolocator/geolocator.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:thirst_quest/api/models/photo.dart';
@@ -30,4 +31,7 @@ class WaterBubbler {
       _$WaterBubblerFromJson(json);
 
   Map<String, dynamic> toJson() => _$WaterBubblerToJson(this);
+
+  double distanceTo(LatLng position) => Geolocator.distanceBetween(
+      latitude, longitude, position.latitude, position.longitude);
 }

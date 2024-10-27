@@ -18,6 +18,13 @@ class WaterBubblerService {
     return _filterBubblersInBounds(await _loadBubblers(bounds), bounds);
   }
 
+  List<WaterBubbler> getXNearestBubblers(
+      LatLng position, int count, List<WaterBubbler> waterBubblers) {
+    return waterBubblers
+      ..sort((a, b) => a.distanceTo(position).compareTo(b.distanceTo(position)))
+      ..take(count).toList();
+  }
+
   LatLngBounds _extendBounds(LatLngBounds bounds) {
     final latDiff = bounds.north - bounds.south;
     final lonDiff = bounds.east - bounds.west;
