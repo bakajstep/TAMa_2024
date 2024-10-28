@@ -19,7 +19,7 @@ class MapWidget extends StatelessWidget {
     required this.onPositionChanged,
     required this.waterBubblers,
     required this.currentPosition,
-    this.showPositionMarker = true,
+    required this.showPositionMarker,
   });
 
   @override
