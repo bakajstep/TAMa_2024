@@ -10,17 +10,19 @@ class WaterBubblerService {
 
   WaterBubblerService({required this.apiClient});
 
-  Future<List<WaterBubbler>> getWaterBubblersByBBox(LatLngBounds bounds) async {
+  Future<List<WaterBubbler>> getWaterBubblersByBBox(
+      {required LatLngBounds bounds, bool extendBounds = true}) async {
     if (_loadedBounds != null && _loadedBounds!.containsBounds(bounds)) {
       return _filterBubblersInBounds(_loadedBubblers, bounds);
     }
 
-    return _filterBubblersInBounds(await _loadBubblers(bounds), bounds);
+    return _filterBubblersInBounds(
+        await _loadBubblers(bounds, extendBounds), bounds);
   }
 
-  List<WaterBubbler> getXNearestBubblers(
-      LatLng position, int count, List<WaterBubbler> waterBubblers) {
-    return waterBubblers
+  Future<List<WaterBubbler>> getXNearestBubblers(
+      LatLng position, int count, LatLngBounds bounds) async {
+    return (await getWaterBubblersByBBox(bounds: bounds, extendBounds: false))
       ..sort((a, b) => a.distanceTo(position).compareTo(b.distanceTo(position)))
       ..take(count).toList();
   }
@@ -35,17 +37,18 @@ class WaterBubblerService {
     return LatLngBounds(extendedSw, extendedNe);
   }
 
-  Future<List<WaterBubbler>> _loadBubblers(LatLngBounds bounds) async {
-    final extendedBounds = _extendBounds(bounds);
+  Future<List<WaterBubbler>> _loadBubblers(
+      LatLngBounds bounds, bool extendBounds) async {
+    final newBounds = extendBounds ? _extendBounds(bounds) : bounds;
     final newBubblers = await apiClient.getBubblersByBBox(
-      extendedBounds.south,
-      extendedBounds.north,
-      extendedBounds.west,
-      extendedBounds.east,
+      newBounds.south,
+      newBounds.north,
+      newBounds.west,
+      newBounds.east,
     );
 
     _loadedBubblers = newBubblers;
-    _loadedBounds = extendedBounds;
+    _loadedBounds = newBounds;
 
     return newBubblers;
   }

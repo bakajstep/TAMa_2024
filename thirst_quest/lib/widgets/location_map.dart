@@ -36,8 +36,8 @@ class LocationMapState extends State<LocationMap> {
     _debounceTimer?.cancel();
 
     _debounceTimer = Timer(const Duration(milliseconds: 500), () async {
-      final waterBubblers = await _waterBubblerService
-          .getWaterBubblersByBBox(position.visibleBounds);
+      final waterBubblers = await _waterBubblerService.getWaterBubblersByBBox(
+          bounds: position.visibleBounds);
       setState(() {
         _waterBubblers = waterBubblers;
       });
