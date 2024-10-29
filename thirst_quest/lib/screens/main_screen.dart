@@ -18,6 +18,7 @@ class MainScreenState extends State<MainScreen> {
   final LocationController _locationController = LocationController();
   final BubblerMapState _bubblerMapState = BubblerMapState();
   MainScreenAction _mainScreenAction = MainScreenAction.none;
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
@@ -85,41 +86,37 @@ class MainScreenState extends State<MainScreen> {
                 child: Stack(
                   children: [
                     // This is the LocationMap that takes all available space
-                    Expanded(
-                        child: LocationMap(
-                            initialPosition:
-                                _locationController.currentPosition)),
+                    LocationMap(
+                        initialPosition: _locationController.currentPosition),
                     if (_mainScreenAction == MainScreenAction.none ||
                         _mainScreenAction == MainScreenAction.smallDetail)
                       Positioned(
                         top: 30,
-                        left: 16,
-                        right: 16,
-                        child: Center(
-                          child: SizedBox(
-                            height: 50,
-                            width: 300,
-                            child: TextField(
-                              decoration: InputDecoration(
+                        left: 20,
+                        right: 20,
+                        child: Padding(
+                            padding:
+                                const EdgeInsets.only(left: 48.0, right: 48.0),
+                            child: Column(children: <Widget>[
+                              const SizedBox(height: 16.0),
+                              SearchBar(
+                                controller: _searchController,
+                                leading: IconButton(
+                                    onPressed: () {
+                                      // searchbar login here
+                                    },
+                                    icon: const Icon(Icons.search)),
+                                // trailing: [
+                                //   IconButton(
+                                //     onPressed: () {
+                                //       // searchbar login here
+                                //     },
+                                //     icon: const Icon(Icons.mic)
+                                //   )
+                                // ],
                                 hintText: 'Search...',
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(30.0),
-                                  borderSide: BorderSide.none,
-                                ),
-                                filled: true,
-                                fillColor: Colors.white,
-                                contentPadding: EdgeInsets.symmetric(
-                                    vertical: 15.0,
-                                    horizontal: 20.0), // Add padding for text
-                                suffixIcon:
-                                    Icon(Icons.search), // Optional search icon
-                              ),
-                              onChanged: (value) {
-                                // Handle search logic here
-                              },
-                            ),
-                          ),
-                        ),
+                              )
+                            ])),
                       ),
                     if (_mainScreenAction == MainScreenAction.none)
                       MapControls(

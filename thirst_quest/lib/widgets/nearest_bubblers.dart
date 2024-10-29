@@ -38,15 +38,20 @@ class NearestBubblers extends StatelessWidget {
 
           final waterBubblers = snapshot.data!;
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            locationMapState.changeLocation(
-                waterBubblers[0].position, false, false);
+            locationMapState.mapController
+                .move(waterBubblers[0].position, 14.0);
           });
 
-          return Expanded(
-              child: Column(
+          return Column(
             children: [
-              Text('Nearest Water Bubblers'),
-              ListView.builder(
+              Padding(
+                  padding: EdgeInsets.symmetric(vertical: 7.5, horizontal: 10),
+                  child: Text(
+                    'Nearest Water Bubblers',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  )),
+              Expanded(
+                  child: ListView.builder(
                 itemCount: waterBubblers.length,
                 itemBuilder: (context, index) {
                   final waterBubbler = waterBubblers[index];
@@ -63,9 +68,9 @@ class NearestBubblers extends StatelessWidget {
                     ),
                   );
                 },
-              )
+              ))
             ],
-          ));
+          );
         });
   }
 }

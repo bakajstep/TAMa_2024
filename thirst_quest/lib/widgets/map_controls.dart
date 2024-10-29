@@ -16,8 +16,8 @@ class MapControls extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            width: 56, // Match FloatingActionButton size
-            height: 56,
+            width: 46, // Match FloatingActionButton size
+            height: 46,
             decoration: BoxDecoration(
               color: Colors.grey[700]?.withOpacity(0.7),
               shape: BoxShape.circle,
@@ -35,8 +35,8 @@ class MapControls extends StatelessWidget {
           ),
           SizedBox(height: 14), // Spacing between buttons
           Container(
-            width: 56,
-            height: 56,
+            width: 46,
+            height: 46,
             decoration: BoxDecoration(
               color: Colors.grey[700]?.withOpacity(0.7),
               shape: BoxShape.circle,
@@ -52,47 +52,46 @@ class MapControls extends StatelessWidget {
           ),
           SizedBox(height: 14), // Spacing between buttons
           Container(
-            width: 56,
-            height: 56,
+            width: 46,
+            height: 46,
             decoration: BoxDecoration(
               color: Colors.grey[700]?.withOpacity(0.7),
               shape: BoxShape.circle,
             ),
             child: PopupMenuButton<String>(
               icon: Icon(Icons.more_vert, color: Colors.white, size: 30),
-              color: Colors.grey[800],
+              color: Colors.grey[700],
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
-              position: PopupMenuPosition.over,
               onSelected: (value) {
                 // Perform action based on selected option
-                if (value == 'Option 1') {
-                  // Action for Option 1
-                } else if (value == 'Option 2') {
-                  // Action for Option 2
+                if (value == 'Filter map') {
+                  // Action for Filter map
+                } else if (value == 'New source') {
+                  // Action for New source
                 } else if (value == 'Option 3') {
                   // Action for Option 3
                 }
               },
               itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                 PopupMenuItem<String>(
-                  value: 'Option 1',
+                  value: 'Filter map',
                   child: Row(
                     children: [
-                      Icon(Icons.settings, color: Colors.white),
+                      Icon(Icons.filter_alt, color: Colors.white),
                       SizedBox(width: 10),
-                      Text('Option 1', style: TextStyle(color: Colors.white)),
+                      Text('Filter map', style: TextStyle(color: Colors.white)),
                     ],
                   ),
                 ),
                 PopupMenuItem<String>(
-                  value: 'Option 2',
+                  value: 'New source',
                   child: Row(
                     children: [
-                      Icon(Icons.info, color: Colors.white),
+                      Icon(Icons.water_drop, color: Colors.white),
                       SizedBox(width: 10),
-                      Text('Option 2', style: TextStyle(color: Colors.white)),
+                      Text('New source', style: TextStyle(color: Colors.white)),
                     ],
                   ),
                 ),
