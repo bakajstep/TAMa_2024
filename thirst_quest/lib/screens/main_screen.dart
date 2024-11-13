@@ -182,15 +182,9 @@ class MainScreenState extends State<MainScreen> {
               Flexible(
                 flex: _getActionFlex(),
                 child: _mainScreenAction == MainScreenAction.nearestBubblers
-                    ? GestureDetector(
-                        onVerticalDragEnd: (details) {
-                          if (details.primaryVelocity! > 0) {
-                            _closeNearestBubblers();
-                          }
-                        },
-                        child:
-                            NearestBubblers(nearestBubblers: _nearestBubblers),
-                      )
+                    ? NearestBubblers(
+                        nearestBubblers: _nearestBubblers,
+                        onClose: _closeNearestBubblers)
                     : Padding(padding: EdgeInsets.all(0)),
               )
             ])));
