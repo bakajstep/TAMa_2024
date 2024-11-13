@@ -88,8 +88,7 @@ class MainScreenState extends State<MainScreen> {
 
     if (_nearestBubblers.isNotEmpty) {
       final waterBubbler = _nearestBubblers[0];
-      _bubblerMapState.changeLocation(waterBubbler.position,
-          _locationController.isLocationServiceEnabled, true);
+      _bubblerMapState.mapController.move(waterBubbler.position, 15.0);
       _bubblerMapState.selectedBubbler = waterBubbler;
       _bubblerMapState.waterBubblers = _nearestBubblers;
     }
