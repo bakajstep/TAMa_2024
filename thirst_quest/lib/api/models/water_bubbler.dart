@@ -34,4 +34,13 @@ class WaterBubbler {
 
   double distanceTo(LatLng position) => Geolocator.distanceBetween(
       latitude, longitude, position.latitude, position.longitude);
+
+  @override
+  bool operator ==(Object other) =>
+      other is WaterBubbler &&
+      id == other.id &&
+      openStreetId == other.openStreetId;
+
+  @override
+  int get hashCode => id.hashCode ^ openStreetId.hashCode;
 }

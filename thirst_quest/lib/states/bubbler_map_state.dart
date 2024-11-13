@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:thirst_quest/api/models/water_bubbler.dart';
 
 class BubblerMapState extends ChangeNotifier {
   final MapController _mapController = MapController();
   bool _trackPosition = true;
   bool _showPositionMarker = false;
+  bool _reloadBubblersOnMove = true;
   LatLng? _currentPosition;
+  WaterBubbler? _selectedBubbler;
+  List<WaterBubbler> _waterBubblers = [];
 
   MapController get mapController => _mapController;
 
@@ -14,10 +18,31 @@ class BubblerMapState extends ChangeNotifier {
 
   bool get trackPosition => _trackPosition;
 
+  bool get reloadBubblersOnMove => _reloadBubblersOnMove;
+
   LatLng? get currentPosition => _currentPosition;
+
+  WaterBubbler? get selectedBubbler => _selectedBubbler;
+
+  List<WaterBubbler> get waterBubblers => _waterBubblers;
 
   set trackPosition(bool value) {
     _trackPosition = value;
+    notifyListeners();
+  }
+
+  set reloadBubblersOnMove(bool value) {
+    _reloadBubblersOnMove = value;
+    notifyListeners();
+  }
+
+  set selectedBubbler(WaterBubbler? value) {
+    _selectedBubbler = value;
+    notifyListeners();
+  }
+
+  set waterBubblers(List<WaterBubbler> waterBubblers) {
+    _waterBubblers = waterBubblers;
     notifyListeners();
   }
 

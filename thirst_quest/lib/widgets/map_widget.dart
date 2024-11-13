@@ -11,6 +11,7 @@ class MapWidget extends StatelessWidget {
   final List<WaterBubbler> waterBubblers;
   final LatLng currentPosition;
   final bool showPositionMarker;
+  final WaterBubbler? selectedBubbler;
 
   const MapWidget({
     super.key,
@@ -20,6 +21,7 @@ class MapWidget extends StatelessWidget {
     required this.waterBubblers,
     required this.currentPosition,
     required this.showPositionMarker,
+    required this.selectedBubbler,
   });
 
   @override
@@ -55,9 +57,11 @@ class MapWidget extends StatelessWidget {
                 width: 50.0,
                 height: 50.0,
                 point: LatLng(waterBubbler.latitude, waterBubbler.longitude),
-                child: const Icon(
+                child: Icon(
                   Icons.local_drink,
-                  color: Colors.blue,
+                  color: waterBubbler == selectedBubbler
+                      ? Colors.red
+                      : Colors.blue,
                   size: 40.0,
                 ),
               ),

@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
+import 'package:thirst_quest/api/models/water_bubbler.dart';
 import 'package:thirst_quest/controllers/location_controller.dart';
+import 'package:thirst_quest/di.dart';
+import 'package:thirst_quest/services/water_bubbler_service.dart';
 import 'package:thirst_quest/states/bubbler_map_state.dart';
 import 'package:thirst_quest/states/main_screen_action.dart';
 import 'package:thirst_quest/widgets/location_map.dart';
@@ -17,7 +22,9 @@ class MainScreen extends StatefulWidget {
 class MainScreenState extends State<MainScreen> {
   final LocationController _locationController = LocationController();
   final BubblerMapState _bubblerMapState = BubblerMapState();
+  final WaterBubblerService bubblerService = DI.get<WaterBubblerService>();
   MainScreenAction _mainScreenAction = MainScreenAction.none;
+  List<WaterBubbler> _nearestBubblers = [];
   final TextEditingController _searchController = TextEditingController();
 
   @override
@@ -67,11 +74,36 @@ class MainScreenState extends State<MainScreen> {
     }
   }
 
-  void _showNearestBubblers() {
-    _bubblerMapState.changeLocation(_locationController.currentPosition,
-        _locationController.isLocationServiceEnabled, false);
+  void _showNearestBubblers() async {
+    _bubblerMapState.reloadBubblersOnMove = false;
+
+    final currentPosition = _bubblerMapState.currentPosition!;
+    final leftBottomCorner = LatLng(
+        currentPosition.latitude - 0.02, currentPosition.longitude - 0.02);
+    final rightTopCorner = LatLng(
+        currentPosition.latitude + 0.02, currentPosition.longitude + 0.02);
+
+    _nearestBubblers = await bubblerService.getXNearestBubblers(
+        currentPosition, 10, LatLngBounds(leftBottomCorner, rightTopCorner));
+
+    if (_nearestBubblers.isNotEmpty) {
+      final waterBubbler = _nearestBubblers[0];
+      _bubblerMapState.changeLocation(waterBubbler.position,
+          _locationController.isLocationServiceEnabled, true);
+      _bubblerMapState.selectedBubbler = waterBubbler;
+      _bubblerMapState.waterBubblers = _nearestBubblers;
+    }
+
     setState(() {
       _mainScreenAction = MainScreenAction.nearestBubblers;
+    });
+  }
+
+  void _closeNearestBubblers() {
+    _bubblerMapState.reloadBubblersOnMove = true;
+    _bubblerMapState.selectedBubbler = null;
+    setState(() {
+      _mainScreenAction = MainScreenAction.none;
     });
   }
 
@@ -91,12 +123,12 @@ class MainScreenState extends State<MainScreen> {
                     if (_mainScreenAction == MainScreenAction.none ||
                         _mainScreenAction == MainScreenAction.smallDetail)
                       Positioned(
-                        top: 30,
+                        top: 15,
                         left: 20,
                         right: 20,
                         child: Padding(
                             padding:
-                                const EdgeInsets.only(left: 48.0, right: 48.0),
+                                const EdgeInsets.only(left: 20.0, right: 20.0),
                             child: Column(children: <Widget>[
                               const SizedBox(height: 16.0),
                               SearchBar(
@@ -151,7 +183,15 @@ class MainScreenState extends State<MainScreen> {
               Flexible(
                 flex: _getActionFlex(),
                 child: _mainScreenAction == MainScreenAction.nearestBubblers
-                    ? NearestBubblers()
+                    ? GestureDetector(
+                        onVerticalDragEnd: (details) {
+                          if (details.primaryVelocity! > 0) {
+                            _closeNearestBubblers();
+                          }
+                        },
+                        child:
+                            NearestBubblers(nearestBubblers: _nearestBubblers),
+                      )
                     : Padding(padding: EdgeInsets.all(0)),
               )
             ])));
