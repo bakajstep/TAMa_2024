@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:thirst_quest/api/models/water_bubbler.dart';
 import 'package:thirst_quest/controllers/location_controller.dart';
 import 'package:thirst_quest/di.dart';
+import 'package:thirst_quest/notifications/bubbler_selected.dart';
 import 'package:thirst_quest/services/water_bubbler_service.dart';
 import 'package:thirst_quest/states/bubbler_map_state.dart';
 import 'package:thirst_quest/states/main_screen_action.dart';
@@ -95,8 +96,14 @@ class MainScreenState extends State<MainScreen> {
                 child: Stack(
                   children: [
                     // This is the LocationMap that takes all available space
-                    LocationMap(
+                    NotificationListener<BubblerSelected>(
+                      onNotification: (notification) {
+                        //print(notification.val); // TODO: set selected bubbler
+                        return true;
+                      },
+                      child: LocationMap(
                         initialPosition: _locationController.currentPosition),
+                    ),
                     if (_mainScreenAction == MainScreenAction.none ||
                         _mainScreenAction == MainScreenAction.smallDetail)
                       Positioned(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:thirst_quest/notifications/bubbler_selected.dart';
 
 class WaterBubblerIcon extends StatefulWidget {
   final bool isCurrent;
@@ -19,6 +20,7 @@ class WaterBubblerIconState extends State<WaterBubblerIcon> {
         setState(() {
           _iconColor = Colors.cyanAccent;
         });
+        BubblerSelected(val: true).dispatch(context);
       },
       icon: Icon(
         Icons.local_drink,
