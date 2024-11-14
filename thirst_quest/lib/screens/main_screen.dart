@@ -50,30 +50,6 @@ class MainScreenState extends State<MainScreen> {
         0.0);
   }
 
-  int _getMapFlex() {
-    switch (_mainScreenAction) {
-      case MainScreenAction.none:
-        return 1;
-      case MainScreenAction.smallDetail:
-        return 7;
-      case MainScreenAction.bigDetail:
-      case MainScreenAction.nearestBubblers:
-        return 3;
-    }
-  }
-
-  int _getActionFlex() {
-    switch (_mainScreenAction) {
-      case MainScreenAction.none:
-        return 0;
-      case MainScreenAction.smallDetail:
-        return 3;
-      case MainScreenAction.bigDetail:
-      case MainScreenAction.nearestBubblers:
-        return 7;
-    }
-  }
-
   void _showNearestBubblers() async {
     _bubblerMapState.reloadBubblersOnMove = false;
 
@@ -88,7 +64,9 @@ class MainScreenState extends State<MainScreen> {
 
     if (_nearestBubblers.isNotEmpty) {
       final waterBubbler = _nearestBubblers[0];
-      _bubblerMapState.mapController.move(waterBubbler.position, 15.0);
+      _bubblerMapState.mapPixelOffset =
+          mounted ? -(MediaQuery.of(context).size.height * 0.7 / 2) : 0.0;
+      _bubblerMapState.mapMove(waterBubbler.position);
       _bubblerMapState.selectedBubbler = waterBubbler;
       _bubblerMapState.waterBubblers = _nearestBubblers;
     }
@@ -101,6 +79,7 @@ class MainScreenState extends State<MainScreen> {
   void _closeNearestBubblers() {
     _bubblerMapState.reloadBubblersOnMove = true;
     _bubblerMapState.selectedBubbler = null;
+    _bubblerMapState.mapPixelOffset = 0.0;
     setState(() {
       _mainScreenAction = MainScreenAction.none;
     });
@@ -111,9 +90,8 @@ class MainScreenState extends State<MainScreen> {
     return Scaffold(
         body: ChangeNotifierProvider(
             create: (context) => _bubblerMapState,
-            child: Column(children: [
-              Flexible(
-                flex: _getMapFlex(),
+            child: Stack(children: [
+              Positioned.fill(
                 child: Stack(
                   children: [
                     // This is the LocationMap that takes all available space
@@ -179,14 +157,29 @@ class MainScreenState extends State<MainScreen> {
                   ],
                 ),
               ),
-              Flexible(
-                flex: _getActionFlex(),
-                child: _mainScreenAction == MainScreenAction.nearestBubblers
-                    ? NearestBubblers(
-                        nearestBubblers: _nearestBubblers,
-                        onClose: _closeNearestBubblers)
-                    : Padding(padding: EdgeInsets.all(0)),
-              )
+              Align(
+                  alignment: Alignment.bottomCenter,
+                  child: AnimatedSwitcher(
+                      duration: Duration(milliseconds: 500),
+                      transitionBuilder: (child, animation) {
+                        final offsetAnimation = Tween<Offset>(
+                          begin: Offset(0, 1),
+                          end: Offset(0, 0),
+                        ).animate(animation);
+                        return SlideTransition(
+                          position: offsetAnimation,
+                          child: child,
+                        );
+                      },
+                      switchInCurve: Curves.easeInOut,
+                      switchOutCurve: Curves.easeInOut,
+                      child:
+                          _mainScreenAction == MainScreenAction.nearestBubblers
+                              ? NearestBubblers(
+                                  nearestBubblers: _nearestBubblers,
+                                  onClose: _closeNearestBubblers,
+                                )
+                              : null))
             ])));
   }
 }
