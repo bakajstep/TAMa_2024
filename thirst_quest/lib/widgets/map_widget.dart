@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:thirst_quest/api/models/water_bubbler.dart';
+import 'package:thirst_quest/assets/constants.dart' as constants;
 import 'package:thirst_quest/widgets/water_bubbler_icon.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -55,12 +56,14 @@ class MapWidget extends StatelessWidget {
               ),
             for (final waterBubbler in waterBubblers)
               Marker(
-                width: 50.0,
-                height: 50.0,
+                width: constants.markerSize,
+                height: constants.markerSize,
                 key: ValueKey(waterBubbler.id ?? waterBubbler.openStreetId),
                 point: LatLng(waterBubbler.latitude, waterBubbler.longitude),
+                alignment: Alignment.topCenter,
                 child: WaterBubblerIcon(
-                    isCurrent: selectedBubbler == waterBubbler),
+                    isCurrent: selectedBubbler == waterBubbler
+                  ),
               ),
           ],
         ),

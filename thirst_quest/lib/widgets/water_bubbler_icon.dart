@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:thirst_quest/assets/constants.dart' as constants;
 import 'package:thirst_quest/notifications/bubbler_selected.dart';
+
+
 
 class WaterBubblerIcon extends StatefulWidget {
   final bool isCurrent;
@@ -11,21 +14,19 @@ class WaterBubblerIcon extends StatefulWidget {
 }
 
 class WaterBubblerIconState extends State<WaterBubblerIcon> {
-  Color _iconColor = Colors.indigoAccent;
 
   @override
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: () {
-        setState(() {
-          _iconColor = Colors.cyanAccent;
-        });
         BubblerSelected(val: true).dispatch(context);
       },
+      alignment: Alignment.center,
+      padding: EdgeInsets.zero,
+      iconSize: constants.markerSize,
       icon: Icon(
-        Icons.local_drink,
-        color: widget.isCurrent ? Colors.red : _iconColor,
-        size: 40.0,
+        Icons.location_pin,
+        color: widget.isCurrent ? Colors.cyanAccent : Colors.indigoAccent
       ),
     );
   }

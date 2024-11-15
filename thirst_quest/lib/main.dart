@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:thirst_quest/assets/constants.dart' as constants;
 import 'package:thirst_quest/di.dart';
 import 'package:thirst_quest/screens/screen.dart';
 import 'package:thirst_quest/states/global_state.dart';
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
       child: Consumer<GlobalState>(
         builder: (context, globalState, child) {
           return MaterialApp(
-            title: 'Flutter Demo',
+            title: constants.appName,
             theme: ThemeData(
               // This is the theme of your application.
               //
