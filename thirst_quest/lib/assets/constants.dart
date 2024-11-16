@@ -1,2 +1,2 @@
 const String appName = "ThirstQuest";
-const double markerSize = 40.0;
+const double markerSize = 45.0;

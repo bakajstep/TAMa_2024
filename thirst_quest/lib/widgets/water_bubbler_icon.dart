@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:thirst_quest/assets/ThirstQuestIcons_icons.dart';
 import 'package:thirst_quest/assets/constants.dart' as constants;
 import 'package:thirst_quest/notifications/bubbler_selected.dart';
 
@@ -25,7 +26,7 @@ class WaterBubblerIconState extends State<WaterBubblerIcon> {
       padding: EdgeInsets.zero,
       iconSize: constants.markerSize,
       icon: Icon(
-        Icons.location_pin,
+        ThirstQuestIcons.bubbler_reflection,
         color: widget.isCurrent ? Colors.cyanAccent : Colors.indigoAccent
       ),
     );
