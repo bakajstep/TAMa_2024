@@ -24,6 +24,13 @@ class AuthService {
     return _handleAuthResponse(response, globalState);
   }
 
+  Future<AuthResponse?> signInWithGoogle(
+      String idToken, GlobalState globalState) async {
+    final response = await apiClient.signInWithGoogle(idToken);
+
+    return _handleAuthResponse(response, globalState);
+  }
+
   Future<AuthResponse?> _handleAuthResponse(
       AuthResponse? response, GlobalState globalState) async {
     if (response == null) {

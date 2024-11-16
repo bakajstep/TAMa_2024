@@ -5,7 +5,7 @@ import 'package:thirst_quest/di.dart';
 import 'package:thirst_quest/screens/screen.dart';
 import 'package:thirst_quest/states/global_state.dart';
 
-void main() {
+void main() async {
   DI.configure();
 
   runApp(const MyApp());

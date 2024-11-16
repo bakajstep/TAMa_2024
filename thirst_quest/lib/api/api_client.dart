@@ -79,4 +79,27 @@ class ApiClient {
       throw Exception('Failed to register: $e');
     }
   }
+
+  Future<AuthResponse?> signInWithGoogle(String idToken) async {
+    final uri = Uri.parse('$baseUrl/api/auth/google');
+    try {
+      final response = await http.post(
+        uri,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'idToken': idToken,
+        }),
+      );
+
+      if (response.statusCode != 200) {
+        return null;
+      }
+
+      return AuthResponse.fromJson(jsonDecode(response.body));
+    } on SocketException {
+      throw Exception('No Internet connection');
+    } catch (e) {
+      throw Exception('Failed to sign in with Google: $e');
+    }
+  }
 }

@@ -1,9 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:thirst_quest/screens/login_screen.dart';
+import 'package:thirst_quest/states/global_state.dart';
 
 class MapControls extends StatelessWidget {
   final VoidCallback onCenterButtonPressed;
 
   const MapControls({super.key, required this.onCenterButtonPressed});
+
+  void _goToProfile(BuildContext context) {
+    final state = Provider.of<GlobalState>(context, listen: false);
+    if (!state.user.isLoggedIn) {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const LoginScreen()));
+      return;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,9 +35,7 @@ class MapControls extends StatelessWidget {
               shape: BoxShape.circle,
             ),
             child: IconButton(
-              onPressed: () {
-                // Action for the first button
-              },
+              onPressed: () => _goToProfile(context),
               icon: Icon(
                 Icons.account_circle,
                 size: 30,

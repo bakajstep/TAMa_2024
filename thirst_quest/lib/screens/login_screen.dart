@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:thirst_quest/di.dart';
 import 'package:thirst_quest/screens/screen.dart';
@@ -6,6 +7,7 @@ import 'package:thirst_quest/services/auth_service.dart';
 import 'package:thirst_quest/states/global_state.dart';
 import 'package:thirst_quest/widgets/form_error.dart';
 import 'package:thirst_quest/widgets/loading.dart';
+import 'package:thirst_quest/widgets/sign_in_button.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -19,8 +21,30 @@ class LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _authService = DI.get<AuthService>();
+  final _googleSignIn = GoogleSignIn(
+      clientId:
+          '1090609015078-cj1qrnmmun2j32nequ4q3tvgm6ut6rdf.apps.googleusercontent.com');
   String? _errorMessage;
   bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _googleSignIn.onCurrentUserChanged
+        .listen((GoogleSignInAccount? account) async {
+      if (account == null) return;
+
+      setState(() {
+        _isLoading = true;
+      });
+
+      final googleAuth = await account.authentication;
+      await _signInWithGoogle(googleAuth);
+    });
+
+    _googleSignIn.signInSilently();
+  }
 
   @override
   void dispose() {
@@ -54,7 +78,71 @@ class LoginScreenState extends State<LoginScreen> {
       return;
     }
 
+    // If the form is valid, navigate to the home page
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MyHomePage(),
+      ),
+    );
+  }
+
+  // Used to sign in with Google (for android)
+  Future _signInWithGoogleButton() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) {
+        setState(() {
+          _isLoading = false;
+        });
+        return; // The user canceled the sign-in
+      }
+
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      await _signInWithGoogle(googleAuth);
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'Failed to sign in with Google: $e';
+      });
+    }
+
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  Future _signInWithGoogle(GoogleSignInAuthentication googleAuth) async {
     if (!mounted) {
+      return;
+    }
+
+    final idToken = googleAuth.idToken;
+    if (idToken == null) {
+      setState(() {
+        _errorMessage = 'Failed to sign in with Google';
+        _isLoading = false;
+      });
+      return;
+    }
+
+    final globalState = Provider.of<GlobalState>(context, listen: false);
+    final response = await _authService.signInWithGoogle(idToken, globalState);
+
+    if (!mounted) {
+      return;
+    }
+
+    if (response == null) {
+      setState(() {
+        _errorMessage = 'Given google email is already registered';
+        _isLoading = false;
+      });
       return;
     }
 
@@ -104,6 +192,10 @@ class LoginScreenState extends State<LoginScreen> {
                   ElevatedButton(
                     onPressed: _submitForm,
                     child: const Text('Login'),
+                  ),
+                  const Padding(padding: EdgeInsets.symmetric(vertical: 16.0)),
+                  buildSignInButton(
+                    onPressed: _signInWithGoogleButton,
                   ),
                 ],
               ),

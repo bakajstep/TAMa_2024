@@ -18,7 +18,10 @@ class FormError extends StatelessWidget {
         children: [
           Icon(Icons.error, color: errorColor),
           const SizedBox(width: 10),
-          Text(errorMessage!, style: TextStyle(color: errorColor)),
+          Flexible(
+              child: Text(errorMessage!,
+                  style: TextStyle(color: errorColor),
+                  overflow: TextOverflow.visible)),
         ],
       ),
     );

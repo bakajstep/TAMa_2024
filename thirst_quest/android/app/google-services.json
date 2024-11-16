@@ -1,0 +1,29 @@
+{
+    "project_info": {
+        "project_number": "1090609015078",
+        "project_id": "thirstquest-92a03",
+        "storage_bucket": "thirstquest-92a03.firebasestorage.app"
+    },
+    "client": [
+        {
+            "client_info": {
+                "mobilesdk_app_id": "1:1090609015078:android:cc9194d0202e3cdc2fb9e7",
+                "android_client_info": {
+                    "package_name": "com.src.thirst_quest"
+                }
+            },
+            "oauth_client": [],
+            "api_key": [
+                {
+                    "current_key": "AIzaSyAlN0mUu87YftaCXTO-4_LLp0FltC5Nr3E"
+                }
+            ],
+            "services": {
+                "appinvite_service": {
+                    "other_platform_oauth_client": []
+                }
+            }
+        }
+    ],
+    "configuration_version": "1"
+}

@@ -49,6 +49,7 @@ dependencies:
     git:
       url: https://github.com/pikaju/flutter-maps-launcher.git
       ref: master
+  google_sign_in: ^6.2.2
 
 dev_dependencies:
   flutter_test:
