@@ -54,16 +54,19 @@ class MapWidget extends StatelessWidget {
                   size: 40.0,
                 ),
               ),
-            for (final waterBubbler in waterBubblers)
+            for (final waterBubbler in waterBubblers) 
               Marker(
-                width: constants.markerSize,
-                height: constants.markerSize,
+                width: constants.markerSize + (constants.markerPadding*2),
+                height: constants.markerSize + (constants.markerPadding*2),
                 key: ValueKey(waterBubbler.id ?? waterBubbler.openStreetId),
                 point: LatLng(waterBubbler.latitude, waterBubbler.longitude),
                 alignment: Alignment.topCenter,
-                child: WaterBubblerIcon(
+                child: Transform.translate(
+                  offset: Offset(0.0, constants.markerPadding),
+                  child: WaterBubblerIcon(
                     isCurrent: selectedBubbler == waterBubbler
                   ),
+                ),
               ),
           ],
         ),
