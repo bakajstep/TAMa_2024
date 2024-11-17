@@ -35,6 +35,7 @@ class NearestBubblersState extends State<NearestBubblers> {
   Future<void> _loadBubblers() async {
     final bubblerMapState =
         Provider.of<BubblerMapState>(context, listen: false);
+    bubblerMapState.reloadBubblersOnMove = false;
 
     final currentPosition = positionOnLoad = bubblerMapState.currentPosition!;
     final delta = constants.nearestBubblersLatLonDelta;
@@ -57,7 +58,6 @@ class NearestBubblersState extends State<NearestBubblers> {
       bubblerMapState.mapMove(waterBubbler.position);
       bubblerMapState.selectedBubbler = waterBubbler;
       bubblerMapState.waterBubblers = nearestBubblers;
-      bubblerMapState.reloadBubblersOnMove = false;
     }
 
     setState(() {

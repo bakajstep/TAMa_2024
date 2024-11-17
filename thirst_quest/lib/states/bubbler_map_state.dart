@@ -8,10 +8,11 @@ import 'package:thirst_quest/api/models/water_bubbler.dart';
 class BubblerMapState extends ChangeNotifier {
   final MapController _mapController = MapController();
   final double targetDetailZoom = 15.0;
+  bool reloadBubblersOnMove = true;
   double _mapPixelOffset = 0.0;
+
   bool _trackPosition = true;
   bool _showPositionMarker = false;
-  bool _reloadBubblersOnMove = true;
   LatLng? _currentPosition;
   WaterBubbler? _selectedBubbler;
   List<WaterBubbler> _waterBubblers = [];
@@ -22,8 +23,6 @@ class BubblerMapState extends ChangeNotifier {
 
   bool get trackPosition => _trackPosition;
 
-  bool get reloadBubblersOnMove => _reloadBubblersOnMove;
-
   LatLng? get currentPosition => _currentPosition;
 
   WaterBubbler? get selectedBubbler => _selectedBubbler;
@@ -32,11 +31,6 @@ class BubblerMapState extends ChangeNotifier {
 
   set trackPosition(bool value) {
     _trackPosition = value;
-    notifyListeners();
-  }
-
-  set reloadBubblersOnMove(bool value) {
-    _reloadBubblersOnMove = value;
     notifyListeners();
   }
 
