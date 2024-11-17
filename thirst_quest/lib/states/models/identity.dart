@@ -1,8 +1,8 @@
 class Identity {
-  final String id;
-  final String email;
-  final String username;
-  final List<String> roles;
+  String id;
+  String email;
+  String username;
+  List<String> roles;
 
   Identity({
     required this.id,
