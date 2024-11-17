@@ -1,7 +1,9 @@
 import 'package:provider/provider.dart';
 
 import 'package:flutter/material.dart';
+import 'package:thirst_quest/screens/favourite_bubbler_screen.dart';
 import 'package:thirst_quest/screens/login_screen.dart';
+import 'package:thirst_quest/screens/my_review_screen.dart';
 import 'package:thirst_quest/states/global_state.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -15,74 +17,149 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final state = Provider.of<GlobalState>(context, listen: false);
+
     if (!state.user.isLoggedIn) {
-      // Pokud není uživatel přihlášen, přesměruj na přihlašovací obrazovku
       Future.microtask(() => Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => const LoginScreen())));
-      return const SizedBox(); // Vrať prázdnou obrazovku, dokud nedojde k přesměrování
+      return const SizedBox();
     }
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context); // Vrátí tě zpět na předchozí obrazovku
+          },
+        ),
         title: const Text("Profile"),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () {
-              setState(() {
-                state.user.logout(); // Odhlásí uživatele
-              });
+              state.user.logout(); // Odhlášení uživatele
+              Navigator.pushReplacement(
+                  context, MaterialPageRoute(builder: (context) => const LoginScreen()));
             },
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: CircleAvatar(
-                radius: 50,
-                child: Icon(Icons.person, size: 50),
-              ),
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              "Personal Information",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            Row(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            color: Colors.grey[200],
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
               children: [
-                const Text("Name:"),
-                const SizedBox(width: 8),
-                Text(state.user.identity!.username), // Zobraz aktuální jméno
-                IconButton(
-                  icon: const Icon(Icons.edit),
-                  onPressed: () {
-                    // Akce pro úpravu jména
-                    _editName(state);
-                  },
+                Center(
+                  child: Stack(
+                    alignment: Alignment.topRight,
+                    children: [
+                      CircleAvatar(
+                        radius: 50,
+                        child: const Icon(Icons.person, size: 50),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.edit, size: 20),
+                        onPressed: () {
+                          // Akce pro úpravu profilového obrázku
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  "Personal information",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
-            Row(
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: Row(
               children: [
-                const Text("Email:"),
-                const SizedBox(width: 8),
-                Text(state.user.identity!.email), // Zobraz aktuální email
-                IconButton(
-                  icon: const Icon(Icons.edit),
-                  onPressed: () {
-                    // Akce pro úpravu emailu
-                    _editEmail(state);
-                  },
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Akce pro "Moje recenze"
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const MyReviewsScreen()));
+                    },
+                    child: const Text("Moje recenze"),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Akce pro "Oblíbená pítka"
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const FavoriteBubblerScreen()));
+                    },
+                    child: const Text("Oblíbená pítka"),
+                  ),
                 ),
               ],
             ),
-          ],
-        ),
+          ),
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.all(16.0),
+              children: [
+                _buildEditableField(
+                  context: context,
+                  label: "Name",
+                  value: state.user.identity!.username,
+                  onEdit: () => _editName(state),
+                ),
+                const SizedBox(height: 16),
+                _buildEditableField(
+                  context: context,
+                  label: "Email",
+                  value: state.user.identity!.email,
+                  onEdit: () => _editEmail(state),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEditableField({
+    required BuildContext context,
+    required String label,
+    required String value,
+    required VoidCallback onEdit,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      padding: const EdgeInsets.all(16.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 4),
+                Text(value),
+              ],
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.edit),
+            onPressed: onEdit,
+          ),
+        ],
       ),
     );
   }

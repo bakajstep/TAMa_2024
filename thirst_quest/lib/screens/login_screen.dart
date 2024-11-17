@@ -77,7 +77,7 @@ class LoginScreenState extends State<LoginScreen> {
     }
 
     // If the form is valid, navigate to the home page
-    Navigator.push(
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(
         builder: (context) => ProfileScreen(),
