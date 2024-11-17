@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:thirst_quest/di.dart';
 import 'package:thirst_quest/main.dart';
 import 'package:thirst_quest/screens/login_screen.dart';
 import 'package:thirst_quest/screens/main_screen.dart';
 import 'package:thirst_quest/screens/register_screen.dart';
+import 'package:thirst_quest/services/auth_service.dart';
 import 'package:thirst_quest/states/global_state.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -110,8 +112,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   Text('Welcome, ${state.user.identity!.username}'),
                   Text('Email: ${state.user.identity!.email}'),
                   ElevatedButton(
-                      onPressed: () {
-                        state.logout();
+                      onPressed: () async {
+                        final authService = DI.get<AuthService>();
+                        await authService.logout(
+                            Provider.of<GlobalState>(context, listen: false));
                       },
                       child: const Text('Logout')),
                 ],
