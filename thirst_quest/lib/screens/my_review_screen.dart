@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class MyReviewsScreen extends StatefulWidget {
-  const MyReviewsScreen({Key? key}) : super(key: key);
+  const MyReviewsScreen({super.key});
 
   @override
   _MyReviewsScreenState createState() => _MyReviewsScreenState();

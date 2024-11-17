@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class FavoriteBubblerScreen extends StatefulWidget {
-  const FavoriteBubblerScreen({Key? key}) : super(key: key);
+  const FavoriteBubblerScreen({super.key});
 
   @override
   _FavoriteBubblerScreenState createState() => _FavoriteBubblerScreenState();

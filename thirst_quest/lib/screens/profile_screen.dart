@@ -7,7 +7,7 @@ import 'package:thirst_quest/screens/my_review_screen.dart';
 import 'package:thirst_quest/states/global_state.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  const ProfileScreen({super.key});
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
@@ -112,6 +112,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   label: "Name",
                   value: state.user.identity!.username,
                   onEdit: () => _editName(state),
+                  googleAuth: state.user.identity!.googleAuth,
                 ),
                 const SizedBox(height: 16),
                 _buildEditableField(
@@ -119,6 +120,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   label: "Email",
                   value: state.user.identity!.email,
                   onEdit: () => _editEmail(state),
+                  googleAuth: state.user.identity!.googleAuth,
                 ),
               ],
             ),
@@ -133,6 +135,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     required String label,
     required String value,
     required VoidCallback onEdit,
+    required bool googleAuth,
   }) {
     return Container(
       decoration: BoxDecoration(
@@ -155,10 +158,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ],
             ),
           ),
-          IconButton(
-            icon: const Icon(Icons.edit),
-            onPressed: onEdit,
-          ),
+          if (!googleAuth)
+            IconButton(
+              icon: const Icon(Icons.edit),
+              onPressed: onEdit,
+            ),
         ],
       ),
     );

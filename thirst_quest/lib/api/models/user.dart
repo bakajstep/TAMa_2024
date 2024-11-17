@@ -7,11 +7,13 @@ class User {
   final String id;
   final String email;
   final String username;
+  final bool authByGoogle;
 
   User({
     required this.id,
     required this.email,
     required this.username,
+    required this.authByGoogle,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
