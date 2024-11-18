@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:thirst_quest/api/models/water_bubbler.dart';
 import 'package:thirst_quest/controllers/location_controller.dart';
@@ -26,7 +24,6 @@ class MainScreenState extends State<MainScreen> {
   final BubblerMapState _bubblerMapState = BubblerMapState();
   final WaterBubblerService bubblerService = DI.get<WaterBubblerService>();
   MainScreenAction _mainScreenAction = MainScreenAction.none;
-  List<WaterBubbler> _nearestBubblers = [];
   final TextEditingController _searchController = TextEditingController();
 
   @override
@@ -53,35 +50,12 @@ class MainScreenState extends State<MainScreen> {
   }
 
   void _showNearestBubblers() async {
-    _bubblerMapState.reloadBubblersOnMove = false;
-
-    final currentPosition = _bubblerMapState.currentPosition!;
-    final leftBottomCorner = LatLng(
-        currentPosition.latitude - 0.02, currentPosition.longitude - 0.02);
-    final rightTopCorner = LatLng(
-        currentPosition.latitude + 0.02, currentPosition.longitude + 0.02);
-
-    _nearestBubblers = await bubblerService.getXNearestBubblers(
-        currentPosition, 10, LatLngBounds(leftBottomCorner, rightTopCorner));
-
-    if (_nearestBubblers.isNotEmpty) {
-      final waterBubbler = _nearestBubblers[0];
-      _bubblerMapState.mapPixelOffset =
-          mounted ? -(MediaQuery.of(context).size.height * 0.7 / 2) : 0.0;
-      _bubblerMapState.mapMove(waterBubbler.position);
-      _bubblerMapState.selectedBubbler = waterBubbler;
-      _bubblerMapState.waterBubblers = _nearestBubblers;
-    }
-
     setState(() {
       _mainScreenAction = MainScreenAction.nearestBubblers;
     });
   }
 
   void _closeNearestBubblers() {
-    _bubblerMapState.reloadBubblersOnMove = true;
-    _bubblerMapState.selectedBubbler = null;
-    _bubblerMapState.mapPixelOffset = 0.0;
     setState(() {
       _mainScreenAction = MainScreenAction.none;
     });
@@ -119,7 +93,7 @@ class MainScreenState extends State<MainScreen> {
                         return true;
                       },
                       child: LocationMap(
-                        initialPosition: _locationController.currentPosition),
+                          initialPosition: _locationController.currentPosition),
                     ),
                     if (_mainScreenAction == MainScreenAction.none ||
                         _mainScreenAction == MainScreenAction.smallDetail)
@@ -201,7 +175,6 @@ class MainScreenState extends State<MainScreen> {
                         switch (_mainScreenAction) {
                           case MainScreenAction.nearestBubblers:
                             return NearestBubblers(
-                                nearestBubblers: _nearestBubblers,
                                 onClose: _closeNearestBubblers,
                                 );
 

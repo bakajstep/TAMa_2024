@@ -22,6 +22,17 @@ class LocationMapState extends State<LocationMap> {
   Timer? _debounceTimer;
 
   @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final bubblerMapState =
+          Provider.of<BubblerMapState>(context, listen: false);
+      _loadBubblers(bubblerMapState.mapController.camera);
+    });
+  }
+
+  @override
   void dispose() {
     _debounceTimer?.cancel();
     super.dispose();
@@ -40,11 +51,21 @@ class LocationMapState extends State<LocationMap> {
 
     _debounceTimer?.cancel();
 
-    _debounceTimer = Timer(const Duration(milliseconds: 500), () async {
-      final waterBubblers = await _waterBubblerService.getWaterBubblersByBBox(
-          bounds: position.visibleBounds);
-      bubblerMapState.waterBubblers = waterBubblers;
-    });
+    _debounceTimer = Timer(const Duration(milliseconds: 500),
+        () async => await _loadBubblers(position));
+  }
+
+  Future _loadBubblers(MapCamera position) async {
+    final waterBubblers = await _waterBubblerService.getWaterBubblersByBBox(
+        bounds: position.visibleBounds);
+
+    if (!mounted) {
+      return;
+    }
+
+    final bubblerMapState =
+        Provider.of<BubblerMapState>(context, listen: false);
+    bubblerMapState.waterBubblers = waterBubblers;
   }
 
   @override

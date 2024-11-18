@@ -8,11 +8,13 @@ part of 'water_bubbler.dart';
 
 WaterBubbler _$WaterBubblerFromJson(Map<String, dynamic> json) => WaterBubbler(
       id: json['id'] as String?,
-      openStreetId: (json['openStreetId'] as num?)?.toInt(),
+      osmId: (json['osmId'] as num?)?.toInt(),
       name: json['name'] as String?,
-      desc: json['desc'] as String?,
+      description: json['description'] as String?,
       latitude: (json['latitude'] as num).toDouble(),
       longitude: (json['longitude'] as num).toDouble(),
+      upvoteCount: (json['upvoteCount'] as num).toInt(),
+      downvoteCount: (json['downvoteCount'] as num).toInt(),
       photos: (json['photos'] as List<dynamic>?)
           ?.map((e) => Photo.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -21,10 +23,12 @@ WaterBubbler _$WaterBubblerFromJson(Map<String, dynamic> json) => WaterBubbler(
 Map<String, dynamic> _$WaterBubblerToJson(WaterBubbler instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'openStreetId': instance.openStreetId,
+      'osmId': instance.osmId,
       'name': instance.name,
-      'desc': instance.desc,
+      'description': instance.description,
       'latitude': instance.latitude,
       'longitude': instance.longitude,
+      'upvoteCount': instance.upvoteCount,
+      'downvoteCount': instance.downvoteCount,
       'photos': instance.photos,
     };

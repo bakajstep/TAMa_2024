@@ -8,21 +8,25 @@ part 'water_bubbler.g.dart';
 @JsonSerializable()
 class WaterBubbler {
   final String? id;
-  final int? openStreetId;
+  final int? osmId;
   final String? name;
-  final String? desc;
+  final String? description;
   final double latitude;
   final double longitude;
   final List<Photo> photos;
   final LatLng position;
+  final int upvoteCount;
+  final int downvoteCount;
 
   WaterBubbler({
     required this.id,
-    required this.openStreetId,
+    required this.osmId,
     required this.name,
-    required this.desc,
+    required this.description,
     required this.latitude,
     required this.longitude,
+    required this.upvoteCount,
+    required this.downvoteCount,
     List<Photo>? photos,
   })  : photos = photos ?? <Photo>[],
         position = LatLng(latitude, longitude);
@@ -37,10 +41,8 @@ class WaterBubbler {
 
   @override
   bool operator ==(Object other) =>
-      other is WaterBubbler &&
-      id == other.id &&
-      openStreetId == other.openStreetId;
+      other is WaterBubbler && id == other.id && osmId == other.osmId;
 
   @override
-  int get hashCode => id.hashCode ^ openStreetId.hashCode;
+  int get hashCode => id.hashCode ^ osmId.hashCode;
 }

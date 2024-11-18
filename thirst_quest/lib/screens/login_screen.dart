@@ -21,9 +21,6 @@ class LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _authService = DI.get<AuthService>();
-  final _googleSignIn = GoogleSignIn(
-      clientId:
-          '1090609015078-cj1qrnmmun2j32nequ4q3tvgm6ut6rdf.apps.googleusercontent.com');
   String? _errorMessage;
   bool _isLoading = false;
 
@@ -31,7 +28,7 @@ class LoginScreenState extends State<LoginScreen> {
   void initState() {
     super.initState();
 
-    _googleSignIn.onCurrentUserChanged
+    _authService.googleSignIn.onCurrentUserChanged
         .listen((GoogleSignInAccount? account) async {
       if (account == null) return;
 
@@ -43,7 +40,7 @@ class LoginScreenState extends State<LoginScreen> {
       await _signInWithGoogle(googleAuth);
     });
 
-    _googleSignIn.signInSilently();
+    _authService.googleSignIn.signInSilently(reAuthenticate: true);
   }
 
   @override
@@ -94,7 +91,8 @@ class LoginScreenState extends State<LoginScreen> {
     });
 
     try {
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      final GoogleSignInAccount? googleUser =
+          await _authService.googleSignIn.signIn();
       if (googleUser == null) {
         setState(() {
           _isLoading = false;

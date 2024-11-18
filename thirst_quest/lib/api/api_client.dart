@@ -9,8 +9,6 @@ import 'package:thirst_quest/config.dart';
 class ApiClient {
   final String baseUrl = Config.apiUrl;
 
-  ApiClient();
-
   Future<List<WaterBubbler>> getBubblersByBBox(
       double minLat, double maxLat, double minLon, double maxLon) async {
     final uri =
@@ -28,6 +26,27 @@ class ApiClient {
 
     final List<dynamic> body = jsonDecode(response.body);
     return body.map((dynamic item) => WaterBubbler.fromJson(item)).toList();
+  }
+
+  Future<bool> addToFavorites(String token, String id, String osmId) async {
+    final uri = Uri.parse('$baseUrl/api/favorites');
+    try {
+      final response = await http.post(
+        uri,
+        headers: _addAuthHeader(token,
+            headers: {'Content-Type': 'application/json'}),
+        body: jsonEncode({
+          'id': id,
+          'osmId': osmId,
+        }),
+      );
+
+      return response.statusCode == 200;
+    } on SocketException {
+      throw Exception('No Internet connection');
+    } catch (e) {
+      throw Exception('Failed to add to favorites: $e');
+    }
   }
 
   Future<AuthResponse?> login(String email, String password) async {
@@ -101,5 +120,32 @@ class ApiClient {
     } catch (e) {
       throw Exception('Failed to sign in with Google: $e');
     }
+  }
+
+  Future<AuthResponse?> extend(String token) async {
+    final uri = Uri.parse('$baseUrl/api/auth/google');
+    try {
+      final response = await http.post(
+        uri,
+        headers: _addAuthHeader(token),
+      );
+
+      if (response.statusCode != 200) {
+        return null;
+      }
+
+      return AuthResponse.fromJson(jsonDecode(response.body));
+    } on SocketException {
+      throw Exception('No Internet connection');
+    } catch (e) {
+      throw Exception('Failed to sign in with Google: $e');
+    }
+  }
+
+  Map<String, String> _addAuthHeader(String token,
+      {Map<String, String>? headers}) {
+    headers ??= {};
+    headers['Authorization'] = 'Bearer $token';
+    return headers;
   }
 }

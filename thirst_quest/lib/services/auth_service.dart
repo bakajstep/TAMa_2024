@@ -1,3 +1,4 @@
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:thirst_quest/api/api_client.dart';
 import 'package:thirst_quest/api/models/auth_response.dart';
@@ -7,6 +8,10 @@ import 'package:thirst_quest/states/models/identity.dart';
 class AuthService {
   static const _tokenKey = 'token';
   final ApiClient apiClient;
+  final GoogleSignIn googleSignIn = GoogleSignIn(
+    clientId:
+        '1090609015078-cj1qrnmmun2j32nequ4q3tvgm6ut6rdf.apps.googleusercontent.com',
+  );
 
   AuthService({required this.apiClient});
 
@@ -50,8 +55,9 @@ class AuthService {
     return response;
   }
 
-  Future<void> logout(GlobalState globalState) async {
+  Future logout(GlobalState globalState) async {
     globalState.logout();
+    googleSignIn.disconnect();
 
     final pref = await SharedPreferences.getInstance();
     await pref.remove(_tokenKey);
@@ -60,5 +66,14 @@ class AuthService {
   Future<String?> getToken() async {
     final pref = await SharedPreferences.getInstance();
     return pref.getString(_tokenKey);
+  }
+
+  Future checkLoginAndExtend(GlobalState globalState) async {
+    final token = await getToken();
+    if (token == null) {
+      return;
+    }
+
+    _handleAuthResponse(await apiClient.extend(token), globalState);
   }
 }

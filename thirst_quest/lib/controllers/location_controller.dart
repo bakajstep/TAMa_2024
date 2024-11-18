@@ -21,12 +21,12 @@ class LocationController {
   Future<void> startLocationStreamIfAvailable(
       Function(LatLng, bool) onChange) async {
     LatLng? lastKnownPosition = await _locationService.getLastKnownPosition();
-    if (lastKnownPosition != null) {
-      _currentPosition = lastKnownPosition;
-      onChange(_currentPosition, false);
-    }
+    final bool isGpsLocation =
+        await _locationService.isLocationServiceEnabled();
+    _currentPosition = lastKnownPosition ?? _currentPosition;
+    onChange(_currentPosition, isGpsLocation && lastKnownPosition != null);
 
-    if (await _locationService.isLocationServiceEnabled()) {
+    if (isGpsLocation) {
       isLocationServiceEnabled = true;
       _startLocationUpdates(onChange);
     }
