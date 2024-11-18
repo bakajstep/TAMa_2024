@@ -46,6 +46,7 @@ class AuthService {
       id: response.user.id,
       email: response.user.email,
       username: response.user.username,
+      googleAuth: response.user.authByGoogle,
       roles: response.roles,
     ));
 

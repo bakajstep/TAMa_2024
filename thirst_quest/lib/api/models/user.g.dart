@@ -10,10 +10,12 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       id: json['id'] as String,
       email: json['email'] as String,
       username: json['username'] as String,
+      authByGoogle: json['authByGoogle'] as bool,
     );
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'id': instance.id,
       'email': instance.email,
       'username': instance.username,
+      'authByGoogle': instance.authByGoogle,
     };

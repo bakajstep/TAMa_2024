@@ -15,6 +15,16 @@ class GlobalState extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updateUsername(String newUsername) {
+    user.identity!.username = newUsername;
+    notifyListeners();
+  }
+
+  void updateEmail(String newEmail) {
+    user.identity!.email = newEmail;
+    notifyListeners();
+  }
+
   ColorScheme _colorScheme =
       ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 22, 98, 160));
 
