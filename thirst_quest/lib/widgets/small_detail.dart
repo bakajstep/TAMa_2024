@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:thirst_quest/api/models/water_bubbler.dart';
+import 'package:thirst_quest/utils/distance_convertor.dart';
 import 'package:thirst_quest/widgets/navigation_button.dart';
 
 class SmallDetail extends StatelessWidget {
@@ -63,7 +64,7 @@ class SmallDetail extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(waterBubbler.name ?? 'Water Bubbler', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                        Text("Distance: ${distanceBetweenBubblerAndCurrent != null ? distanceBetweenBubblerAndCurrent!.toStringAsFixed(2) : "UNKNOWN"} meters", style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal)),
+                        Text("Distance: ${distanceBetweenBubblerAndCurrent != null ? '~${distanceToDisplay(distanceBetweenBubblerAndCurrent!)}' : "UNKNOWN"}", style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal)),
                       ],
                     ),
                   ),
