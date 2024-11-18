@@ -12,6 +12,7 @@ import 'package:thirst_quest/states/main_screen_action.dart';
 import 'package:thirst_quest/widgets/location_map.dart';
 import 'package:thirst_quest/widgets/map_controls.dart';
 import 'package:thirst_quest/widgets/nearest_bubblers.dart';
+import 'package:thirst_quest/widgets/small_detail.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -86,6 +87,22 @@ class MainScreenState extends State<MainScreen> {
     });
   }
 
+  void _showBubblerSmallDetail(WaterBubbler selectedWaterBubbler) {
+
+    _bubblerMapState.selectedBubbler = selectedWaterBubbler;
+
+    setState(() {
+      _mainScreenAction = MainScreenAction.smallDetail;
+    });
+  }
+
+  void _closeBubblerSmallDetail() {
+    _bubblerMapState.selectedBubbler = null;
+    setState(() {
+      _mainScreenAction = MainScreenAction.none;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,7 +115,7 @@ class MainScreenState extends State<MainScreen> {
                     // This is the LocationMap that takes all available space
                     NotificationListener<BubblerSelected>(
                       onNotification: (notification) {
-                        //print(notification.val); // TODO: set selected bubbler
+                        _showBubblerSmallDetail(notification.selectedWaterBubbler);
                         return true;
                       },
                       child: LocationMap(
@@ -180,13 +197,30 @@ class MainScreenState extends State<MainScreen> {
                       },
                       switchInCurve: Curves.easeInOut,
                       switchOutCurve: Curves.easeInOut,
-                      child:
-                          _mainScreenAction == MainScreenAction.nearestBubblers
-                              ? NearestBubblers(
-                                  nearestBubblers: _nearestBubblers,
-                                  onClose: _closeNearestBubblers,
-                                )
-                              : null))
+                      child: () {
+                        switch (_mainScreenAction) {
+                          case MainScreenAction.nearestBubblers:
+                            return NearestBubblers(
+                                nearestBubblers: _nearestBubblers,
+                                onClose: _closeNearestBubblers,
+                                );
+
+                          case MainScreenAction.smallDetail:
+                            return SmallDetail(
+                              waterBubbler: _bubblerMapState.selectedBubbler!,
+                              distanceBetweenBubblerAndCurrent: 
+                                  _bubblerMapState.currentPosition != null 
+                                  ? _bubblerMapState.selectedBubbler!.distanceTo(_bubblerMapState.currentPosition!)
+                                  : null,
+                              onClose: _closeBubblerSmallDetail,
+                            ); // TODO:
+                            
+                          default:
+                          return null;
+                        }
+                      }()
+                    )
+               )
             ])));
   }
 }

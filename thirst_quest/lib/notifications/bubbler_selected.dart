@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:thirst_quest/api/models/water_bubbler.dart';
 
 class BubblerSelected extends Notification {
-  final bool val;
+  final WaterBubbler selectedWaterBubbler;
 
-  BubblerSelected({required this.val});
+  BubblerSelected({required this.selectedWaterBubbler});
 }

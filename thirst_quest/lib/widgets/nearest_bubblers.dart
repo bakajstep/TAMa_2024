@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:maps_launcher/maps_launcher.dart';
 import 'package:thirst_quest/api/models/water_bubbler.dart';
+import 'package:thirst_quest/widgets/navigation_button.dart';
 
 class NearestBubblers extends StatelessWidget {
   final List<WaterBubbler> nearestBubblers;
@@ -62,12 +62,7 @@ class NearestBubblers extends StatelessWidget {
                 child: ListTile(
                   title: Text(waterBubbler.name ?? 'Water Bubbler'),
                   subtitle: Text(waterBubbler.desc ?? 'No description'),
-                  trailing: IconButton(
-                      onPressed: () => MapsLauncher.launchCoordinates(
-                          waterBubbler.latitude,
-                          waterBubbler.longitude,
-                          waterBubbler.name),
-                      icon: const Icon(Icons.navigation)),
+                  trailing: NavigationButton(waterBubbler: waterBubbler),
                 ),
               );
             },
