@@ -185,27 +185,21 @@ class MainScreenState extends State<MainScreen> {
                       },
                       switchInCurve: Curves.easeInOut,
                       switchOutCurve: Curves.easeInOut,
-                      child: () {
+                      child: 
                         switch (_mainScreenAction) {
-                          case MainScreenAction.nearestBubblers:
-                            return NearestBubblers(
-                                onClose: _closeNearestBubblers,
-                                );
-
-                          case MainScreenAction.smallDetail:
-                            return SmallDetail(
+                          MainScreenAction.nearestBubblers => NearestBubblers(
+                              onClose: _closeNearestBubblers,
+                              ),
+                          MainScreenAction.smallDetail => SmallDetail(
                               waterBubbler: _bubblerMapState.selectedBubbler!,
                               distanceBetweenBubblerAndCurrent: 
                                   _bubblerMapState.currentPosition != null 
                                   ? _bubblerMapState.selectedBubbler!.distanceTo(_bubblerMapState.currentPosition!)
                                   : null,
                               onClose: _closeBubblerSmallDetail,
-                            ); // TODO:
-                            
-                          default:
-                          return null;
+                            ),
+                          _ => null,
                         }
-                      }()
                     )
                )
             ])));
