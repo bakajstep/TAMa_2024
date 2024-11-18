@@ -7,6 +7,7 @@ class SmallDetail extends StatelessWidget {
   final WaterBubbler waterBubbler;
   final double? distanceBetweenBubblerAndCurrent;
   final VoidCallback onClose;
+  final VoidCallback onSwipeUp;
 
   final double _buttonsSize = 45.0;
 
@@ -14,6 +15,7 @@ class SmallDetail extends StatelessWidget {
     required this.waterBubbler,
     this.distanceBetweenBubblerAndCurrent,
     required this.onClose,
+    required this.onSwipeUp,
     super.key
   });
 
@@ -36,6 +38,9 @@ class SmallDetail extends StatelessWidget {
                   if (details.primaryVelocity! > 0) {
                     onClose();
                   }
+                  else if (details.primaryVelocity! < 0) {
+                    onSwipeUp();
+                  }
                 },
               child: Container(
                 width: MediaQuery.of(context).size.width,
@@ -50,27 +55,28 @@ class SmallDetail extends StatelessWidget {
                           borderRadius: BorderRadius.circular(2.5),
                         ),
                       ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 15),
+                        child: Row(
+                          children: [
+                            Icon(Icons.circle, size: _buttonsSize, color: Colors.grey,),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(waterBubbler.name ?? 'Water Bubbler', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                                  Text("Distance: ${distanceBetweenBubblerAndCurrent != null ? '~${distanceToDisplay(distanceBetweenBubblerAndCurrent!)}' : "UNKNOWN"}", style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal)),
+                                ],
+                              ),
+                            ),
+                            NavigationButton(waterBubbler: waterBubbler, size: _buttonsSize,),
+                          ].expand((x) => [const SizedBox(width: 10), x]).skip(1).toList(),
+                        ),
+                      ),
                     ],
                   ),
                 ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 15),
-              child: Row(
-                children: [
-                  Icon(Icons.circle, size: _buttonsSize, color: Colors.grey,),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(waterBubbler.name ?? 'Water Bubbler', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                        Text("Distance: ${distanceBetweenBubblerAndCurrent != null ? '~${distanceToDisplay(distanceBetweenBubblerAndCurrent!)}' : "UNKNOWN"}", style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal)),
-                      ],
-                    ),
-                  ),
-                  NavigationButton(waterBubbler: waterBubbler, size: _buttonsSize,),
-                ].expand((x) => [const SizedBox(width: 10), x]).skip(1).toList(),
-              ),
+              
             ),
           ],
         ),

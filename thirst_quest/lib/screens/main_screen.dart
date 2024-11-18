@@ -207,6 +207,7 @@ class MainScreenState extends State<MainScreen> {
                                     ? _bubblerMapState.selectedBubbler!.distanceTo(_bubblerMapState.currentPosition!)
                                     : null,
                                 onClose: _closeBubblerSmallDetail,
+                                onSwipeUp: _showFullDetail,
                               ),
                           _ => null,
                         }
