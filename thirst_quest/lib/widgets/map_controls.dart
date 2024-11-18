@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:thirst_quest/screens/login_screen.dart';
+import 'package:thirst_quest/screens/profile_screen.dart';
 import 'package:thirst_quest/states/global_state.dart';
 
 class MapControls extends StatelessWidget {
@@ -14,7 +15,11 @@ class MapControls extends StatelessWidget {
       Navigator.push(context,
           MaterialPageRoute(builder: (context) => const LoginScreen()));
       return;
-    }
+    } else {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const ProfileScreen()),
+  );
+}
   }
 
   @override

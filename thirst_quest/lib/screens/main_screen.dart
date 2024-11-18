@@ -7,10 +7,12 @@ import 'package:thirst_quest/notifications/bubbler_selected.dart';
 import 'package:thirst_quest/services/water_bubbler_service.dart';
 import 'package:thirst_quest/states/bubbler_map_state.dart';
 import 'package:thirst_quest/states/main_screen_action.dart';
+import 'package:thirst_quest/widgets/full_detail.dart';
 import 'package:thirst_quest/widgets/location_map.dart';
 import 'package:thirst_quest/widgets/map_controls.dart';
 import 'package:thirst_quest/widgets/nearest_bubblers.dart';
 import 'package:thirst_quest/widgets/small_detail.dart';
+import 'package:thirst_quest/assets/constants.dart' as constants;
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -61,15 +63,20 @@ class MainScreenState extends State<MainScreen> {
     });
   }
 
-  void _showSelectedBubbler() async {
+  void _showFullDetail() async {
+    _bubblerMapState.reloadBubblersOnMove = false;
+    _bubblerMapState.mapPixelOffset = -(MediaQuery.of(context).size.height * constants.bigInfoCardHeight / 2);
+    _bubblerMapState.mapMove(_bubblerMapState.selectedBubbler!.position);
 
     setState(() {
-      _mainScreenAction = MainScreenAction.bigDetail;
-      // _selectedBubbler = fakeSelectedBubbler;
+      _mainScreenAction = MainScreenAction.fullDetail;
   });
 }
 
-  void _closeSelectedBubblers() {
+  void _closeFullDetail() {
+    _bubblerMapState.reloadBubblersOnMove = true;
+    _bubblerMapState.mapPixelOffset = 0.0;
+
     setState(() {
       _mainScreenAction = MainScreenAction.smallDetail;
     });
@@ -190,14 +197,17 @@ class MainScreenState extends State<MainScreen> {
                           MainScreenAction.nearestBubblers => NearestBubblers(
                               onClose: _closeNearestBubblers,
                               ),
+                          MainScreenAction.fullDetail => FullDetail(
+                                onClose: _closeFullDetail,
+                              ),
                           MainScreenAction.smallDetail => SmallDetail(
-                              waterBubbler: _bubblerMapState.selectedBubbler!,
-                              distanceBetweenBubblerAndCurrent: 
-                                  _bubblerMapState.currentPosition != null 
-                                  ? _bubblerMapState.selectedBubbler!.distanceTo(_bubblerMapState.currentPosition!)
-                                  : null,
-                              onClose: _closeBubblerSmallDetail,
-                            ),
+                                waterBubbler: _bubblerMapState.selectedBubbler!,
+                                distanceBetweenBubblerAndCurrent: 
+                                    _bubblerMapState.currentPosition != null 
+                                    ? _bubblerMapState.selectedBubbler!.distanceTo(_bubblerMapState.currentPosition!)
+                                    : null,
+                                onClose: _closeBubblerSmallDetail,
+                              ),
                           _ => null,
                         }
                     )
