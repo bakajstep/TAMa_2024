@@ -59,6 +59,21 @@ class MainScreenState extends State<MainScreen> {
     });
   }
 
+  void _showSelectedBubbler() async {
+
+    setState(() {
+      _mainScreenAction = MainScreenAction.bigDetail;
+      // _selectedBubbler = fakeSelectedBubbler;
+  });
+}
+
+  void _closeSelectedBubblers() {
+
+    setState(() {
+      _mainScreenAction = MainScreenAction.none;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -138,27 +153,24 @@ class MainScreenState extends State<MainScreen> {
                 ),
               ),
               Align(
-                  alignment: Alignment.bottomCenter,
-                  child: AnimatedSwitcher(
-                      duration: Duration(milliseconds: 500),
-                      transitionBuilder: (child, animation) {
-                        final offsetAnimation = Tween<Offset>(
-                          begin: Offset(0, 1),
-                          end: Offset(0, 0),
-                        ).animate(animation);
-                        return SlideTransition(
-                          position: offsetAnimation,
-                          child: child,
-                        );
-                      },
-                      switchInCurve: Curves.easeInOut,
-                      switchOutCurve: Curves.easeInOut,
-                      child:
-                          _mainScreenAction == MainScreenAction.nearestBubblers
-                              ? NearestBubblers(
-                                  onClose: _closeNearestBubblers,
-                                )
-                              : null))
+                alignment: Alignment.bottomCenter,
+                child: AnimatedSwitcher(
+                  duration: Duration(milliseconds: 500),
+                  transitionBuilder: (child, animation) {
+                    final offsetAnimation = Tween<Offset>(begin: Offset(0, 1), end: Offset(0, 0)).animate(animation);
+                    return SlideTransition(
+                      position: offsetAnimation,
+                      child: child,
+                    );
+                  },
+                  switchInCurve: Curves.easeInOut,
+                  switchOutCurve: Curves.easeInOut,
+                  child:
+                    _mainScreenAction == MainScreenAction.nearestBubblers
+                      ? NearestBubblers(
+                          onClose: _closeNearestBubblers,
+                        )
+                      : null))
             ])));
   }
 }
