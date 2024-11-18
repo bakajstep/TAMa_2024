@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:thirst_quest/api/models/water_bubbler.dart';
 import 'package:thirst_quest/controllers/location_controller.dart';
 import 'package:thirst_quest/di.dart';
 import 'package:thirst_quest/notifications/bubbler_selected.dart';
@@ -9,6 +10,7 @@ import 'package:thirst_quest/states/main_screen_action.dart';
 import 'package:thirst_quest/widgets/location_map.dart';
 import 'package:thirst_quest/widgets/map_controls.dart';
 import 'package:thirst_quest/widgets/nearest_bubblers.dart';
+import 'package:thirst_quest/widgets/small_detail.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -68,7 +70,22 @@ class MainScreenState extends State<MainScreen> {
 }
 
   void _closeSelectedBubblers() {
+    setState(() {
+      _mainScreenAction = MainScreenAction.smallDetail;
+    });
+  }
 
+  void _showBubblerSmallDetail(WaterBubbler selectedWaterBubbler) {
+
+    _bubblerMapState.selectedBubbler = selectedWaterBubbler;
+
+    setState(() {
+      _mainScreenAction = MainScreenAction.smallDetail;
+    });
+  }
+
+  void _closeBubblerSmallDetail() {
+    _bubblerMapState.selectedBubbler = null;
     setState(() {
       _mainScreenAction = MainScreenAction.none;
     });
@@ -86,7 +103,7 @@ class MainScreenState extends State<MainScreen> {
                     // This is the LocationMap that takes all available space
                     NotificationListener<BubblerSelected>(
                       onNotification: (notification) {
-                        //print(notification.val); // TODO: set selected bubbler
+                        _showBubblerSmallDetail(notification.selectedWaterBubbler);
                         return true;
                       },
                       child: LocationMap(
@@ -153,24 +170,44 @@ class MainScreenState extends State<MainScreen> {
                 ),
               ),
               Align(
-                alignment: Alignment.bottomCenter,
-                child: AnimatedSwitcher(
-                  duration: Duration(milliseconds: 500),
-                  transitionBuilder: (child, animation) {
-                    final offsetAnimation = Tween<Offset>(begin: Offset(0, 1), end: Offset(0, 0)).animate(animation);
-                    return SlideTransition(
-                      position: offsetAnimation,
-                      child: child,
-                    );
-                  },
-                  switchInCurve: Curves.easeInOut,
-                  switchOutCurve: Curves.easeInOut,
-                  child:
-                    _mainScreenAction == MainScreenAction.nearestBubblers
-                      ? NearestBubblers(
-                          onClose: _closeNearestBubblers,
-                        )
-                      : null))
+                  alignment: Alignment.bottomCenter,
+                  child: AnimatedSwitcher(
+                      duration: Duration(milliseconds: 500),
+                      transitionBuilder: (child, animation) {
+                        final offsetAnimation = Tween<Offset>(
+                          begin: Offset(0, 1),
+                          end: Offset(0, 0),
+                        ).animate(animation);
+                        return SlideTransition(
+                          position: offsetAnimation,
+                          child: child,
+                        );
+                      },
+                      switchInCurve: Curves.easeInOut,
+                      switchOutCurve: Curves.easeInOut,
+                      child: () {
+                        switch (_mainScreenAction) {
+                          case MainScreenAction.nearestBubblers:
+                            return NearestBubblers(
+                                onClose: _closeNearestBubblers,
+                                );
+
+                          case MainScreenAction.smallDetail:
+                            return SmallDetail(
+                              waterBubbler: _bubblerMapState.selectedBubbler!,
+                              distanceBetweenBubblerAndCurrent: 
+                                  _bubblerMapState.currentPosition != null 
+                                  ? _bubblerMapState.selectedBubbler!.distanceTo(_bubblerMapState.currentPosition!)
+                                  : null,
+                              onClose: _closeBubblerSmallDetail,
+                            ); // TODO:
+                            
+                          default:
+                          return null;
+                        }
+                      }()
+                    )
+               )
             ])));
   }
 }

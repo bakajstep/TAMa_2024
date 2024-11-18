@@ -64,7 +64,9 @@ class MapWidget extends StatelessWidget {
                 child: Transform.translate(
                   offset: Offset(0.0, constants.markerPadding),
                   child: WaterBubblerIcon(
-                      isCurrent: selectedBubbler == waterBubbler),
+                    isCurrent: selectedBubbler == waterBubbler,
+                    waterBubbler: waterBubbler,
+                  ),
                 ),
               ),
           ],

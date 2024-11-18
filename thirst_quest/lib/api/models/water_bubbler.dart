@@ -10,7 +10,7 @@ class WaterBubbler {
   final String? id;
   final int? osmId;
   final String? name;
-  final String? desc;
+  final String? description;
   final double latitude;
   final double longitude;
   final List<Photo> photos;
@@ -22,7 +22,7 @@ class WaterBubbler {
     required this.id,
     required this.osmId,
     required this.name,
-    required this.desc,
+    required this.description,
     required this.latitude,
     required this.longitude,
     required this.upvoteCount,

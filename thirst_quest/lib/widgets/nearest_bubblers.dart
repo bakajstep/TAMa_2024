@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:thirst_quest/api/models/water_bubbler.dart';
+import 'package:thirst_quest/widgets/navigation_button.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:maps_launcher/maps_launcher.dart';
 import 'package:provider/provider.dart';
-import 'package:thirst_quest/api/models/water_bubbler.dart';
 import 'package:thirst_quest/di.dart';
 import 'package:thirst_quest/services/water_bubbler_service.dart';
 import 'package:thirst_quest/states/bubbler_map_state.dart';
@@ -141,14 +141,7 @@ class NearestBubblersState extends State<NearestBubblers> {
                                 : const Icon(Icons.local_drink),
                             trailing:
                                 Row(mainAxisSize: MainAxisSize.min, children: [
-                              IconButton(
-                                onPressed: () => MapsLauncher.launchCoordinates(
-                                  waterBubbler.latitude,
-                                  waterBubbler.longitude,
-                                  waterBubbler.name,
-                                ),
-                                icon: const Icon(Icons.navigation),
-                              ),
+                              NavigationButton(waterBubbler: waterBubbler),
                               IconButton(
                                   onPressed: () {},
                                   icon: const Icon(Icons
