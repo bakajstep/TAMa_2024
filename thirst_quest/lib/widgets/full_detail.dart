@@ -1,36 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:thirst_quest/states/bubbler_map_state.dart';
+import 'package:provider/provider.dart';
+import 'package:thirst_quest/utils/distance_convertor.dart';
 
-class WaterBubblerFake {
-  final String id;
-  final String? name;
-  final String? description;
-  final String? distance;
-  final double latitude;
-  final double longitude;
-  final String? imageUrl;
-
-  WaterBubblerFake({
-    required this.id,
-    this.name,
-    this.description,
-    this.distance,
-    required this.latitude,
-    required this.longitude,
-    this.imageUrl,
-  });
-}
-
-class SelectedBubblerPanel extends StatelessWidget {
-  final WaterBubblerFake selectedBubbler;
+class FullDetail extends StatelessWidget {
   final VoidCallback onClose;
 
-  const SelectedBubblerPanel(
-      {required this.selectedBubbler, required this.onClose, super.key});
+  const FullDetail(
+      {required this.onClose, super.key});
 
   @override
     Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
+    final mapState = context.watch<BubblerMapState>();
+    final selectedBubbler = mapState.selectedBubbler!;
+    final currentLocation = mapState.currentPosition!;
 
     return Container(
       padding: EdgeInsets.all(16),
@@ -79,7 +64,7 @@ class SelectedBubblerPanel extends StatelessWidget {
                       ),
                       SizedBox(height: 4),
                       Text(
-                        selectedBubbler.distance ?? 'Distance: unknown',
+                        distanceToDisplay(selectedBubbler.distanceTo(currentLocation)),
                         style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                       ),
                     ],
@@ -92,21 +77,21 @@ class SelectedBubblerPanel extends StatelessWidget {
                     onTap: () {
                       print("Settings");
                     },
-                    child: Icon(Icons.settings, color: Colors.grey, size: 32), // Adjust size
+                    child: Icon(Icons.settings, color: Colors.grey, size: 32),
                   ),
                   SizedBox(width: 24),
                   GestureDetector(
                     onTap: () {
                       print("Delete");
                     },
-                    child: Icon(Icons.delete, color: Colors.red, size: 32), // Adjust size
+                    child: Icon(Icons.delete, color: Colors.red, size: 32),
                   ),
                   SizedBox(width: 24),
                   GestureDetector(
                     onTap: () {
                       print("Directions");
                     },
-                    child: Icon(Icons.directions, color: Colors.green, size: 32), // Adjust size
+                    child: Icon(Icons.directions, color: Colors.green, size: 32),
                   ),
                 ],
               ),
@@ -119,7 +104,7 @@ class SelectedBubblerPanel extends StatelessWidget {
             color: Colors.grey[200],
             child: Center(
               child: Image.network(
-                selectedBubbler.imageUrl!,
+                'https://via.placeholder.com/150',//selectedBubbler.photos[0].url, // TODO: add placeholder
                 height: 200,
                 fit: BoxFit.cover,
               ),

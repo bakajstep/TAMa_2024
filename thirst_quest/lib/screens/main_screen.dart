@@ -7,6 +7,7 @@ import 'package:thirst_quest/notifications/bubbler_selected.dart';
 import 'package:thirst_quest/services/water_bubbler_service.dart';
 import 'package:thirst_quest/states/bubbler_map_state.dart';
 import 'package:thirst_quest/states/main_screen_action.dart';
+import 'package:thirst_quest/widgets/full_detail.dart';
 import 'package:thirst_quest/widgets/location_map.dart';
 import 'package:thirst_quest/widgets/map_controls.dart';
 import 'package:thirst_quest/widgets/nearest_bubblers.dart';
@@ -61,15 +62,18 @@ class MainScreenState extends State<MainScreen> {
     });
   }
 
-  void _showSelectedBubbler() async {
+  void _showFullDetail() async {
+    _bubblerMapState.reloadBubblersOnMove = false;
 
     setState(() {
-      _mainScreenAction = MainScreenAction.bigDetail;
+      _mainScreenAction = MainScreenAction.fullDetail;
       // _selectedBubbler = fakeSelectedBubbler;
   });
 }
 
-  void _closeSelectedBubblers() {
+  void _closeFullDetail() {
+    _bubblerMapState.reloadBubblersOnMove = true;
+
     setState(() {
       _mainScreenAction = MainScreenAction.smallDetail;
     });
@@ -191,6 +195,10 @@ class MainScreenState extends State<MainScreen> {
                             return NearestBubblers(
                                 onClose: _closeNearestBubblers,
                                 );
+                          case MainScreenAction.fullDetail:
+                            return FullDetail(
+                                onClose: _closeFullDetail,
+                              );
 
                           case MainScreenAction.smallDetail:
                             return SmallDetail(

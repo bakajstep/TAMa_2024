@@ -1,1 +1,1 @@
-enum MainScreenAction { none, smallDetail, bigDetail, nearestBubblers }
+enum MainScreenAction { none, smallDetail, fullDetail, nearestBubblers }
