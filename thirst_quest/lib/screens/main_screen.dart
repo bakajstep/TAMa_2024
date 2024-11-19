@@ -65,13 +65,14 @@ class MainScreenState extends State<MainScreen> {
 
   void _showFullDetail() async {
     _bubblerMapState.reloadBubblersOnMove = false;
-    _bubblerMapState.mapPixelOffset = -(MediaQuery.of(context).size.height * constants.bigInfoCardHeight / 2);
+    _bubblerMapState.mapPixelOffset =
+        -(MediaQuery.of(context).size.height * constants.bigInfoCardHeight / 2);
     _bubblerMapState.mapMove(_bubblerMapState.selectedBubbler!.position);
 
     setState(() {
       _mainScreenAction = MainScreenAction.fullDetail;
-  });
-}
+    });
+  }
 
   void _closeFullDetail() {
     _bubblerMapState.reloadBubblersOnMove = true;
@@ -83,7 +84,6 @@ class MainScreenState extends State<MainScreen> {
   }
 
   void _showBubblerSmallDetail(WaterBubbler selectedWaterBubbler) {
-
     _bubblerMapState.selectedBubbler = selectedWaterBubbler;
 
     setState(() {
@@ -110,7 +110,8 @@ class MainScreenState extends State<MainScreen> {
                     // This is the LocationMap that takes all available space
                     NotificationListener<BubblerSelected>(
                       onNotification: (notification) {
-                        _showBubblerSmallDetail(notification.selectedWaterBubbler);
+                        _showBubblerSmallDetail(
+                            notification.selectedWaterBubbler);
                         return true;
                       },
                       child: LocationMap(
@@ -146,9 +147,15 @@ class MainScreenState extends State<MainScreen> {
                               )
                             ])),
                       ),
-                    if (_mainScreenAction == MainScreenAction.none)
+                    if (_mainScreenAction == MainScreenAction.none ||
+                        _mainScreenAction == MainScreenAction.smallDetail)
                       MapControls(
-                          onCenterButtonPressed: _centerToCurrentLocation),
+                          onCenterButtonPressed: _centerToCurrentLocation,
+                          bottomOffset:
+                              _mainScreenAction == MainScreenAction.none
+                                  ? 0.0
+                                  : MediaQuery.of(context).size.height *
+                                      constants.smallInfoCardHeight),
                     if (_mainScreenAction == MainScreenAction.none)
                       Positioned(
                         bottom: 20,
@@ -192,27 +199,26 @@ class MainScreenState extends State<MainScreen> {
                       },
                       switchInCurve: Curves.easeInOut,
                       switchOutCurve: Curves.easeInOut,
-                      child: 
-                        switch (_mainScreenAction) {
-                          MainScreenAction.nearestBubblers => NearestBubblers(
-                              onClose: _closeNearestBubblers,
-                              ),
-                          MainScreenAction.fullDetail => FullDetail(
-                                onClose: _closeFullDetail,
-                              ),
-                          MainScreenAction.smallDetail => SmallDetail(
-                                waterBubbler: _bubblerMapState.selectedBubbler!,
-                                distanceBetweenBubblerAndCurrent: 
-                                    _bubblerMapState.currentPosition != null 
-                                    ? _bubblerMapState.selectedBubbler!.distanceTo(_bubblerMapState.currentPosition!)
+                      child: switch (_mainScreenAction) {
+                        MainScreenAction.nearestBubblers => NearestBubblers(
+                            onClose: _closeNearestBubblers,
+                          ),
+                        MainScreenAction.fullDetail => FullDetail(
+                            onClose: _closeFullDetail,
+                          ),
+                        MainScreenAction.smallDetail => SmallDetail(
+                            waterBubbler: _bubblerMapState.selectedBubbler!,
+                            distanceBetweenBubblerAndCurrent:
+                                _bubblerMapState.currentPosition != null
+                                    ? _bubblerMapState.selectedBubbler!
+                                        .distanceTo(
+                                            _bubblerMapState.currentPosition!)
                                     : null,
-                                onClose: _closeBubblerSmallDetail,
-                                onSwipeUp: _showFullDetail,
-                              ),
-                          _ => null,
-                        }
-                    )
-               )
+                            onClose: _closeBubblerSmallDetail,
+                            onSwipeUp: _showFullDetail,
+                          ),
+                        _ => null,
+                      }))
             ])));
   }
 }
