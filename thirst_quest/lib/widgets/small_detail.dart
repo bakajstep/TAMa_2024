@@ -42,7 +42,7 @@ class SmallDetail extends StatelessWidget {
                     onSwipeUp();
                   }
                 },
-              child: Container(
+              child: SizedBox(
                 width: MediaQuery.of(context).size.width,
                 child: Column(
                     children: [

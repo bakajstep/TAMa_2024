@@ -87,7 +87,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       // Akce pro "Moje recenze"
                       Navigator.push(context, MaterialPageRoute(builder: (context) => const MyReviewsScreen()));
                     },
-                    child: const Text("Moje recenze"),
+                    child: const Text("My reviews"),
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -97,7 +97,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       // Akce pro "Oblíbená pítka"
                       Navigator.push(context, MaterialPageRoute(builder: (context) => const FavoriteBubblerScreen()));
                     },
-                    child: const Text("Oblíbená pítka"),
+                    child: const Text("Favorite WatterBubblers"),
                   ),
                 ),
               ],
