@@ -63,6 +63,7 @@ class SmallDetail extends StatelessWidget {
                         Icon(
                           Icons.circle,
                           size: _buttonsSize,
+
                           color: Colors.grey,
                         ),
                         Expanded(

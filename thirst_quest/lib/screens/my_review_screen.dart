@@ -30,14 +30,14 @@ class _MyReviewsScreenState extends State<MyReviewsScreen> {
       setState(() {
         reviews = [
           "Výborné místo!",
-          "Skvělá obsluha.",
-          "Jídlo by mohlo být lepší."
+          "Skvělá fontánka.",
+          "Neteče voda"
         ];
         isLoading = false;
       });
     } catch (e) {
       setState(() {
-        errorMessage = "Chyba při načítání recenzí: $e";
+        errorMessage = "Error during loading Reviews: $e";
         isLoading = false;
       });
     }
@@ -46,7 +46,7 @@ class _MyReviewsScreenState extends State<MyReviewsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Moje recenze")),
+      appBar: AppBar(title: const Text("My reviews")),
       body: isLoading
           ? const Center(child: CircularProgressIndicator()) // Zobraz indikátor načítání
           : errorMessage != null

@@ -28,12 +28,12 @@ class _FavoriteBubblerScreenState extends State<FavoriteBubblerScreen> {
       // Simulace API volání
       await Future.delayed(const Duration(seconds: 2)); // Umělá prodleva
       setState(() {
-        favoriteDrinks = ["Káva", "Čaj", "Pomerančový džus", "Latte"];
+        favoriteDrinks = ["Brno Lužánky", "Brno střed", "Jihlava", "Potůček u Babičky"];
         isLoading = false;
       });
     } catch (e) {
       setState(() {
-        errorMessage = "Chyba při načítání oblíbených pít: $e";
+        errorMessage = "Error during loading WaterBubblers: $e";
         isLoading = false;
       });
     }
@@ -42,7 +42,7 @@ class _FavoriteBubblerScreenState extends State<FavoriteBubblerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Oblíbená pítka")),
+      appBar: AppBar(title: const Text("Favourite WatterBubblers")),
       body: isLoading
           ? const Center(child: CircularProgressIndicator()) // Zobraz indikátor načítání
           : errorMessage != null
