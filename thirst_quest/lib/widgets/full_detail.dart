@@ -125,6 +125,7 @@ class FullDetail extends StatelessWidget {
                               IconButton(
                                 icon: Icon(Icons.thumb_up),
                                 color: Colors.green,
+                                iconSize: 35.0,
                                 onPressed: () {},
                               ),
                               Text(
@@ -134,6 +135,7 @@ class FullDetail extends StatelessWidget {
                               IconButton(
                                 icon: Icon(Icons.thumb_down),
                                 color: Colors.red,
+                                iconSize: 35.0,
                                 onPressed: () {},
                               ),
                             ],
