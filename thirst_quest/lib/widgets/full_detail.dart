@@ -18,7 +18,10 @@ class FullDetail extends StatelessWidget {
     final selectedBubbler = mapState.selectedBubbler!;
     final currentLocation = mapState.currentPosition!;
     final List<Image> carouselItems = [
-      Image.network('https://d34-a.sdn.cz/d_34/c_img_QQ_BC/WdBV7E.jpeg?fl=rot,270,0%7Cres,,500,1'),
+      Image.network('https://d34-a.sdn.cz/d_34/c_img_QK_3/IYU6je.mpo?fl=res,,500,1'),
+      Image.network('https://d34-a.sdn.cz/d_34/c_img_G_p/oFQQ2j.jpeg?fl=res,,500,1'),
+      Image.network('https://d34-a.sdn.cz/d_34/c_img_QM_x/mtXrCt.mpo?fl=res,,500,1'),
+      Image.network('https://d34-a.sdn.cz/d_34/c_img_QJ_u/4mnrGE.mpo?fl=res,,500,1'),
     ];
 
     return Container(
@@ -160,7 +163,7 @@ class FullDetail extends StatelessWidget {
                     autoPlay: false, // Enable auto-play
                     enlargeCenterPage: false, // Don't enlarge the center item
                     enableInfiniteScroll: false, // Enable infinite scroll
-                    viewportFraction: 0.55, // Show next/previous items more prominently on the sides
+                    viewportFraction: 0.5, // Show next/previous items more prominently on the sides
                     onPageChanged: (index, reason) {
                       // Optional callback when the page changes
                       // You can use it to update any additional UI components
