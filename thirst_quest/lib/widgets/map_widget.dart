@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:thirst_quest/api/models/water_bubbler.dart';
 import 'package:thirst_quest/assets/constants.dart' as constants;
@@ -26,6 +27,27 @@ class MapWidget extends StatelessWidget {
     required this.selectedBubbler,
   });
 
+  List<Marker> _buildMapMarkers() {
+    return [
+            for (final waterBubbler in waterBubblers)
+              Marker(
+                width: constants.markerSize + (constants.markerPadding * 2),
+                height: constants.markerSize + (constants.markerPadding * 2),
+                key: ValueKey(waterBubbler.id ?? waterBubbler.osmId),
+                point: LatLng(waterBubbler.latitude, waterBubbler.longitude),
+                alignment: Alignment.topCenter,
+                rotate: true,
+                child: Transform.translate(
+                  offset: Offset(0.0, constants.markerPadding),
+                  child: WaterBubblerIcon(
+                    isCurrent: selectedBubbler == waterBubbler,
+                    waterBubbler: waterBubbler,
+                  ),
+                ),
+              ),
+          ];
+  }
+
   @override
   Widget build(BuildContext context) {
     return FlutterMap(
@@ -41,6 +63,34 @@ class MapWidget extends StatelessWidget {
           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
           userAgentPackageName: 'com.src.app',
         ),
+        MarkerClusterLayerWidget(
+          options: MarkerClusterLayerOptions(
+            maxClusterRadius: 45,
+            size: const Size(40, 40),
+            alignment: Alignment.center,
+            padding: const EdgeInsets.all(50),
+            maxZoom: 17.0,   
+            rotate: true,
+            polygonOptions: PolygonOptions(
+                borderColor: Colors.blue.shade700.withOpacity(0.35),
+                color: Colors.blue.shade700.withOpacity(0.35),
+                borderStrokeWidth: 3),
+            markers: _buildMapMarkers(),
+            builder: (context, markers) {
+                return Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.blue),
+                  child: Center(
+                    child: Text(
+                      markers.length.toString(),
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ),
+                );
+              },
+          ),
+        ),
         MarkerLayer(
           markers: [
             if (showPositionMarker)
@@ -54,22 +104,7 @@ class MapWidget extends StatelessWidget {
                   size: 40.0,
                 ),
               ),
-            for (final waterBubbler in waterBubblers)
-              Marker(
-                width: constants.markerSize + (constants.markerPadding * 2),
-                height: constants.markerSize + (constants.markerPadding * 2),
-                key: ValueKey(waterBubbler.id ?? waterBubbler.osmId),
-                point: LatLng(waterBubbler.latitude, waterBubbler.longitude),
-                alignment: Alignment.topCenter,
-                child: Transform.translate(
-                  offset: Offset(0.0, constants.markerPadding),
-                  child: WaterBubblerIcon(
-                    isCurrent: selectedBubbler == waterBubbler,
-                    waterBubbler: waterBubbler,
-                  ),
-                ),
-              ),
-          ],
+          ]
         ),
         RichAttributionWidget(
           attributions: [
