@@ -4,9 +4,12 @@ import 'package:thirst_quest/api/models/water_bubbler.dart';
 import 'package:thirst_quest/controllers/location_controller.dart';
 import 'package:thirst_quest/di.dart';
 import 'package:thirst_quest/notifications/bubbler_selected.dart';
+import 'package:thirst_quest/notifications/draggable_sheet_changed_size.dart';
 import 'package:thirst_quest/services/water_bubbler_service.dart';
 import 'package:thirst_quest/states/bubbler_map_state.dart';
 import 'package:thirst_quest/states/main_screen_action.dart';
+import 'package:thirst_quest/utils/double_equals.dart';
+import 'package:thirst_quest/widgets/draggable_sheet.dart';
 import 'package:thirst_quest/widgets/full_detail.dart';
 import 'package:thirst_quest/widgets/location_map.dart';
 import 'package:thirst_quest/widgets/map_controls.dart';
@@ -27,6 +30,7 @@ class MainScreenState extends State<MainScreen> {
   final WaterBubblerService bubblerService = DI.get<WaterBubblerService>();
   MainScreenAction _mainScreenAction = MainScreenAction.none;
   final TextEditingController _searchController = TextEditingController();
+  final DraggableScrollableController _draggableController = DraggableScrollableController();
 
   @override
   void initState() {
@@ -51,10 +55,68 @@ class MainScreenState extends State<MainScreen> {
         0.0);
   }
 
+  bool _onDraggableSheetChangedSize(DraggableSheetChangedSize notification) {
+    switch (_mainScreenAction) {
+      case MainScreenAction.nearestBubblers:
+        if (DoubleEquals(notification.newSize, 0.0)) {
+          _closeNearestBubblers();
+        }
+        break;
+
+      case MainScreenAction.fullDetail:
+        if (DoubleEquals(notification.newSize, 0.0)) {
+          _closeFullDetail();
+        }
+        else if (DoubleEquals(notification.newSize, constants.smallInfoCardHeight)) {
+          _showBubblerSmallDetail(_bubblerMapState.selectedBubbler!);
+        }
+        break;
+
+      case MainScreenAction.smallDetail:
+        if (DoubleEquals(notification.newSize, 0.0)) {
+          _closeBubblerSmallDetail();
+        }
+        else if (DoubleEquals(notification.newSize, constants.bigInfoCardHeight)) {
+          _showFullDetail();
+        }
+        break;
+
+      default:
+        break;
+    }
+    return true;
+  }
+
+  Widget _buildEmptyDraggableSheet(ScrollController scrollController) {
+    return CustomScrollView(
+        controller: scrollController,
+        slivers: [
+          SliverToBoxAdapter(child: Text('Null')),
+        ]
+    );
+  }
+
   void _showNearestBubblers() async {
     setState(() {
       _mainScreenAction = MainScreenAction.nearestBubblers;
     });
+
+    if (_draggableController.isAttached) {
+      DraggableSheet.animateSheet(_draggableController, constants.bigInfoCardHeight);
+      print('draggable controller NEAREST');
+    }
+    else {
+      print('draggable controller not attached');
+    }
+  }
+
+  Widget _buildNearestBubblersDraggableSheet(ScrollController scrollController) {
+    return CustomScrollView(
+        controller: scrollController,
+        slivers: [
+          SliverToBoxAdapter(child: Text('Nearest Bubblers')),
+        ]
+    );
   }
 
   void _closeNearestBubblers() {
@@ -72,6 +134,23 @@ class MainScreenState extends State<MainScreen> {
     setState(() {
       _mainScreenAction = MainScreenAction.fullDetail;
     });
+
+    if (_draggableController.isAttached) {
+      DraggableSheet.animateSheet(_draggableController, constants.bigInfoCardHeight);
+      print('draggable controller FULL');
+    }
+    else {
+      print('draggable controller not attached');
+    }
+  }
+
+  Widget _buildFullDetailDraggableSheet(ScrollController scrollController) {
+    return CustomScrollView(
+        controller: scrollController,
+        slivers: [
+          SliverToBoxAdapter(child: Text('Full Detail')),
+        ]
+    );
   }
 
   void _closeFullDetail() {
@@ -89,6 +168,23 @@ class MainScreenState extends State<MainScreen> {
     setState(() {
       _mainScreenAction = MainScreenAction.smallDetail;
     });
+
+    if (_draggableController.isAttached) {
+      DraggableSheet.animateSheet(_draggableController, constants.smallInfoCardHeight);
+      print('draggable controller SMALL');
+    }
+    else {
+      print('draggable controller not attached');
+    }
+  }
+
+  Widget _buildSmallDetailDraggableSheet(ScrollController scrollController) {
+    return CustomScrollView(
+        controller: scrollController,
+        slivers: [
+          SliverToBoxAdapter(child: Text('Small Detail')),
+        ]
+    );
   }
 
   void _closeBubblerSmallDetail() {
@@ -218,7 +314,42 @@ class MainScreenState extends State<MainScreen> {
                             onSwipeUp: _showFullDetail,
                           ),
                         _ => null,
-                      }))
+                      })
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width,
+                  child: NotificationListener<DraggableSheetChangedSize>(
+                    onNotification: _onDraggableSheetChangedSize,
+                    child: DraggableSheet(
+                      controller: _draggableController,
+                      initialSize: 
+                        switch (_mainScreenAction) {
+                          MainScreenAction.nearestBubblers => constants.bigInfoCardHeight,
+                          MainScreenAction.fullDetail => constants.bigInfoCardHeight,
+                          MainScreenAction.smallDetail => constants.smallInfoCardHeight,
+                          _ => 0.0,
+                        },
+                      snapSizes:
+                        switch (_mainScreenAction) {
+                          MainScreenAction.nearestBubblers => [0.0, constants.bigInfoCardHeight],
+                          MainScreenAction.fullDetail => [0.0, constants.smallInfoCardHeight, constants.bigInfoCardHeight],
+                          MainScreenAction.smallDetail => [0.0, constants.smallInfoCardHeight, constants.bigInfoCardHeight],
+                          _ => [0.0],
+                        },
+                      child:
+                        switch (_mainScreenAction) {
+                          MainScreenAction.nearestBubblers => _buildNearestBubblersDraggableSheet,
+                          MainScreenAction.fullDetail => _buildFullDetailDraggableSheet,
+                          MainScreenAction.smallDetail => _buildSmallDetailDraggableSheet,
+                          _ => _buildEmptyDraggableSheet,
+                        },
+                      ),
+                    ),
+                )
+              )
             ])));
   }
 }
