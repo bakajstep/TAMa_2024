@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:thirst_quest/api/models/water_bubbler.dart';
+import 'package:thirst_quest/controllers/draggable_sheet_child_controller.dart';
 import 'package:thirst_quest/controllers/location_controller.dart';
 import 'package:thirst_quest/di.dart';
 import 'package:thirst_quest/notifications/bubbler_selected.dart';
@@ -16,6 +17,7 @@ import 'package:thirst_quest/widgets/map_controls.dart';
 import 'package:thirst_quest/widgets/nearest_bubblers.dart';
 import 'package:thirst_quest/widgets/small_detail.dart';
 import 'package:thirst_quest/assets/constants.dart' as constants;
+import 'package:thirst_quest/widgets/small_detail_sheet_child.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -87,12 +89,10 @@ class MainScreenState extends State<MainScreen> {
     return true;
   }
 
-  Widget _buildEmptyDraggableSheet(ScrollController scrollController) {
+  Widget _buildEmptyDraggableSheet(DraggableSheetChildController controller, ScrollController scrollController) {
     return CustomScrollView(
         controller: scrollController,
-        slivers: [
-          SliverToBoxAdapter(child: Text('Null')),
-        ]
+        slivers: []
     );
   }
 
@@ -106,11 +106,13 @@ class MainScreenState extends State<MainScreen> {
     }
   }
 
-  Widget _buildNearestBubblersDraggableSheet(ScrollController scrollController) {
+  Widget _buildNearestBubblersDraggableSheet(DraggableSheetChildController controller, ScrollController scrollController) {
     return CustomScrollView(
         controller: scrollController,
         slivers: [
-          SliverToBoxAdapter(child: Text('Nearest Bubblers')),
+          SliverToBoxAdapter(
+            child: Text('Nearest Bubblers')
+          ),
         ]
     );
   }
@@ -136,7 +138,7 @@ class MainScreenState extends State<MainScreen> {
     }
   }
 
-  Widget _buildFullDetailDraggableSheet(ScrollController scrollController) {
+  Widget _buildFullDetailDraggableSheet(DraggableSheetChildController controller, ScrollController scrollController) {
     return CustomScrollView(
         controller: scrollController,
         slivers: [
@@ -166,12 +168,10 @@ class MainScreenState extends State<MainScreen> {
     }
   }
 
-  Widget _buildSmallDetailDraggableSheet(ScrollController scrollController) {
-    return CustomScrollView(
-        controller: scrollController,
-        slivers: [
-          SliverToBoxAdapter(child: Text('Small Detail')),
-        ]
+  Widget _buildSmallDetailDraggableSheet(DraggableSheetChildController controller, ScrollController scrollController) {
+    return SmallDetailSheetChild(
+      controller: controller, 
+      scrollController: scrollController
     );
   }
 
@@ -267,43 +267,43 @@ class MainScreenState extends State<MainScreen> {
                   ],
                 ),
               ),
-              Align(
-                  alignment: Alignment.bottomCenter,
-                  child: AnimatedSwitcher(
-                      duration: Duration(milliseconds: 500),
-                      transitionBuilder: (child, animation) {
-                        final offsetAnimation = Tween<Offset>(
-                          begin: Offset(0, 1),
-                          end: Offset(0, 0),
-                        ).animate(animation);
-                        return SlideTransition(
-                          position: offsetAnimation,
-                          child: child,
-                        );
-                      },
-                      switchInCurve: Curves.easeInOut,
-                      switchOutCurve: Curves.easeInOut,
-                      child: switch (_mainScreenAction) {
-                        MainScreenAction.nearestBubblers => NearestBubblers(
-                            onClose: _closeNearestBubblers,
-                          ),
-                        MainScreenAction.fullDetail => FullDetail(
-                            onClose: _closeFullDetail,
-                          ),
-                        MainScreenAction.smallDetail => SmallDetail(
-                            waterBubbler: _bubblerMapState.selectedBubbler!,
-                            distanceBetweenBubblerAndCurrent:
-                                _bubblerMapState.currentPosition != null
-                                    ? _bubblerMapState.selectedBubbler!
-                                        .distanceTo(
-                                            _bubblerMapState.currentPosition!)
-                                    : null,
-                            onClose: _closeBubblerSmallDetail,
-                            onSwipeUp: _showFullDetail,
-                          ),
-                        _ => null,
-                      })
-              ),
+              // Align(
+              //     alignment: Alignment.bottomCenter,
+              //     child: AnimatedSwitcher(
+              //         duration: Duration(milliseconds: 500),
+              //         transitionBuilder: (child, animation) {
+              //           final offsetAnimation = Tween<Offset>(
+              //             begin: Offset(0, 1),
+              //             end: Offset(0, 0),
+              //           ).animate(animation);
+              //           return SlideTransition(
+              //             position: offsetAnimation,
+              //             child: child,
+              //           );
+              //         },
+              //         switchInCurve: Curves.easeInOut,
+              //         switchOutCurve: Curves.easeInOut,
+              //         child: switch (_mainScreenAction) {
+              //           MainScreenAction.nearestBubblers => NearestBubblers(
+              //               onClose: _closeNearestBubblers,
+              //             ),
+              //           MainScreenAction.fullDetail => FullDetail(
+              //               onClose: _closeFullDetail,
+              //             ),
+              //           MainScreenAction.smallDetail => SmallDetail(
+              //               waterBubbler: _bubblerMapState.selectedBubbler!,
+              //               distanceBetweenBubblerAndCurrent:
+              //                   _bubblerMapState.currentPosition != null
+              //                       ? _bubblerMapState.selectedBubbler!
+              //                           .distanceTo(
+              //                               _bubblerMapState.currentPosition!)
+              //                       : null,
+              //               onClose: _closeBubblerSmallDetail,
+              //               onSwipeUp: _showFullDetail,
+              //             ),
+              //           _ => null,
+              //         })
+              // ),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: SizedBox(

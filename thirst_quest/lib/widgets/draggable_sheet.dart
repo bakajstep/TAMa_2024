@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:thirst_quest/assets/constants.dart' as constants;
+import 'package:thirst_quest/controllers/draggable_sheet_child_controller.dart';
 import 'package:thirst_quest/notifications/draggable_sheet_changed_size.dart';
 import 'package:thirst_quest/utils/double_equals.dart';
 
@@ -7,7 +8,7 @@ class DraggableSheet extends StatefulWidget {
   final DraggableScrollableController controller;
   final List<double> snapSizes;
   final double initialSize;
-  final Widget Function(ScrollController scrollController) child;
+  final Widget Function(DraggableSheetChildController childController, ScrollController scrollController) child;
 
   const DraggableSheet({required this.controller, required this.snapSizes, required this.initialSize, required this.child, super.key});
 
@@ -24,6 +25,7 @@ class DraggableSheet extends StatefulWidget {
 }
 
 class DraggableSheetState extends State<DraggableSheet> {
+  final DraggableSheetChildController _childController = DraggableSheetChildController();
 
   @override
   void initState() {
@@ -36,6 +38,7 @@ class DraggableSheetState extends State<DraggableSheet> {
     if (doubleInList(widget.snapSizes, currentSize)) { 
       if (!doubleEquals(currentSize, widget.initialSize)) {
         DraggableSheetChangedSize(newSize: currentSize).dispatch(context);
+        _childController.onHeightChanged!();
       }
     }
   }
@@ -55,6 +58,7 @@ class DraggableSheetState extends State<DraggableSheet> {
       expand: true,
       snap: true,
       snapSizes: widget.snapSizes,
+      snapAnimationDuration: const Duration(milliseconds: 500),
       controller: widget.controller,
       builder: (BuildContext context, ScrollController scrollController) {
         return DecoratedBox(
@@ -65,7 +69,7 @@ class DraggableSheetState extends State<DraggableSheet> {
               topRight: Radius.circular(20),
             ),
           ),
-          child: widget.child(scrollController),
+          child: widget.child(_childController, scrollController),
         );
       },
     );
