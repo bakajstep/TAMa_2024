@@ -11,11 +11,9 @@ import 'package:thirst_quest/states/bubbler_map_state.dart';
 import 'package:thirst_quest/states/main_screen_action.dart';
 import 'package:thirst_quest/utils/double_equals.dart';
 import 'package:thirst_quest/widgets/draggable_sheet.dart';
-import 'package:thirst_quest/widgets/full_detail.dart';
+import 'package:thirst_quest/widgets/full_detail_sheet_child.dart';
 import 'package:thirst_quest/widgets/location_map.dart';
 import 'package:thirst_quest/widgets/map_controls.dart';
-import 'package:thirst_quest/widgets/nearest_bubblers.dart';
-import 'package:thirst_quest/widgets/small_detail.dart';
 import 'package:thirst_quest/assets/constants.dart' as constants;
 import 'package:thirst_quest/widgets/small_detail_sheet_child.dart';
 
@@ -138,15 +136,6 @@ class MainScreenState extends State<MainScreen> {
     }
   }
 
-  Widget _buildFullDetailDraggableSheet(DraggableSheetChildController controller, ScrollController scrollController) {
-    return CustomScrollView(
-        controller: scrollController,
-        slivers: [
-          SliverToBoxAdapter(child: Text('Full Detail')),
-        ]
-    );
-  }
-
   void _closeFullDetail() {
     _bubblerMapState.reloadBubblersOnMove = true;
     _bubblerMapState.mapPixelOffset = 0.0;
@@ -166,17 +155,6 @@ class MainScreenState extends State<MainScreen> {
     if (_draggableController.isAttached) {
       DraggableSheet.animateSheet(_draggableController, constants.smallInfoCardHeight);
     }
-  }
-
-  Widget _buildSmallDetailDraggableSheet(DraggableSheetChildController controller, ScrollController scrollController) {
-    return CustomScrollView(
-        controller: scrollController,
-        slivers: [
-          SliverToBoxAdapter(
-            child: SmallDetailSheetChild(controller: controller)
-          )
-        ]
-    );
   }
 
   void _closeBubblerSmallDetail() {
@@ -271,43 +249,6 @@ class MainScreenState extends State<MainScreen> {
                   ],
                 ),
               ),
-              // Align(
-              //     alignment: Alignment.bottomCenter,
-              //     child: AnimatedSwitcher(
-              //         duration: Duration(milliseconds: 500),
-              //         transitionBuilder: (child, animation) {
-              //           final offsetAnimation = Tween<Offset>(
-              //             begin: Offset(0, 1),
-              //             end: Offset(0, 0),
-              //           ).animate(animation);
-              //           return SlideTransition(
-              //             position: offsetAnimation,
-              //             child: child,
-              //           );
-              //         },
-              //         switchInCurve: Curves.easeInOut,
-              //         switchOutCurve: Curves.easeInOut,
-              //         child: switch (_mainScreenAction) {
-              //           MainScreenAction.nearestBubblers => NearestBubblers(
-              //               onClose: _closeNearestBubblers,
-              //             ),
-              //           MainScreenAction.fullDetail => FullDetail(
-              //               onClose: _closeFullDetail,
-              //             ),
-              //           MainScreenAction.smallDetail => SmallDetail(
-              //               waterBubbler: _bubblerMapState.selectedBubbler!,
-              //               distanceBetweenBubblerAndCurrent:
-              //                   _bubblerMapState.currentPosition != null
-              //                       ? _bubblerMapState.selectedBubbler!
-              //                           .distanceTo(
-              //                               _bubblerMapState.currentPosition!)
-              //                       : null,
-              //               onClose: _closeBubblerSmallDetail,
-              //               onSwipeUp: _showFullDetail,
-              //             ),
-              //           _ => null,
-              //         })
-              // ),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: SizedBox(
@@ -334,8 +275,8 @@ class MainScreenState extends State<MainScreen> {
                       child:
                         switch (_mainScreenAction) {
                           MainScreenAction.nearestBubblers => _buildNearestBubblersDraggableSheet,
-                          MainScreenAction.fullDetail => _buildFullDetailDraggableSheet,
-                          MainScreenAction.smallDetail => _buildSmallDetailDraggableSheet,
+                          MainScreenAction.fullDetail => FullDetailSheetChild.build,
+                          MainScreenAction.smallDetail => SmallDetailSheetChild.build,
                           _ => _buildEmptyDraggableSheet,
                         },
                       ),
