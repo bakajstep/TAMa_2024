@@ -1,7 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:thirst_quest/api/api_client.dart';
 import 'package:thirst_quest/api/models/auth_response.dart';
+import 'package:thirst_quest/config.dart';
 import 'package:thirst_quest/states/global_state.dart';
 import 'package:thirst_quest/states/models/identity.dart';
 
@@ -9,8 +11,8 @@ class AuthService {
   static const _tokenKey = 'token';
   final ApiClient apiClient;
   final GoogleSignIn googleSignIn = GoogleSignIn(
-    clientId:
-        '1090609015078-cj1qrnmmun2j32nequ4q3tvgm6ut6rdf.apps.googleusercontent.com',
+    clientId: kIsWeb ? Config.googleClientId : null,
+    serverClientId: kIsWeb ? null : Config.googleClientId,
   );
 
   AuthService({required this.apiClient});

@@ -29,7 +29,10 @@ class NearestBubblersState extends State<NearestBubblers> {
   @override
   void initState() {
     super.initState();
-    _loadBubblers();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadBubblers();
+    });
   }
 
   Future<void> _loadBubblers() async {
@@ -56,6 +59,7 @@ class NearestBubblersState extends State<NearestBubblers> {
               2)
           : 0;
       bubblerMapState.mapMove(waterBubbler.position);
+
       bubblerMapState.selectedBubbler = waterBubbler;
       bubblerMapState.waterBubblers = nearestBubblers;
     }

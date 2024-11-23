@@ -1,9 +1,11 @@
 import 'package:provider/provider.dart';
 
 import 'package:flutter/material.dart';
+import 'package:thirst_quest/di.dart';
 import 'package:thirst_quest/screens/favourite_bubbler_screen.dart';
 import 'package:thirst_quest/screens/login_screen.dart';
 import 'package:thirst_quest/screens/my_review_screen.dart';
+import 'package:thirst_quest/services/auth_service.dart';
 import 'package:thirst_quest/states/global_state.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -13,14 +15,13 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-
   @override
   Widget build(BuildContext context) {
     final state = Provider.of<GlobalState>(context, listen: false);
 
     if (!state.user.isLoggedIn) {
-      Future.microtask(() => Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => const LoginScreen())));
+      Future.microtask(() => Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context) => const LoginScreen())));
       return const SizedBox();
     }
 
@@ -36,10 +37,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
-            onPressed: () {
-              state.user.logout(); // Odhlášení uživatele
-              Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+            onPressed: () async {
+              final authService = DI.get<AuthService>();
+              await authService.logout(state); // Odhlášení uživatele
+
+              if (!mounted) return;
+
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => const LoginScreen()));
             },
           ),
         ],
@@ -78,14 +83,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
             child: Row(
               children: [
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
                       // Akce pro "Moje recenze"
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const MyReviewsScreen()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const MyReviewsScreen()));
                     },
                     child: const Text("My reviews"),
                   ),
@@ -95,7 +104,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: ElevatedButton(
                     onPressed: () {
                       // Akce pro "Oblíbená pítka"
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const FavoriteBubblerScreen()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  const FavoriteBubblerScreen()));
                     },
                     child: const Text("Favorite WatterBubblers"),
                   ),
@@ -170,7 +183,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   // Dialog pro úpravu jména
   void _editName(GlobalState state) {
-    TextEditingController nameController = TextEditingController(text: state.user.identity!.username);
+    TextEditingController nameController =
+        TextEditingController(text: state.user.identity!.username);
     showDialog(
       context: context,
       builder: (context) {
@@ -202,7 +216,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   // Dialog pro úpravu emailu
   void _editEmail(GlobalState state) {
-    TextEditingController emailController = TextEditingController(text: state.user.identity!.email);
+    TextEditingController emailController =
+        TextEditingController(text: state.user.identity!.email);
     showDialog(
       context: context,
       builder: (context) {

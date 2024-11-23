@@ -27,6 +27,11 @@ class WaterBubblerService {
       ..take(count).toList();
   }
 
+  void clearCache() {
+    _loadedBounds = null;
+    _loadedBubblers = [];
+  }
+
   LatLngBounds _extendBounds(LatLngBounds bounds) {
     final latDiff = bounds.north - bounds.south;
     final lonDiff = bounds.east - bounds.west;
