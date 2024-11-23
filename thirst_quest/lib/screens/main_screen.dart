@@ -92,7 +92,7 @@ class MainScreenState extends State<MainScreen> {
   Widget _buildEmptyDraggableSheet(DraggableSheetChildController controller, ScrollController scrollController) {
     return CustomScrollView(
         controller: scrollController,
-        slivers: []
+        slivers: [],
     );
   }
 
@@ -169,9 +169,13 @@ class MainScreenState extends State<MainScreen> {
   }
 
   Widget _buildSmallDetailDraggableSheet(DraggableSheetChildController controller, ScrollController scrollController) {
-    return SmallDetailSheetChild(
-      controller: controller, 
-      scrollController: scrollController
+    return CustomScrollView(
+        controller: scrollController,
+        slivers: [
+          SliverToBoxAdapter(
+            child: SmallDetailSheetChild(controller: controller)
+          )
+        ]
     );
   }
 

@@ -8,9 +8,9 @@ import 'package:thirst_quest/widgets/navigation_button.dart';
 
 class SmallDetailSheetChild extends StatefulWidget {
   final DraggableSheetChildController controller;
-  final ScrollController scrollController;
+  //final ScrollController scrollController;
 
-  const SmallDetailSheetChild({required this.controller, required this.scrollController, super.key});
+  const SmallDetailSheetChild({required this.controller, super.key});
 
   @override
   State<SmallDetailSheetChild> createState() => _SmallDetailSheetChildState(controller);
@@ -25,8 +25,8 @@ class _SmallDetailSheetChildState extends State<SmallDetailSheetChild> {
 
   _SmallDetailSheetChildState(DraggableSheetChildController controller) {
     controller.onHeightChanged = _onHeightChanged;
-    controller.snapSizes = [0.0, constants.smallInfoCardHeight, constants.bigInfoCardHeight];
-    controller.initialSize = constants.smallInfoCardHeight;
+    //controller.snapSizes = [0.0, constants.smallInfoCardHeight, constants.bigInfoCardHeight];
+    //controller.initialSize = constants.smallInfoCardHeight;
   }
 
   @override
@@ -39,11 +39,7 @@ class _SmallDetailSheetChildState extends State<SmallDetailSheetChild> {
       ? waterBubbler.distanceTo(currentLocation)
       : null;
 
-    return CustomScrollView(
-      controller: widget.scrollController,
-      slivers: [
-        SliverToBoxAdapter(
-          child: 
+    return 
               Column(
                 children: [
                   SizedBox(
@@ -99,9 +95,6 @@ class _SmallDetailSheetChildState extends State<SmallDetailSheetChild> {
                     ),
                   ),
                 ], // column children
-              )
-          ),
-      ] // slivers
-    );
+              );
   }
 }
