@@ -58,25 +58,25 @@ class MainScreenState extends State<MainScreen> {
   bool _onDraggableSheetChangedSize(DraggableSheetChangedSize notification) {
     switch (_mainScreenAction) {
       case MainScreenAction.nearestBubblers:
-        if (DoubleEquals(notification.newSize, 0.0)) {
+        if (doubleEquals(notification.newSize, 0.0)) {
           _closeNearestBubblers();
         }
         break;
 
       case MainScreenAction.fullDetail:
-        if (DoubleEquals(notification.newSize, 0.0)) {
+        if (doubleEquals(notification.newSize, 0.0)) {
           _closeFullDetail();
         }
-        else if (DoubleEquals(notification.newSize, constants.smallInfoCardHeight)) {
+        else if (doubleEquals(notification.newSize, constants.smallInfoCardHeight)) {
           _showBubblerSmallDetail(_bubblerMapState.selectedBubbler!);
         }
         break;
 
       case MainScreenAction.smallDetail:
-        if (DoubleEquals(notification.newSize, 0.0)) {
+        if (doubleEquals(notification.newSize, 0.0)) {
           _closeBubblerSmallDetail();
         }
-        else if (DoubleEquals(notification.newSize, constants.bigInfoCardHeight)) {
+        else if (doubleEquals(notification.newSize, constants.bigInfoCardHeight)) {
           _showFullDetail();
         }
         break;
@@ -103,10 +103,6 @@ class MainScreenState extends State<MainScreen> {
 
     if (_draggableController.isAttached) {
       DraggableSheet.animateSheet(_draggableController, constants.bigInfoCardHeight);
-      print('draggable controller NEAREST');
-    }
-    else {
-      print('draggable controller not attached');
     }
   }
 
@@ -137,10 +133,6 @@ class MainScreenState extends State<MainScreen> {
 
     if (_draggableController.isAttached) {
       DraggableSheet.animateSheet(_draggableController, constants.bigInfoCardHeight);
-      print('draggable controller FULL');
-    }
-    else {
-      print('draggable controller not attached');
     }
   }
 
@@ -171,10 +163,6 @@ class MainScreenState extends State<MainScreen> {
 
     if (_draggableController.isAttached) {
       DraggableSheet.animateSheet(_draggableController, constants.smallInfoCardHeight);
-      print('draggable controller SMALL');
-    }
-    else {
-      print('draggable controller not attached');
     }
   }
 

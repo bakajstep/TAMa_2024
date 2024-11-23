@@ -33,8 +33,10 @@ class DraggableSheetState extends State<DraggableSheet> {
 
   void _onChanged() {
     final currentSize = widget.controller.size;
-    if (!DoubleEquals(currentSize, widget.initialSize)) { 
-      DraggableSheetChangedSize(newSize: currentSize).dispatch(context);
+    if (doubleInList(widget.snapSizes, currentSize)) { 
+      if (!doubleEquals(currentSize, widget.initialSize)) {
+        DraggableSheetChangedSize(newSize: currentSize).dispatch(context);
+      }
     }
   }
 
@@ -48,7 +50,7 @@ class DraggableSheetState extends State<DraggableSheet> {
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
       initialChildSize: 0.0,
-      maxChildSize: widget.snapSizes.last,
+      maxChildSize: constants.bigInfoCardHeight,
       minChildSize: 0.0,
       expand: true,
       snap: true,
