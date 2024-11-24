@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:thirst_quest/api/models/water_bubbler.dart';
 import 'package:thirst_quest/controllers/draggable_sheet_child_controller.dart';
+import 'package:thirst_quest/notifications/bubbler_selected.dart';
 import 'package:thirst_quest/widgets/navigation_button.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -128,6 +129,10 @@ class NearestBubblersState extends State<NearestBubblers> {
                   ),
                   margin: EdgeInsets.symmetric(vertical: 7.5, horizontal: 10),
                   child: ListTile(
+                    onTap: () => BubblerSelected(
+                            selectedWaterBubbler: waterBubbler,
+                            showFullDetail: true)
+                        .dispatch(context),
                     title: Text(waterBubbler.name ?? 'Water Bubbler'),
                     subtitle: Text(
                         'Distance: ~${distanceToDisplay(waterBubbler.distanceTo(positionOnLoad!))}'),

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:thirst_quest/screens/login_screen.dart';
 import 'package:thirst_quest/screens/profile_screen.dart';
 import 'package:thirst_quest/states/global_state.dart';
+import 'package:thirst_quest/assets/constants.dart' as constants;
 
 class MapControls extends StatelessWidget {
   final VoidCallback onCenterButtonPressed;
@@ -34,13 +35,15 @@ class MapControls extends StatelessWidget {
     return
         // Other widgets...
         AnimatedPositioned(
-            duration: const Duration(milliseconds: 500),
+            duration:
+                const Duration(milliseconds: constants.longAnimationDuration),
             curve: Curves.easeInOut,
             left: 20,
             bottom: 20 + bottomOffset,
             child: AnimatedOpacity(
                 opacity: visible ? 1.0 : 0.0,
-                duration: Duration(milliseconds: 500),
+                duration:
+                    Duration(milliseconds: constants.shortAnimationDuration),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [

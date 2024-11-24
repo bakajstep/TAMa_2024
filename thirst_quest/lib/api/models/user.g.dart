@@ -11,6 +11,7 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       email: json['email'] as String,
       username: json['username'] as String,
       authByGoogle: json['authByGoogle'] as bool,
+      profilePicture: json['profilePicture'] as String?,
     );
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
@@ -18,4 +19,5 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'email': instance.email,
       'username': instance.username,
       'authByGoogle': instance.authByGoogle,
+      'profilePicture': instance.profilePicture,
     };

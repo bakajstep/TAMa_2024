@@ -18,7 +18,7 @@ class DraggableSheet extends StatefulWidget {
   static void animateSheet(DraggableScrollableController controller, double size) {
     controller.animateTo(
       size,
-      duration: const Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: constants.longAnimationDuration),
       curve: Curves.easeInOut,
     );
   }

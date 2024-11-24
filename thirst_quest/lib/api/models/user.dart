@@ -8,12 +8,14 @@ class User {
   final String email;
   final String username;
   final bool authByGoogle;
+  final String? profilePicture;
 
   User({
     required this.id,
     required this.email,
     required this.username,
     required this.authByGoogle,
+    required this.profilePicture,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);

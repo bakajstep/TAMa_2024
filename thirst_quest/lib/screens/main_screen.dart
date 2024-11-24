@@ -114,7 +114,11 @@ class MainScreenState extends State<MainScreen> {
     });
   }
 
-  void _showFullDetail() async {
+  void _showFullDetail({WaterBubbler? selectedBubbler}) async {
+    if (selectedBubbler != null) {
+      _bubblerMapState.selectedBubbler = selectedBubbler;
+    }
+
     _bubblerMapState.reloadBubblersOnMove = false;
     _bubblerMapState.mapPixelOffset =
         -(MediaQuery.of(context).size.height * constants.bigInfoCardHeight / 2);
@@ -165,28 +169,30 @@ class MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: ChangeNotifierProvider(
-            create: (context) => _bubblerMapState,
-            child: Stack(children: [
+      body: ChangeNotifierProvider(
+        create: (context) => _bubblerMapState,
+        child: NotificationListener<BubblerSelected>(
+          onNotification: (notification) {
+            notification.showFullDetail
+                ? _showFullDetail(
+                    selectedBubbler: notification.selectedWaterBubbler)
+                : _showBubblerSmallDetail(notification.selectedWaterBubbler);
+            return true;
+          },
+          child: Stack(
+            children: [
               Positioned.fill(
                 child: Stack(
                   children: [
-                    // This is the LocationMap that takes all available space
-                    NotificationListener<BubblerSelected>(
-                      onNotification: (notification) {
-                        _showBubblerSmallDetail(
-                            notification.selectedWaterBubbler);
-                        return true;
-                      },
-                      child: LocationMap(
-                          initialPosition: _locationController.currentPosition),
-                    ),
+                    LocationMap(
+                        initialPosition: _locationController.currentPosition),
                     Positioned(
                         top: 15,
                         left: 20,
                         right: 20,
                         child: AnimatedOpacity(
-                          duration: const Duration(milliseconds: 300),
+                          duration: const Duration(
+                              milliseconds: constants.shortAnimationDuration),
                           opacity: _mainScreenAction == MainScreenAction.none ||
                                   _mainScreenAction ==
                                       MainScreenAction.smallDetail
@@ -230,7 +236,8 @@ class MainScreenState extends State<MainScreen> {
                       left: 0,
                       right: 0,
                       child: AnimatedOpacity(
-                          duration: Duration(milliseconds: 300),
+                          duration: Duration(
+                              milliseconds: constants.shortAnimationDuration),
                           opacity: _mainScreenAction == MainScreenAction.none
                               ? 1.0
                               : 0.0,
@@ -305,6 +312,10 @@ class MainScreenState extends State<MainScreen> {
                       ),
                     ),
                   ))
-            ])));
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
