@@ -108,24 +108,6 @@ class MainScreenState extends State<MainScreen> {
     }
   }
 
-  Widget _buildNearestBubblersDraggableSheet(
-      DraggableSheetChildController controller,
-      ScrollController scrollController) {
-    return CustomScrollView(controller: scrollController, slivers: [
-      SliverList(
-        delegate: SliverChildListDelegate([
-          NearestBubblers(
-            onClose: _closeNearestBubblers,
-            controller: controller,
-          ),
-        ]),
-      ),
-    ]);
-    // return CustomScrollView(controller: scrollController, slivers: [
-    //   SliverToBoxAdapter(child: Text('Nearest Bubblers')),
-    // ]);
-  }
-
   void _closeNearestBubblers() {
     setState(() {
       _mainScreenAction = MainScreenAction.none;
@@ -151,13 +133,16 @@ class MainScreenState extends State<MainScreen> {
   void _closeFullDetail() {
     _bubblerMapState.reloadBubblersOnMove = true;
     _bubblerMapState.mapPixelOffset = 0.0;
+    _bubblerMapState.selectedBubbler = null;
 
     setState(() {
-      _mainScreenAction = MainScreenAction.smallDetail;
+      _mainScreenAction = MainScreenAction.none;
     });
   }
 
   void _showBubblerSmallDetail(WaterBubbler selectedWaterBubbler) {
+    _bubblerMapState.reloadBubblersOnMove = true;
+    _bubblerMapState.mapPixelOffset = 0.0;
     _bubblerMapState.selectedBubbler = selectedWaterBubbler;
 
     setState(() {
@@ -196,69 +181,78 @@ class MainScreenState extends State<MainScreen> {
                       child: LocationMap(
                           initialPosition: _locationController.currentPosition),
                     ),
-                    if (_mainScreenAction == MainScreenAction.none ||
-                        _mainScreenAction == MainScreenAction.smallDetail)
-                      Positioned(
+                    Positioned(
                         top: 15,
                         left: 20,
                         right: 20,
-                        child: Padding(
-                            padding:
-                                const EdgeInsets.only(left: 20.0, right: 20.0),
-                            child: Column(children: <Widget>[
-                              const SizedBox(height: 16.0),
-                              SearchBar(
-                                controller: _searchController,
-                                leading: IconButton(
-                                    onPressed: () {
-                                      // searchbar login here
-                                    },
-                                    icon: const Icon(Icons.search)),
-                                // trailing: [
-                                //   IconButton(
-                                //     onPressed: () {
-                                //       // searchbar login here
-                                //     },
-                                //     icon: const Icon(Icons.mic)
-                                //   )
-                                // ],
-                                hintText: 'Search...',
-                              )
-                            ])),
-                      ),
-                    if (_mainScreenAction == MainScreenAction.none ||
-                        _mainScreenAction == MainScreenAction.smallDetail)
-                      MapControls(
-                          onCenterButtonPressed: _centerToCurrentLocation,
-                          bottomOffset:
-                              _mainScreenAction == MainScreenAction.none
-                                  ? 0.0
-                                  : MediaQuery.of(context).size.height *
-                                      constants.smallInfoCardHeight),
-                    if (_mainScreenAction == MainScreenAction.none)
-                      Positioned(
-                        bottom: 20,
-                        left: 0,
-                        right: 0,
-                        child: Center(
-                          child: Container(
-                            width: 100,
-                            height: 100,
-                            decoration: BoxDecoration(
-                              color: Colors.blueAccent.withOpacity(0.6),
-                              shape: BoxShape.circle,
-                            ),
-                            child: IconButton(
-                              onPressed: _showNearestBubblers,
-                              icon: Icon(
-                                Icons.surfing,
-                                size: 60, // Adjust icon size as needed
+                        child: AnimatedOpacity(
+                          duration: const Duration(milliseconds: 300),
+                          opacity: _mainScreenAction == MainScreenAction.none ||
+                                  _mainScreenAction ==
+                                      MainScreenAction.smallDetail
+                              ? 1.0
+                              : 0.0,
+                          child: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 20.0, right: 20.0),
+                              child: Column(children: <Widget>[
+                                const SizedBox(height: 16.0),
+                                SearchBar(
+                                  controller: _searchController,
+                                  leading: IconButton(
+                                      onPressed: () {
+                                        // searchbar login here
+                                      },
+                                      icon: const Icon(Icons.search)),
+                                  // trailing: [
+                                  //   IconButton(
+                                  //     onPressed: () {
+                                  //       // searchbar login here
+                                  //     },
+                                  //     icon: const Icon(Icons.mic)
+                                  //   )
+                                  // ],
+                                  hintText: 'Search...',
+                                )
+                              ])),
+                        )),
+                    MapControls(
+                      onCenterButtonPressed: _centerToCurrentLocation,
+                      bottomOffset: _mainScreenAction == MainScreenAction.none
+                          ? 0.0
+                          : MediaQuery.of(context).size.height *
+                              constants.smallInfoCardHeight,
+                      visible: _mainScreenAction == MainScreenAction.none ||
+                          _mainScreenAction == MainScreenAction.smallDetail,
+                    ),
+                    Positioned(
+                      bottom: 20,
+                      left: 0,
+                      right: 0,
+                      child: AnimatedOpacity(
+                          duration: Duration(milliseconds: 300),
+                          opacity: _mainScreenAction == MainScreenAction.none
+                              ? 1.0
+                              : 0.0,
+                          child: Center(
+                            child: Container(
+                              width: 100,
+                              height: 100,
+                              decoration: BoxDecoration(
+                                color: Colors.blueAccent.withOpacity(0.6),
+                                shape: BoxShape.circle,
                               ),
-                              color: Colors.white,
+                              child: IconButton(
+                                onPressed: _showNearestBubblers,
+                                icon: Icon(
+                                  Icons.surfing,
+                                  size: 60, // Adjust icon size as needed
+                                ),
+                                color: Colors.white,
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
+                          )),
+                    ),
                   ],
                 ),
               ),
@@ -299,7 +293,9 @@ class MainScreenState extends State<MainScreen> {
                         },
                         child: switch (_mainScreenAction) {
                           MainScreenAction.nearestBubblers =>
-                            _buildNearestBubblersDraggableSheet,
+                            (controller, scrollController) =>
+                                NearestBubblers.build(controller,
+                                    scrollController, _closeNearestBubblers),
                           MainScreenAction.fullDetail =>
                             FullDetailSheetChild.build,
                           MainScreenAction.smallDetail =>

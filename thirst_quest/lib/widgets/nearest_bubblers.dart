@@ -21,6 +21,22 @@ class NearestBubblers extends StatefulWidget {
 
   @override
   NearestBubblersState createState() => NearestBubblersState();
+
+  static ScrollView build(DraggableSheetChildController controller,
+      ScrollController scrollController, VoidCallback onClose) {
+    return CustomScrollView(
+      controller: scrollController,
+      slivers: [
+        SliverList(
+          delegate: SliverChildListDelegate(
+            [
+              NearestBubblers(controller: controller, onClose: onClose),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
 }
 
 class NearestBubblersState extends State<NearestBubblers> {
