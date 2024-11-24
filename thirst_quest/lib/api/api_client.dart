@@ -9,6 +9,10 @@ import 'package:thirst_quest/config.dart';
 class ApiClient {
   final String baseUrl = Config.apiUrl;
 
+  /////////////////////////////////////////////////////////////////
+  // WATER BUBBLERS
+  /////////////////////////////////////////////////////////////////
+
   Future<List<WaterBubbler>> getBubblersByBBox(
       double minLat, double maxLat, double minLon, double maxLon) async {
     final uri =
@@ -28,7 +32,11 @@ class ApiClient {
     return body.map((dynamic item) => WaterBubbler.fromJson(item)).toList();
   }
 
-  Future<bool> addToFavorites(String token, String id, String osmId) async {
+  /////////////////////////////////////////////////////////////////
+  // FAVORITE WATER BUBBLERS
+  /////////////////////////////////////////////////////////////////
+
+  Future<bool> addToFavorites(String token, String? id, String? osmId) async {
     final uri = Uri.parse('$baseUrl/api/favorites');
     try {
       final response = await http.post(
@@ -48,6 +56,26 @@ class ApiClient {
       throw Exception('Failed to add to favorites: $e');
     }
   }
+
+  Future<bool> removeFromFavorites(String token, String id) async {
+    final uri = Uri.parse('$baseUrl/api/favorites/$id');
+    try {
+      final response = await http.delete(
+        uri,
+        headers: _addAuthHeader(token),
+      );
+
+      return response.statusCode == 200;
+    } on SocketException {
+      throw Exception('No Internet connection');
+    } catch (e) {
+      throw Exception('Failed to remove from favorites: $e');
+    }
+  }
+
+  /////////////////////////////////////////////////////////////////
+  // USER AUTH
+  /////////////////////////////////////////////////////////////////
 
   Future<AuthResponse?> login(String email, String password) async {
     final uri = Uri.parse('$baseUrl/api/auth/login');
@@ -141,6 +169,10 @@ class ApiClient {
       throw Exception('Failed to sign in with Google: $e');
     }
   }
+
+  /////////////////////////////////////////////////////////////////
+  // HELPERS
+  /////////////////////////////////////////////////////////////////
 
   Map<String, String> _addAuthHeader(String token,
       {Map<String, String>? headers}) {

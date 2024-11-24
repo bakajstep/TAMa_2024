@@ -1,9 +1,11 @@
 import 'package:provider/provider.dart';
 
 import 'package:flutter/material.dart';
+import 'package:thirst_quest/di.dart';
 import 'package:thirst_quest/screens/favourite_bubbler_screen.dart';
 import 'package:thirst_quest/screens/login_screen.dart';
 import 'package:thirst_quest/screens/my_review_screen.dart';
+import 'package:thirst_quest/services/auth_service.dart';
 import 'package:thirst_quest/states/global_state.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -35,8 +37,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
-            onPressed: () {
-              state.user.logout(); // Odhlášení uživatele
+            onPressed: () async {
+              final authService = DI.get<AuthService>();
+              await authService.logout(state); // Odhlášení uživatele
+
+              if (!mounted) return;
+
               Navigator.pushReplacement(context,
                   MaterialPageRoute(builder: (context) => const LoginScreen()));
             },
