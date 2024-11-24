@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:thirst_quest/api/models/water_bubbler.dart';
+import 'package:thirst_quest/controllers/draggable_sheet_child_controller.dart';
 import 'package:thirst_quest/widgets/navigation_button.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -13,8 +14,10 @@ import 'package:thirst_quest/assets/constants.dart' as constants;
 
 class NearestBubblers extends StatefulWidget {
   final VoidCallback onClose;
+  final DraggableSheetChildController controller;
 
-  const NearestBubblers({required this.onClose, super.key});
+  const NearestBubblers(
+      {required this.onClose, required this.controller, super.key});
 
   @override
   NearestBubblersState createState() => NearestBubblersState();
@@ -29,6 +32,7 @@ class NearestBubblersState extends State<NearestBubblers> {
   @override
   void initState() {
     super.initState();
+    widget.controller.onHeightChanged = () => _onClose(context);
     _loadBubblers();
   }
 
@@ -77,84 +81,54 @@ class NearestBubblersState extends State<NearestBubblers> {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(20),
-        topRight: Radius.circular(20),
-      ),
-      child: Container(
-        height:
-            MediaQuery.of(context).size.height * constants.bigInfoCardHeight,
-        color: Colors.white,
-        child: isLoading
-            ? const Loading()
-            : Column(
-                children: [
-                  GestureDetector(
-                    onVerticalDragEnd: (details) {
-                      if (details.primaryVelocity! > 0) {
-                        _onClose(context);
-                      }
-                    },
-                    child: Column(
-                      children: [
-                        Container(
-                          width: 50,
-                          height: 5,
-                          margin: EdgeInsets.only(top: 10),
-                          decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.circular(2.5),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 7.5, horizontal: 10),
-                          child: Text(
-                            'Nearest Water Bubblers',
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: nearestBubblers.length,
-                      itemBuilder: (context, index) {
-                        final waterBubbler = nearestBubblers[index];
-
-                        return Container(
-                          decoration: BoxDecoration(
-                            color: Colors.blueAccent.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          margin: EdgeInsets.symmetric(
-                              vertical: 7.5, horizontal: 10),
-                          child: ListTile(
-                            title: Text(waterBubbler.name ?? 'Water Bubbler'),
-                            subtitle: Text(
-                                'Distance: ~${distanceToDisplay(waterBubbler.distanceTo(positionOnLoad!))}'),
-                            leading: waterBubbler.photos.isNotEmpty
-                                ? Image.network(waterBubbler.photos[0].url)
-                                : const Icon(Icons.local_drink),
-                            trailing:
-                                Row(mainAxisSize: MainAxisSize.min, children: [
-                              NavigationButton(waterBubbler: waterBubbler),
-                              IconButton(
-                                  onPressed: () {},
-                                  icon: const Icon(Icons
-                                      .favorite_border)) // TODO: Implement favorite functionality
-                            ]),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ],
+    return Container(
+      child: isLoading
+          ? SizedBox(
+              height: MediaQuery.of(context).size.height *
+                  constants.bigInfoCardHeight,
+              child: const Loading())
+          : Column(children: [
+              Container(
+                width: 50,
+                height: 5,
+                margin: EdgeInsets.only(top: 10),
+                decoration: BoxDecoration(
+                  color: Colors.grey,
+                  borderRadius: BorderRadius.circular(2.5),
+                ),
               ),
-      ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 7.5, horizontal: 10),
+                child: Text(
+                  'Nearest Water Bubblers',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              ),
+              ...nearestBubblers.map((waterBubbler) {
+                return Container(
+                  decoration: BoxDecoration(
+                    color: Colors.blueAccent.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  margin: EdgeInsets.symmetric(vertical: 7.5, horizontal: 10),
+                  child: ListTile(
+                    title: Text(waterBubbler.name ?? 'Water Bubbler'),
+                    subtitle: Text(
+                        'Distance: ~${distanceToDisplay(waterBubbler.distanceTo(positionOnLoad!))}'),
+                    leading: waterBubbler.photos.isNotEmpty
+                        ? Image.network(waterBubbler.photos[0].url)
+                        : const Icon(Icons.local_drink),
+                    trailing: Row(mainAxisSize: MainAxisSize.min, children: [
+                      NavigationButton(waterBubbler: waterBubbler),
+                      IconButton(
+                          onPressed: () {},
+                          icon: const Icon(Icons
+                              .favorite_border)) // TODO: Implement favorite functionality
+                    ]),
+                  ),
+                );
+              }),
+            ]),
     );
   }
 }
