@@ -63,7 +63,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: [
                       CircleAvatar(
                         radius: 50,
-                        child: const Icon(Icons.person, size: 50),
+                        child: state.user.identity!.pictureUrl == null
+                            ? const Icon(Icons.person, size: 50)
+                            : ClipOval(
+                                child: Image.network(
+                                state.user.identity!.pictureUrl!,
+                                width: 100,
+                                height: 100,
+                                fit: BoxFit.cover,
+                              )),
                       ),
                       IconButton(
                         icon: const Icon(Icons.edit, size: 20),

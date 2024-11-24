@@ -49,6 +49,7 @@ class AuthService {
       email: response.user.email,
       username: response.user.username,
       googleAuth: response.user.authByGoogle,
+      pictureUrl: response.user.profilePicture,
       roles: response.roles,
     ));
 
