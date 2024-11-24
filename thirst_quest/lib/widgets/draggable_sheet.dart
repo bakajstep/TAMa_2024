@@ -26,6 +26,7 @@ class DraggableSheet extends StatefulWidget {
 
 class DraggableSheetState extends State<DraggableSheet> {
   final DraggableSheetChildController _childController = DraggableSheetChildController();
+  final BorderRadius _borderRadius = BorderRadius.vertical(top: Radius.circular(20));
 
   @override
   void initState() {
@@ -58,18 +59,25 @@ class DraggableSheetState extends State<DraggableSheet> {
       expand: true,
       snap: true,
       snapSizes: widget.snapSizes,
-      snapAnimationDuration: const Duration(milliseconds: 500),
       controller: widget.controller,
       builder: (BuildContext context, ScrollController scrollController) {
-        return DecoratedBox(
+        return Container(
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
-            ),
+            borderRadius: _borderRadius,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black26,
+                blurRadius: 10,
+              ),
+            ],
           ),
-          child: widget.child(_childController, scrollController),
+          child:
+            ClipRRect(
+              borderRadius: _borderRadius,
+              child: Container(
+                  child: widget.child(_childController, scrollController)),
+            )
         );
       },
     );
