@@ -14,6 +14,7 @@ class AuthService {
     clientId: kIsWeb ? Config.googleClientId : null,
     serverClientId: kIsWeb ? null : Config.googleClientId,
   );
+  String? token;
 
   AuthService({required this.apiClient});
 
@@ -55,6 +56,7 @@ class AuthService {
 
     final pref = await SharedPreferences.getInstance();
     await pref.setString(_tokenKey, response.token);
+    token = response.token;
 
     return response;
   }
@@ -68,8 +70,12 @@ class AuthService {
   }
 
   Future<String?> getToken() async {
+    if (token != null) {
+      return token;
+    }
+
     final pref = await SharedPreferences.getInstance();
-    return pref.getString(_tokenKey);
+    return token = pref.getString(_tokenKey);
   }
 
   Future checkLoginAndExtend(GlobalState globalState) async {

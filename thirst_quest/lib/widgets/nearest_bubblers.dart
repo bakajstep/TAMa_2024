@@ -92,11 +92,6 @@ class NearestBubblersState extends State<NearestBubblers> {
   }
 
   void _onClose(BuildContext context) {
-    final bubblerMapState =
-        Provider.of<BubblerMapState>(context, listen: false);
-    bubblerMapState.reloadBubblersOnMove = true;
-    bubblerMapState.selectedBubbler = null;
-    bubblerMapState.mapPixelOffset = 0.0;
     widget.onClose();
   }
 
