@@ -36,7 +36,7 @@ class ApiClient {
   // FAVORITE WATER BUBBLERS
   /////////////////////////////////////////////////////////////////
 
-  Future<bool> addToFavorites(String token, String? id, String? osmId) async {
+  Future<bool> addToFavorites(String token, String? id, int? osmId) async {
     final uri = Uri.parse('$baseUrl/api/favorites');
     try {
       final response = await http.post(

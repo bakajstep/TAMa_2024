@@ -13,5 +13,5 @@ class ThirstQuestIcons {
   static const String _fontFamily = 'ThirstQuestIcons';
 
   static const IconData bubbler = IconData(0xe900, fontFamily: _fontFamily);
-  static const IconData bubbler_reflection = IconData(0xe901, fontFamily: _fontFamily);
+  static const IconData bubblerReflection = IconData(0xe901, fontFamily: _fontFamily);
 }

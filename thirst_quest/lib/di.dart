@@ -12,7 +12,7 @@ class DI {
     getIt.registerLazySingleton(() => ApiClient());
     getIt.registerLazySingleton(
         () => AuthService(apiClient: getIt<ApiClient>()));
-    getIt.registerLazySingleton(
-        () => WaterBubblerService(apiClient: getIt<ApiClient>()));
+    getIt.registerLazySingleton(() => WaterBubblerService(
+        apiClient: getIt<ApiClient>(), authService: getIt<AuthService>()));
   }
 }

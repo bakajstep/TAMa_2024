@@ -10,7 +10,9 @@ import 'package:thirst_quest/widgets/loading.dart';
 import 'package:thirst_quest/widgets/sign_in_button.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  final MaterialPageRoute? onLoginSuccess;
+
+  const LoginScreen({this.onLoginSuccess, super.key});
 
   @override
   LoginScreenState createState() => LoginScreenState();
@@ -28,8 +30,7 @@ class LoginScreenState extends State<LoginScreen> {
   void initState() {
     super.initState();
 
-    _authService.googleSignIn.onCurrentUserChanged
-        .listen((GoogleSignInAccount? account) async {
+    _authService.googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) async {
       if (account == null) return;
 
       setState(() {
@@ -60,8 +61,7 @@ class LoginScreenState extends State<LoginScreen> {
     });
 
     final globalState = Provider.of<GlobalState>(context, listen: false);
-    final response = await _authService.login(
-        _emailController.text, _passwordController.text, globalState);
+    final response = await _authService.login(_emailController.text, _passwordController.text, globalState);
 
     if (!mounted) {
       return;
@@ -76,12 +76,7 @@ class LoginScreenState extends State<LoginScreen> {
     }
 
     // If the form is valid, navigate to the home page
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ProfileScreen(),
-      ),
-    );
+    _redirectAfterLogin();
   }
 
   // Used to sign in with Google (for android)
@@ -91,8 +86,7 @@ class LoginScreenState extends State<LoginScreen> {
     });
 
     try {
-      final GoogleSignInAccount? googleUser =
-          await _authService.googleSignIn.signIn();
+      final GoogleSignInAccount? googleUser = await _authService.googleSignIn.signIn();
       if (googleUser == null) {
         setState(() {
           _isLoading = false;
@@ -100,8 +94,7 @@ class LoginScreenState extends State<LoginScreen> {
         return; // The user canceled the sign-in
       }
 
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
       await _signInWithGoogle(googleAuth);
     } catch (e) {
@@ -145,12 +138,12 @@ class LoginScreenState extends State<LoginScreen> {
     }
 
     // If the form is valid, navigate to the home page
+    _redirectAfterLogin();
+  }
+
+  void _redirectAfterLogin() {
     Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ProfileScreen(),
-      ),
-    );
+        context, widget.onLoginSuccess ?? MaterialPageRoute(builder: (context) => ProfileScreen()));
   }
 
   @override
@@ -174,17 +167,13 @@ class LoginScreenState extends State<LoginScreen> {
                   TextFormField(
                     controller: _emailController,
                     decoration: const InputDecoration(labelText: 'Email'),
-                    validator: (value) => (value == null || value.isEmpty)
-                        ? 'Please enter your email'
-                        : null,
+                    validator: (value) => (value == null || value.isEmpty) ? 'Please enter your email' : null,
                   ),
                   TextFormField(
                     controller: _passwordController,
                     decoration: const InputDecoration(labelText: 'Password'),
                     obscureText: true,
-                    validator: (value) => (value == null || value.isEmpty)
-                        ? 'Please enter your password'
-                        : null,
+                    validator: (value) => (value == null || value.isEmpty) ? 'Please enter your password' : null,
                   ),
                   const Padding(padding: EdgeInsets.symmetric(vertical: 16.0)),
                   ElevatedButton(

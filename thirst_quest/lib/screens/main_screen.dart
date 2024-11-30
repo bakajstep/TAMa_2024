@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:thirst_quest/api/models/water_bubbler.dart';
 import 'package:thirst_quest/controllers/draggable_sheet_child_controller.dart';
 import 'package:thirst_quest/controllers/location_controller.dart';
 import 'package:thirst_quest/controllers/main_action_controller.dart';
-import 'package:thirst_quest/di.dart';
 import 'package:thirst_quest/notifications/bubbler_selected.dart';
 import 'package:thirst_quest/notifications/draggable_sheet_changed_size.dart';
-import 'package:thirst_quest/services/water_bubbler_service.dart';
 import 'package:thirst_quest/states/bubbler_map_state.dart';
 import 'package:thirst_quest/states/main_screen_action.dart';
 import 'package:thirst_quest/utils/double_equals.dart';
@@ -20,7 +19,9 @@ import 'package:thirst_quest/widgets/nearest_bubblers.dart';
 import 'package:thirst_quest/widgets/small_detail_sheet_child.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+  final LatLng? initialPosition;
+
+  const MainScreen({this.initialPosition, super.key});
 
   @override
   MainScreenState createState() => MainScreenState();
@@ -29,18 +30,20 @@ class MainScreen extends StatefulWidget {
 class MainScreenState extends State<MainScreen> {
   final LocationController _locationController = LocationController();
   final BubblerMapState _bubblerMapState = BubblerMapState();
-  final WaterBubblerService bubblerService = DI.get<WaterBubblerService>();
   final MainActionController _mainActionController = MainActionController();
   final TextEditingController _searchController = TextEditingController();
-  final DraggableScrollableController _draggableController =
-      DraggableScrollableController();
+  final DraggableScrollableController _draggableController = DraggableScrollableController();
 
   @override
   void initState() {
     super.initState();
+    if (widget.initialPosition != null) {
+      _locationController.initialLocation = widget.initialPosition!;
+      _bubblerMapState.trackPosition = false;
+    }
+
     _locationController.startLocationStreamIfAvailable(
-        (position, isGpsLocation) =>
-            _bubblerMapState.changeLocation(position, isGpsLocation, false));
+        (position, isGpsLocation) => _bubblerMapState.changeLocation(position, isGpsLocation, false));
   }
 
   @override
@@ -52,10 +55,7 @@ class MainScreenState extends State<MainScreen> {
 
   void _centerToCurrentLocation() {
     _bubblerMapState.changeLocationAndRotation(
-        _locationController.currentPosition,
-        _locationController.isLocationServiceEnabled,
-        true,
-        0.0);
+        _locationController.currentPosition, _locationController.isLocationServiceEnabled, true, 0.0);
   }
 
   bool _onDraggableSheetChangedSize(DraggableSheetChangedSize notification) {
@@ -69,8 +69,7 @@ class MainScreenState extends State<MainScreen> {
       case MainScreenAction.fullDetail:
         if (doubleEquals(notification.newSize, 0.0)) {
           _closeFullDetail();
-        } else if (doubleEquals(
-            notification.newSize, constants.smallInfoCardHeight)) {
+        } else if (doubleEquals(notification.newSize, constants.smallInfoCardHeight)) {
           _showBubblerSmallDetail(_bubblerMapState.selectedBubbler!);
         }
         break;
@@ -78,8 +77,7 @@ class MainScreenState extends State<MainScreen> {
       case MainScreenAction.smallDetail:
         if (doubleEquals(notification.newSize, 0.0)) {
           _closeBubblerSmallDetail();
-        } else if (doubleEquals(
-            notification.newSize, constants.bigInfoCardHeight)) {
+        } else if (doubleEquals(notification.newSize, constants.bigInfoCardHeight)) {
           _showFullDetail();
         }
         break;
@@ -90,8 +88,7 @@ class MainScreenState extends State<MainScreen> {
     return true;
   }
 
-  Widget _buildEmptyDraggableSheet(DraggableSheetChildController controller,
-      ScrollController scrollController) {
+  Widget _buildEmptyDraggableSheet(DraggableSheetChildController controller, ScrollController scrollController) {
     return CustomScrollView(
       controller: scrollController,
       slivers: [],
@@ -104,8 +101,7 @@ class MainScreenState extends State<MainScreen> {
     });
 
     if (_draggableController.isAttached) {
-      DraggableSheet.animateSheet(
-          _draggableController, constants.bigInfoCardHeight);
+      DraggableSheet.animateSheet(_draggableController, constants.bigInfoCardHeight);
     }
   }
 
@@ -124,8 +120,7 @@ class MainScreenState extends State<MainScreen> {
     }
 
     _bubblerMapState.reloadBubblersOnMove = false;
-    _bubblerMapState.mapPixelOffset =
-        -(MediaQuery.of(context).size.height * constants.bigInfoCardHeight / 2);
+    _bubblerMapState.mapPixelOffset = -(MediaQuery.of(context).size.height * constants.bigInfoCardHeight / 2);
     _bubblerMapState.mapMove(_bubblerMapState.selectedBubbler!.position);
 
     setState(() {
@@ -133,8 +128,7 @@ class MainScreenState extends State<MainScreen> {
     });
 
     if (_draggableController.isAttached) {
-      DraggableSheet.animateSheet(
-          _draggableController, constants.bigInfoCardHeight);
+      DraggableSheet.animateSheet(_draggableController, constants.bigInfoCardHeight);
     }
   }
 
@@ -158,8 +152,7 @@ class MainScreenState extends State<MainScreen> {
     });
 
     if (_draggableController.isAttached) {
-      DraggableSheet.animateSheet(
-          _draggableController, constants.smallInfoCardHeight);
+      DraggableSheet.animateSheet(_draggableController, constants.smallInfoCardHeight);
     }
   }
 
@@ -204,8 +197,7 @@ class MainScreenState extends State<MainScreen> {
       _showFullDetail();
     }
 
-    if (_mainActionController.currentAction ==
-        MainScreenAction.nearestBubblers) {
+    if (_mainActionController.currentAction == MainScreenAction.nearestBubblers) {
       _showNearestBubblers();
     }
   }
@@ -221,8 +213,7 @@ class MainScreenState extends State<MainScreen> {
           child: NotificationListener<BubblerSelected>(
             onNotification: (notification) {
               notification.showFullDetail
-                  ? _showFullDetail(
-                      selectedBubbler: notification.selectedWaterBubbler)
+                  ? _showFullDetail(selectedBubbler: notification.selectedWaterBubbler)
                   : _showBubblerSmallDetail(notification.selectedWaterBubbler);
               return true;
             },
@@ -231,24 +222,19 @@ class MainScreenState extends State<MainScreen> {
                 Positioned.fill(
                   child: Stack(
                     children: [
-                      LocationMap(
-                          initialPosition: _locationController.currentPosition),
+                      LocationMap(initialPosition: _locationController.currentPosition),
                       Positioned(
                           top: 15,
                           left: 20,
                           right: 20,
                           child: AnimatedOpacity(
-                            duration: const Duration(
-                                milliseconds: constants.shortAnimationDuration),
-                            opacity: _mainActionController.currentAction ==
-                                        MainScreenAction.none ||
-                                    _mainActionController.currentAction ==
-                                        MainScreenAction.smallDetail
+                            duration: const Duration(milliseconds: constants.shortAnimationDuration),
+                            opacity: _mainActionController.currentAction == MainScreenAction.none ||
+                                    _mainActionController.currentAction == MainScreenAction.smallDetail
                                 ? 1.0
                                 : 0.0,
                             child: Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 20.0, right: 20.0),
+                                padding: const EdgeInsets.only(left: 20.0, right: 20.0),
                                 child: Column(children: <Widget>[
                                   const SizedBox(height: 16.0),
                                   SearchBar(
@@ -272,27 +258,19 @@ class MainScreenState extends State<MainScreen> {
                           )),
                       MapControls(
                         onCenterButtonPressed: _centerToCurrentLocation,
-                        bottomOffset: _mainActionController.currentAction ==
-                                MainScreenAction.none
+                        bottomOffset: _mainActionController.currentAction == MainScreenAction.none
                             ? 0.0
-                            : MediaQuery.of(context).size.height *
-                                constants.smallInfoCardHeight,
-                        visible: _mainActionController.currentAction ==
-                                MainScreenAction.none ||
-                            _mainActionController.currentAction ==
-                                MainScreenAction.smallDetail,
+                            : MediaQuery.of(context).size.height * constants.smallInfoCardHeight,
+                        visible: _mainActionController.currentAction == MainScreenAction.none ||
+                            _mainActionController.currentAction == MainScreenAction.smallDetail,
                       ),
                       Positioned(
                         bottom: 20,
                         left: 0,
                         right: 0,
                         child: AnimatedOpacity(
-                            duration: Duration(
-                                milliseconds: constants.shortAnimationDuration),
-                            opacity: _mainActionController.currentAction ==
-                                    MainScreenAction.none
-                                ? 1.0
-                                : 0.0,
+                            duration: Duration(milliseconds: constants.shortAnimationDuration),
+                            opacity: _mainActionController.currentAction == MainScreenAction.none ? 1.0 : 0.0,
                             child: Center(
                               child: Container(
                                 width: 100,
@@ -324,22 +302,14 @@ class MainScreenState extends State<MainScreen> {
                         onNotification: _onDraggableSheetChangedSize,
                         child: DraggableSheet(
                           controller: _draggableController,
-                          initialSize: switch (
-                              _mainActionController.currentAction) {
-                            MainScreenAction.nearestBubblers =>
-                              constants.bigInfoCardHeight,
-                            MainScreenAction.fullDetail =>
-                              constants.bigInfoCardHeight,
-                            MainScreenAction.smallDetail =>
-                              constants.smallInfoCardHeight,
+                          initialSize: switch (_mainActionController.currentAction) {
+                            MainScreenAction.nearestBubblers => constants.bigInfoCardHeight,
+                            MainScreenAction.fullDetail => constants.bigInfoCardHeight,
+                            MainScreenAction.smallDetail => constants.smallInfoCardHeight,
                             _ => 0.0,
                           },
-                          snapSizes: switch (
-                              _mainActionController.currentAction) {
-                            MainScreenAction.nearestBubblers => [
-                                0.0,
-                                constants.bigInfoCardHeight
-                              ],
+                          snapSizes: switch (_mainActionController.currentAction) {
+                            MainScreenAction.nearestBubblers => [0.0, constants.bigInfoCardHeight],
                             MainScreenAction.fullDetail => [
                                 0.0,
                                 constants.smallInfoCardHeight,
@@ -353,14 +323,10 @@ class MainScreenState extends State<MainScreen> {
                             _ => [0.0],
                           },
                           child: switch (_mainActionController.currentAction) {
-                            MainScreenAction.nearestBubblers =>
-                              (controller, scrollController) =>
-                                  NearestBubblers.build(controller,
-                                      scrollController, _closeNearestBubblers),
-                            MainScreenAction.fullDetail =>
-                              FullDetailSheetChild.build,
-                            MainScreenAction.smallDetail =>
-                              SmallDetailSheetChild.build,
+                            MainScreenAction.nearestBubblers => (controller, scrollController) =>
+                                NearestBubblers.build(controller, scrollController, _closeNearestBubblers),
+                            MainScreenAction.fullDetail => FullDetailSheetChild.build,
+                            MainScreenAction.smallDetail => SmallDetailSheetChild.build,
                             _ => _buildEmptyDraggableSheet,
                           },
                         ),

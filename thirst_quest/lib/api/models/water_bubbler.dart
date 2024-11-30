@@ -15,8 +15,9 @@ class WaterBubbler {
   final double longitude;
   final List<Photo> photos;
   final LatLng position;
-  final int upvoteCount;
-  final int downvoteCount;
+  int upvoteCount;
+  int downvoteCount;
+  bool isFavorite = false;
 
   WaterBubbler({
     required this.id,

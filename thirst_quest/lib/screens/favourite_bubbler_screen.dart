@@ -4,10 +4,10 @@ class FavoriteBubblerScreen extends StatefulWidget {
   const FavoriteBubblerScreen({super.key});
 
   @override
-  _FavoriteBubblerScreenState createState() => _FavoriteBubblerScreenState();
+  FavoriteBubblerScreenState createState() => FavoriteBubblerScreenState();
 }
 
-class _FavoriteBubblerScreenState extends State<FavoriteBubblerScreen> {
+class FavoriteBubblerScreenState extends State<FavoriteBubblerScreen> {
   bool isLoading = true; // Stav pro načítání
   List<String> favoriteDrinks = []; // Mock dat, nebo data z API
   String? errorMessage;
@@ -28,7 +28,12 @@ class _FavoriteBubblerScreenState extends State<FavoriteBubblerScreen> {
       // Simulace API volání
       await Future.delayed(const Duration(seconds: 2)); // Umělá prodleva
       setState(() {
-        favoriteDrinks = ["Brno Lužánky", "Brno střed", "Jihlava", "Potůček u Babičky"];
+        favoriteDrinks = [
+          "Brno Lužánky",
+          "Brno střed",
+          "Jihlava",
+          "Potůček u Babičky"
+        ];
         isLoading = false;
       });
     } catch (e) {
@@ -44,7 +49,8 @@ class _FavoriteBubblerScreenState extends State<FavoriteBubblerScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text("Favourite WatterBubblers")),
       body: isLoading
-          ? const Center(child: CircularProgressIndicator()) // Zobraz indikátor načítání
+          ? const Center(
+              child: CircularProgressIndicator()) // Zobraz indikátor načítání
           : errorMessage != null
               ? Center(child: Text(errorMessage!)) // Zobraz chybovou zprávu
               : ListView.builder(

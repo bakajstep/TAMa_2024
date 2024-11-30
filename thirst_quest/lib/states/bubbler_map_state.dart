@@ -52,13 +52,11 @@ class BubblerMapState extends ChangeNotifier {
     _updateLocation(position, isGpsLocation, forceTracking, null);
   }
 
-  void changeLocationAndRotation(LatLng position, bool isGpsLocation,
-      bool forceTracking, double rotation) {
+  void changeLocationAndRotation(LatLng position, bool isGpsLocation, bool forceTracking, double rotation) {
     _updateLocation(position, isGpsLocation, forceTracking, rotation);
   }
 
-  void _updateLocation(LatLng position, bool isGpsLocation, bool forceTracking,
-      double? rotation) {
+  void _updateLocation(LatLng position, bool isGpsLocation, bool forceTracking, double? rotation) {
     if (isGpsLocation != _showPositionMarker) {
       _showPositionMarker = isGpsLocation;
       notifyListeners();
@@ -66,13 +64,16 @@ class BubblerMapState extends ChangeNotifier {
 
     _trackPosition = _trackPosition || forceTracking;
     _currentPosition = position;
-    if (_trackPosition) {
-      if (rotation != null) {
-        _mapController.moveAndRotate(position, targetDetailZoom, rotation);
-        return;
-      }
-      _mapController.move(position, targetDetailZoom);
+    if (!_trackPosition) {
+      return;
     }
+
+    if (rotation != null) {
+      _mapController.moveAndRotate(position, targetDetailZoom, rotation);
+      return;
+    }
+
+    _mapController.move(position, targetDetailZoom);
   }
 
   void mapMove(LatLng position) {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:thirst_quest/api/models/water_bubbler.dart';
 import 'package:thirst_quest/controllers/draggable_sheet_child_controller.dart';
 import 'package:thirst_quest/notifications/bubbler_selected.dart';
+import 'package:thirst_quest/widgets/favorite_bubbler_button.dart';
 import 'package:thirst_quest/widgets/navigation_button.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -17,14 +18,13 @@ class NearestBubblers extends StatefulWidget {
   final VoidCallback onClose;
   final DraggableSheetChildController controller;
 
-  const NearestBubblers(
-      {required this.onClose, required this.controller, super.key});
+  const NearestBubblers({required this.onClose, required this.controller, super.key});
 
   @override
   NearestBubblersState createState() => NearestBubblersState();
 
-  static ScrollView build(DraggableSheetChildController controller,
-      ScrollController scrollController, VoidCallback onClose) {
+  static ScrollView build(
+      DraggableSheetChildController controller, ScrollController scrollController, VoidCallback onClose) {
     return CustomScrollView(
       controller: scrollController,
       slivers: [
@@ -57,28 +57,22 @@ class NearestBubblersState extends State<NearestBubblers> {
   }
 
   Future<void> _loadBubblers() async {
-    final bubblerMapState =
-        Provider.of<BubblerMapState>(context, listen: false);
+    final bubblerMapState = Provider.of<BubblerMapState>(context, listen: false);
     bubblerMapState.reloadBubblersOnMove = false;
 
     final currentPosition = positionOnLoad = bubblerMapState.currentPosition!;
     final delta = constants.nearestBubblersLatLonDelta;
 
-    final leftBottomCorner = LatLng(
-        currentPosition.latitude - delta, currentPosition.longitude - delta);
-    final rightTopCorner = LatLng(
-        currentPosition.latitude + delta, currentPosition.longitude + delta);
+    final leftBottomCorner = LatLng(currentPosition.latitude - delta, currentPosition.longitude - delta);
+    final rightTopCorner = LatLng(currentPosition.latitude + delta, currentPosition.longitude + delta);
 
-    final nearestBubblers = await bubblerService.getXNearestBubblers(
-        currentPosition, 10, LatLngBounds(leftBottomCorner, rightTopCorner));
+    final nearestBubblers =
+        await bubblerService.getXNearestBubblers(currentPosition, 10, LatLngBounds(leftBottomCorner, rightTopCorner));
 
     if (nearestBubblers.isNotEmpty) {
       final waterBubbler = nearestBubblers[0];
-      bubblerMapState.mapPixelOffset = mounted
-          ? -(MediaQuery.of(context).size.height *
-              constants.bigInfoCardHeight /
-              2)
-          : 0;
+      bubblerMapState.mapPixelOffset =
+          mounted ? -(MediaQuery.of(context).size.height * constants.bigInfoCardHeight / 2) : 0;
       bubblerMapState.mapMove(waterBubbler.position);
 
       bubblerMapState.selectedBubbler = waterBubbler;
@@ -99,10 +93,7 @@ class NearestBubblersState extends State<NearestBubblers> {
   Widget build(BuildContext context) {
     return Container(
       child: isLoading
-          ? SizedBox(
-              height: MediaQuery.of(context).size.height *
-                  constants.bigInfoCardHeight,
-              child: const Loading())
+          ? SizedBox(height: MediaQuery.of(context).size.height * constants.bigInfoCardHeight, child: const Loading())
           : Column(children: [
               Container(
                 width: 50,
@@ -128,22 +119,16 @@ class NearestBubblersState extends State<NearestBubblers> {
                   ),
                   margin: EdgeInsets.symmetric(vertical: 7.5, horizontal: 10),
                   child: ListTile(
-                    onTap: () => BubblerSelected(
-                            selectedWaterBubbler: waterBubbler,
-                            showFullDetail: true)
-                        .dispatch(context),
+                    onTap: () =>
+                        BubblerSelected(selectedWaterBubbler: waterBubbler, showFullDetail: true).dispatch(context),
                     title: Text(waterBubbler.name ?? 'Water Bubbler'),
-                    subtitle: Text(
-                        'Distance: ~${distanceToDisplay(waterBubbler.distanceTo(positionOnLoad!))}'),
+                    subtitle: Text('Distance: ~${distanceToDisplay(waterBubbler.distanceTo(positionOnLoad!))}'),
                     leading: waterBubbler.photos.isNotEmpty
                         ? Image.network(waterBubbler.photos[0].url)
                         : const Icon(Icons.local_drink),
                     trailing: Row(mainAxisSize: MainAxisSize.min, children: [
                       NavigationButton(waterBubbler: waterBubbler),
-                      IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons
-                              .favorite_border)) // TODO: Implement favorite functionality
+                      FavoriteBubblerButton(waterBubbler: waterBubbler),
                     ]),
                   ),
                 );

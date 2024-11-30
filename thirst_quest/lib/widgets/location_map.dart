@@ -26,8 +26,7 @@ class LocationMapState extends State<LocationMap> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final bubblerMapState =
-          Provider.of<BubblerMapState>(context, listen: false);
+      final bubblerMapState = Provider.of<BubblerMapState>(context, listen: false);
       _loadBubblers(bubblerMapState.mapController.camera);
     });
   }
@@ -38,10 +37,8 @@ class LocationMapState extends State<LocationMap> {
     super.dispose();
   }
 
-  void _onPositionChanged(
-      BubblerMapState state, MapCamera position, bool hasGesture) {
-    final bubblerMapState =
-        Provider.of<BubblerMapState>(context, listen: false);
+  void _onPositionChanged(BubblerMapState state, MapCamera position, bool hasGesture) {
+    final bubblerMapState = Provider.of<BubblerMapState>(context, listen: false);
 
     if (!bubblerMapState.reloadBubblersOnMove) {
       return;
@@ -50,21 +47,17 @@ class LocationMapState extends State<LocationMap> {
     state.trackPosition = false;
 
     _debounceTimer?.cancel();
-
-    _debounceTimer = Timer(const Duration(milliseconds: 500),
-        () async => await _loadBubblers(position));
+    _debounceTimer = Timer(const Duration(milliseconds: 500), () async => await _loadBubblers(position));
   }
 
   Future _loadBubblers(MapCamera position) async {
-    final waterBubblers = await _waterBubblerService.getWaterBubblersByBBox(
-        bounds: position.visibleBounds);
+    final waterBubblers = await _waterBubblerService.getWaterBubblersByBBox(bounds: position.visibleBounds);
 
     if (!mounted) {
       return;
     }
 
-    final bubblerMapState =
-        Provider.of<BubblerMapState>(context, listen: false);
+    final bubblerMapState = Provider.of<BubblerMapState>(context, listen: false);
     bubblerMapState.waterBubblers = waterBubblers;
   }
 
@@ -75,11 +68,9 @@ class LocationMapState extends State<LocationMap> {
     return Scaffold(
       body: MapWidget(
         initialPosition: widget.initialPosition,
-        currentPosition:
-            bubblerMapState.currentPosition ?? widget.initialPosition,
+        currentPosition: bubblerMapState.currentPosition ?? widget.initialPosition,
         mapController: bubblerMapState.mapController,
-        onPositionChanged: (mapCamera, hasGesture) =>
-            _onPositionChanged(bubblerMapState, mapCamera, hasGesture),
+        onPositionChanged: (mapCamera, hasGesture) => _onPositionChanged(bubblerMapState, mapCamera, hasGesture),
         waterBubblers: bubblerMapState.waterBubblers,
         showPositionMarker: bubblerMapState.showPositionMarker,
         selectedBubbler: bubblerMapState.selectedBubbler,

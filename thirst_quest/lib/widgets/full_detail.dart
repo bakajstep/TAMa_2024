@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:thirst_quest/utils/distance_convertor.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
-
 class FullDetail extends StatelessWidget {
   final VoidCallback onClose;
 
@@ -12,7 +11,7 @@ class FullDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
+    // final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     final mapState = context.watch<BubblerMapState>();
     final selectedBubbler = mapState.selectedBubbler!;
@@ -26,7 +25,7 @@ class FullDetail extends StatelessWidget {
 
     return Container(
       padding: EdgeInsets.all(16),
-      height: screenHeight*0.7,
+      height: screenHeight * 0.7,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
@@ -171,7 +170,6 @@ class FullDetail extends StatelessWidget {
                   ),
                 ),
 
-
                 // Container(
                 //   height: 150,
                 //   width: screenWidth,
@@ -188,21 +186,20 @@ class FullDetail extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 12.0),
                   child: Container(
-                    height: MediaQuery.of(context).size.height * 0.1,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text(
-                          selectedBubbler.description ?? 'No description available.',
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      ],
-                    )
-                  ),
+                      height: MediaQuery.of(context).size.height * 0.1,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text(
+                            selectedBubbler.description ?? 'No description available.',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ],
+                      )),
                 ),
                 TextButton(
                   onPressed: () {},

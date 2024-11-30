@@ -13,16 +13,18 @@ class LocationController {
   bool isLocationServiceEnabled = false;
   LatLng get currentPosition => _currentPosition;
 
+  set initialLocation(LatLng initialLocation) {
+    _currentPosition = initialLocation;
+  }
+
   void dispose() {
     _locationService.saveLastKnownPosition(_currentPosition);
     _positionStream?.cancel();
   }
 
-  Future<void> startLocationStreamIfAvailable(
-      Function(LatLng, bool) onChange) async {
+  Future<void> startLocationStreamIfAvailable(Function(LatLng, bool) onChange) async {
     LatLng? lastKnownPosition = await _locationService.getLastKnownPosition();
-    final bool isGpsLocation =
-        await _locationService.isLocationServiceEnabled();
+    final bool isGpsLocation = await _locationService.isLocationServiceEnabled();
     _currentPosition = lastKnownPosition ?? _currentPosition;
     onChange(_currentPosition, isGpsLocation && lastKnownPosition != null);
 
@@ -33,8 +35,7 @@ class LocationController {
   }
 
   void _startLocationUpdates(Function(LatLng, bool) onChange) {
-    _positionStream =
-        _locationService.getPositionStream().listen((Position position) {
+    _positionStream = _locationService.getPositionStream().listen((Position position) {
       _currentPosition = LatLng(position.latitude, position.longitude);
       onChange(_currentPosition, true);
     });

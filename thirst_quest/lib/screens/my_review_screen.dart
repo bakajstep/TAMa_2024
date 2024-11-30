@@ -4,10 +4,10 @@ class MyReviewsScreen extends StatefulWidget {
   const MyReviewsScreen({super.key});
 
   @override
-  _MyReviewsScreenState createState() => _MyReviewsScreenState();
+  MyReviewsScreenState createState() => MyReviewsScreenState();
 }
 
-class _MyReviewsScreenState extends State<MyReviewsScreen> {
+class MyReviewsScreenState extends State<MyReviewsScreen> {
   bool isLoading = true; // Stav pro načítání
   List<String> reviews = []; // Mock dat, nebo data z API
   String? errorMessage;
@@ -28,11 +28,7 @@ class _MyReviewsScreenState extends State<MyReviewsScreen> {
       // Simulace API volání
       await Future.delayed(const Duration(seconds: 2)); // Umělá prodleva
       setState(() {
-        reviews = [
-          "Výborné místo!",
-          "Skvělá fontánka.",
-          "Neteče voda"
-        ];
+        reviews = ["Výborné místo!", "Skvělá fontánka.", "Neteče voda"];
         isLoading = false;
       });
     } catch (e) {
@@ -48,7 +44,8 @@ class _MyReviewsScreenState extends State<MyReviewsScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text("My reviews")),
       body: isLoading
-          ? const Center(child: CircularProgressIndicator()) // Zobraz indikátor načítání
+          ? const Center(
+              child: CircularProgressIndicator()) // Zobraz indikátor načítání
           : errorMessage != null
               ? Center(child: Text(errorMessage!)) // Zobraz chybovou zprávu
               : ListView.builder(
