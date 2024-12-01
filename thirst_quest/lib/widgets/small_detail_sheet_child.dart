@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:thirst_quest/assets/assign_color_to_bubbler_votes.dart';
 import 'package:thirst_quest/controllers/draggable_sheet_child_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:thirst_quest/states/bubbler_map_state.dart';
@@ -73,7 +74,7 @@ class _SmallDetailSheetChildState extends State<SmallDetailSheetChild> {
                     Icon(
                       Icons.circle,
                       size: _buttonsSize,
-                      color: Colors.grey,
+                      color: assignColorToBubblerVotes(waterBubbler.upvoteCount,waterBubbler.downvoteCount),
                     ),
                     Expanded(
                       child: Column(
