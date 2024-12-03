@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:thirst_quest/di.dart';
 import 'package:thirst_quest/screens/favourite_bubbler_screen.dart';
 import 'package:thirst_quest/screens/login_screen.dart';
-import 'package:thirst_quest/screens/my_review_screen.dart';
+import 'package:thirst_quest/screens/my_bubbler_screen.dart';
 import 'package:thirst_quest/services/auth_service.dart';
 import 'package:thirst_quest/states/global_state.dart';
 
@@ -102,9 +102,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const MyReviewsScreen()));
+                              builder: (context) => const MyBubblerScreen()));
                     },
-                    child: const Text("My reviews"),
+                    child: const Text("My WaterBubblers"),
                   ),
                 ),
                 const SizedBox(width: 16),
