@@ -98,23 +98,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
-                      // Akce pro "Moje recenze"
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const MyBubblerScreen()));
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const MyBubblerScreen(),
+                        ),
+                      );
                     },
-                    child: const Text("My WaterBubblers"),
+                    child: const Center(
+                      child: Text(
+                        "My Bubblers",
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
                   ),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
-                      // Akce pro "Oblíbená pítka"
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const FavoriteBubblerScreen()));
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const FavoriteBubblerScreen(),
+                        ),
+                      );
                     },
-                    child: const Text("Favorite WatterBubblers"),
+                    child: const Center(
+                      child: Text(
+                        "My Favorite Bubblers",
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
                   ),
                 ),
               ],

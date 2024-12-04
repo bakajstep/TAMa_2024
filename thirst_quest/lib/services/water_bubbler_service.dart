@@ -47,6 +47,11 @@ class WaterBubblerService {
     return apiClient.getWaterBubblersCreatedByUser(token);
   }
 
+  Future<List<WaterBubbler>> getUsersFavoriteWaterBubblers() async {
+    final token = await authService.getToken();
+    return apiClient.getUsersFavoriteWaterBubblers(token);
+  }
+  
   Future<void> deleteWaterBubbler(String bubblerId) async {
     final token = await authService.getToken();
     apiClient.deleteWaterBubbler(token, bubblerId);
