@@ -29,7 +29,7 @@ class WaterBubblerService {
   Future<void> toggleFavorite(WaterBubbler waterBubbler) async {
     final token = await authService.getToken();
     waterBubbler.isFavorite
-        ? await apiClient.removeFromFavorites(token, waterBubbler.id!)
+        ? await apiClient.removeFromFavorites(token, waterBubbler.id, waterBubbler.osmId)
         : await apiClient.addToFavorites(token, waterBubbler.id, waterBubbler.osmId);
 
     waterBubbler.isFavorite = !waterBubbler.isFavorite;

@@ -55,6 +55,7 @@ class FavoriteBubblerButtonState extends State<FavoriteBubblerButton> {
     final globalState = context.watch<GlobalState>();
 
     return IconButton(
+      key: ValueKey(widget.waterBubbler.id ?? widget.waterBubbler.osmId),
       onPressed: globalState.user.isLoggedIn ? _onPresed : _redirectToLogin,
       padding: EdgeInsets.all(5),
       iconSize: widget.size != null ? (widget.size! - 10) : null,
