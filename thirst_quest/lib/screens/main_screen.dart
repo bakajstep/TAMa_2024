@@ -121,7 +121,7 @@ class MainScreenState extends State<MainScreen> {
 
     _bubblerMapState.reloadBubblersOnMove = false;
     _bubblerMapState.mapPixelOffset = -(MediaQuery.of(context).size.height * constants.bigInfoCardHeight / 2);
-    _bubblerMapState.animatedMapMove(_bubblerMapState.selectedBubbler!.position);
+    _bubblerMapState.mapMove(_bubblerMapState.selectedBubbler!.position);
 
     setState(() {
       _mainActionController.pushAction(MainScreenAction.fullDetail);
