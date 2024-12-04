@@ -6,41 +6,39 @@ import 'package:thirst_quest/api/models/auth_response.dart';
 import 'package:thirst_quest/config.dart';
 import 'package:thirst_quest/states/global_state.dart';
 import 'package:thirst_quest/states/models/identity.dart';
+import 'package:thirst_quest/utils/cache.dart';
 
 class AuthService {
   static const _tokenKey = 'token';
   final ApiClient apiClient;
+  final Cache cache;
   final GoogleSignIn googleSignIn = GoogleSignIn(
     clientId: kIsWeb ? Config.googleClientId : null,
     serverClientId: kIsWeb ? null : Config.googleClientId,
   );
   String? _token;
 
-  AuthService({required this.apiClient});
+  AuthService({required this.apiClient, required this.cache});
 
-  Future<AuthResponse?> login(
-      String email, String password, GlobalState globalState) async {
+  Future<AuthResponse?> login(String email, String password, GlobalState globalState) async {
     final response = await apiClient.login(email, password);
 
     return _handleAuthResponse(response, globalState);
   }
 
-  Future<AuthResponse?> register(String email, String username, String password,
-      GlobalState globalState) async {
+  Future<AuthResponse?> register(String email, String username, String password, GlobalState globalState) async {
     final response = await apiClient.register(email, username, password);
 
     return _handleAuthResponse(response, globalState);
   }
 
-  Future<AuthResponse?> signInWithGoogle(
-      String idToken, GlobalState globalState) async {
+  Future<AuthResponse?> signInWithGoogle(String idToken, GlobalState globalState) async {
     final response = await apiClient.signInWithGoogle(idToken);
 
     return _handleAuthResponse(response, globalState);
   }
 
-  Future<AuthResponse?> _handleAuthResponse(
-      AuthResponse? response, GlobalState globalState) async {
+  Future<AuthResponse?> _handleAuthResponse(AuthResponse? response, GlobalState globalState) async {
     if (response == null) {
       return null;
     }
@@ -57,6 +55,7 @@ class AuthService {
     final pref = await SharedPreferences.getInstance();
     await pref.setString(_tokenKey, response.token);
     _token = response.token;
+    cache.clear();
 
     return response;
   }
@@ -67,10 +66,11 @@ class AuthService {
 
     final pref = await SharedPreferences.getInstance();
     await pref.remove(_tokenKey);
+    _token = null;
+    cache.clear();
   }
 
-  Future<String> getToken() async =>
-      await tryGetToken() ?? (throw Exception('Token not found'));
+  Future<String> getToken() async => await tryGetToken() ?? (throw Exception('Token not found'));
 
   Future<String?> tryGetToken() async {
     if (_token != null) {

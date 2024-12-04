@@ -13,7 +13,8 @@ class ApiClient {
   // WATER BUBBLERS
   /////////////////////////////////////////////////////////////////
 
-  Future<List<WaterBubbler>> getBubblersByBBox(double minLat, double maxLat, double minLon, double maxLon) async {
+  Future<List<WaterBubbler>> getBubblersByBBox(
+      double minLat, double maxLat, double minLon, double maxLon, String? token) async {
     final uri = Uri.parse('$baseUrl/api/waterbubblers').replace(queryParameters: {
       'minLat': minLat.toString(),
       'maxLat': maxLat.toString(),
@@ -21,7 +22,9 @@ class ApiClient {
       'maxLon': maxLon.toString(),
     });
 
-    final response = await http.get(uri);
+    final headers = token != null ? _addAuthHeader(token) : null;
+
+    final response = await http.get(uri, headers: headers);
     if (response.statusCode != 200) {
       throw Exception('Failed to load bubblers');
     }

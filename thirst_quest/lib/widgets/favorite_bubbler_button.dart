@@ -25,7 +25,7 @@ class FavoriteBubblerButtonState extends State<FavoriteBubblerButton> {
   @override
   void initState() {
     super.initState();
-    _isFavorite = widget.waterBubbler.isFavorite;
+    _isFavorite = widget.waterBubbler.favorite;
   }
 
   void _onPresed() async {
@@ -33,7 +33,7 @@ class FavoriteBubblerButtonState extends State<FavoriteBubblerButton> {
       _isFavorite = !_isFavorite;
     });
     await waterBubblerService.toggleFavorite(widget.waterBubbler);
-    _isFavorite = widget.waterBubbler.isFavorite;
+    _isFavorite = widget.waterBubbler.favorite;
   }
 
   void _redirectToLogin() {

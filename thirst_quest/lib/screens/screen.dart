@@ -1,7 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:thirst_quest/di.dart';
-import 'package:thirst_quest/main.dart';
 import 'package:thirst_quest/screens/login_screen.dart';
 import 'package:thirst_quest/screens/main_screen.dart';
 import 'package:thirst_quest/screens/register_screen.dart';
@@ -94,28 +95,23 @@ class _MyHomePageState extends State<MyHomePage> {
               child: const Text('Go to Second Screen'),
             ),
             ElevatedButton(
-                onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const RegisterScreen())),
+                onPressed: () =>
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const RegisterScreen())),
                 child: const Text('Go to Register Screen')),
             if (!state.user.isLoggedIn)
               ElevatedButton(
-                  onPressed: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const LoginScreen())),
+                  onPressed: () =>
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen())),
                   child: const Text('Go to Login Screen'))
             else
               Column(
                 children: [
-                  Text('Welcome, ${state.user.identity!.username}'),
+                  Text('Welcome, ${utf8.decode(state.user.identity!.username.codeUnits)}'),
                   Text('Email: ${state.user.identity!.email}'),
                   ElevatedButton(
                       onPressed: () async {
                         final authService = DI.get<AuthService>();
-                        await authService.logout(
-                            Provider.of<GlobalState>(context, listen: false));
+                        await authService.logout(Provider.of<GlobalState>(context, listen: false));
                       },
                       child: const Text('Logout')),
                 ],
@@ -126,8 +122,6 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _incrementCounter();
-          Provider.of<GlobalState>(context, listen: false).colorScheme =
-              ColorScheme.fromSeed(seedColor: getRandomColor());
         },
         tooltip: 'Increment',
         child: const Icon(Icons.add),

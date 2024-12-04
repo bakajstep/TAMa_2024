@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:thirst_quest/controllers/draggable_sheet_child_controller.dart';
@@ -81,7 +83,7 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              selectedBubbler.name ?? 'Bubbler Details',
+                              utf8.decode((selectedBubbler.name ?? 'Water Bubbler').codeUnits),
                               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                             ),
                             SizedBox(height: 4),
@@ -209,7 +211,7 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Text(
-                          selectedBubbler.description ?? 'No description available.',
+                          utf8.decode((selectedBubbler.description ?? 'No description available.').codeUnits),
                           style: TextStyle(fontSize: 16),
                         ),
                       ],
