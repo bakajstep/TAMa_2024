@@ -19,7 +19,7 @@ class FavoriteBubblerScreenState extends State<FavoriteBubblerScreen> {
   @override
   void initState() {
     super.initState();
-    fetchBubblers(); 
+    fetchBubblers();
   }
 
   Future<void> fetchBubblers() async {
@@ -118,7 +118,8 @@ class FavoriteBubblerScreenState extends State<FavoriteBubblerScreen> {
                                     builder: (BuildContext context) {
                                       return AlertDialog(
                                         title: const Text('Confirm Removing Favorite WatterBubbler'),
-                                        content: const Text('Are you sure you want to remove this bubbler from favorite?'),
+                                        content:
+                                            const Text('Are you sure you want to remove this bubbler from favorite?'),
                                         actions: [
                                           TextButton(
                                             onPressed: () {
@@ -130,7 +131,7 @@ class FavoriteBubblerScreenState extends State<FavoriteBubblerScreen> {
                                           TextButton(
                                             onPressed: () {
                                               // Perform removing favorite bubbler
-                                              bubbler.isFavorite = false;
+                                              bubbler.favorite = false;
                                               removeFavoriteWaterBubbler(bubbler);
                                               // Close the dialog
                                               Navigator.of(context).pop();

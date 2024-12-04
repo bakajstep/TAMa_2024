@@ -39,7 +39,7 @@ class WaterBubblerService {
         ? await apiClient.removeFromFavorites(token, waterBubbler.id, waterBubbler.osmId)
         : await apiClient.addToFavorites(token, waterBubbler.id, waterBubbler.osmId);
 
-    waterBubbler.isFavorite = !waterBubbler.isFavorite;
+    waterBubbler.favorite = !waterBubbler.favorite;
   }
 
   Future<List<WaterBubbler>> getWaterBubblerCreatedByUser() async {
@@ -51,7 +51,7 @@ class WaterBubblerService {
     final token = await authService.getToken();
     return apiClient.getUsersFavoriteWaterBubblers(token);
   }
-  
+
   Future<void> deleteWaterBubbler(String bubblerId) async {
     final token = await authService.getToken();
     apiClient.deleteWaterBubbler(token, bubblerId);
