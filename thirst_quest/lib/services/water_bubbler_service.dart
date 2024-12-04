@@ -3,18 +3,25 @@ import 'package:latlong2/latlong.dart';
 import 'package:thirst_quest/api/api_client.dart';
 import 'package:thirst_quest/api/models/water_bubbler.dart';
 import 'package:thirst_quest/services/auth_service.dart';
+import 'package:thirst_quest/utils/cache.dart';
 
 class WaterBubblerService {
+  static const bubblersKey = 'bubblers';
+  static const bubblersBoundsKey = 'bubblers_bounds';
+
   final ApiClient apiClient;
   final AuthService authService;
-  LatLngBounds? _loadedBounds;
-  List<WaterBubbler> _loadedBubblers = [];
+  final Cache cache;
 
-  WaterBubblerService({required this.apiClient, required this.authService});
+  WaterBubblerService({required this.apiClient, required this.authService, required this.cache});
 
   Future<List<WaterBubbler>> getWaterBubblersByBBox({required LatLngBounds bounds, bool extendBounds = true}) async {
-    if (_loadedBounds != null && _loadedBounds!.containsBounds(bounds)) {
-      return _filterBubblersInBounds(_loadedBubblers, bounds);
+    final loadedBounds = cache.get<LatLngBounds?>(bubblersBoundsKey);
+
+    if (loadedBounds != null && loadedBounds.containsBounds(bounds)) {
+      final loadedBubblers = cache.get<List<WaterBubbler>>(bubblersKey);
+
+      return _filterBubblersInBounds(loadedBubblers ?? [], bounds);
     }
 
     return _filterBubblersInBounds(await _loadBubblers(bounds, extendBounds), bounds);
@@ -28,7 +35,7 @@ class WaterBubblerService {
 
   Future<void> toggleFavorite(WaterBubbler waterBubbler) async {
     final token = await authService.getToken();
-    waterBubbler.isFavorite
+    waterBubbler.favorite
         ? await apiClient.removeFromFavorites(token, waterBubbler.id, waterBubbler.osmId)
         : await apiClient.addToFavorites(token, waterBubbler.id, waterBubbler.osmId);
 
@@ -50,11 +57,6 @@ class WaterBubblerService {
     apiClient.deleteWaterBubbler(token, bubblerId);
   }
 
-  void clearCache() {
-    _loadedBounds = null;
-    _loadedBubblers = [];
-  }
-
   LatLngBounds _extendBounds(LatLngBounds bounds) {
     final latDiff = bounds.north - bounds.south;
     final lonDiff = bounds.east - bounds.west;
@@ -66,16 +68,14 @@ class WaterBubblerService {
   }
 
   Future<List<WaterBubbler>> _loadBubblers(LatLngBounds bounds, bool extendBounds) async {
+    final token = await authService.tryGetToken();
     final newBounds = extendBounds ? _extendBounds(bounds) : bounds;
-    final newBubblers = await apiClient.getBubblersByBBox(
-      newBounds.south,
-      newBounds.north,
-      newBounds.west,
-      newBounds.east,
-    );
 
-    _loadedBubblers = newBubblers;
-    _loadedBounds = newBounds;
+    final newBubblers =
+        await apiClient.getBubblersByBBox(newBounds.south, newBounds.north, newBounds.west, newBounds.east, token);
+
+    cache.set(bubblersKey, newBubblers);
+    cache.set(bubblersBoundsKey, newBounds);
 
     return newBubblers;
   }
