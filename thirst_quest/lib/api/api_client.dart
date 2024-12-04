@@ -115,6 +115,21 @@ class ApiClient {
     }
   }
 
+  Future<List<WaterBubbler>> getUsersFavoriteWaterBubblers(String token) async {
+    final uri = Uri.parse('$baseUrl/api/users/favorites');
+    
+    final response = await http.get(
+      uri, 
+      headers: _addAuthHeader(token),
+    );
+    if (response.statusCode != 200) {
+      throw Exception('Failed to load favourite bubblers');
+    }
+
+    final List<dynamic> body = jsonDecode(response.body);
+    return body.map((dynamic item) => WaterBubbler.fromJson(item)).toList();
+  }
+
   /////////////////////////////////////////////////////////////////
   // USER AUTH
   /////////////////////////////////////////////////////////////////
