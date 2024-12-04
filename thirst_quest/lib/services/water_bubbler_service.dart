@@ -39,7 +39,17 @@ class WaterBubblerService {
         ? await apiClient.removeFromFavorites(token, waterBubbler.id, waterBubbler.osmId)
         : await apiClient.addToFavorites(token, waterBubbler.id, waterBubbler.osmId);
 
-    waterBubbler.favorite = !waterBubbler.favorite;
+    waterBubbler.isFavorite = !waterBubbler.isFavorite;
+  }
+
+  Future<List<WaterBubbler>> getWaterBubblerCreatedByUser() async {
+    final token = await authService.getToken();
+    return apiClient.getWaterBubblersCreatedByUser(token);
+  }
+
+  Future<void> deleteWaterBubbler(String bubblerId) async {
+    final token = await authService.getToken();
+    apiClient.deleteWaterBubbler(token, bubblerId);
   }
 
   LatLngBounds _extendBounds(LatLngBounds bounds) {

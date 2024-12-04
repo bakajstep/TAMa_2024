@@ -33,6 +33,47 @@ class ApiClient {
     return body.map((dynamic item) => WaterBubbler.fromJson(item)).toList();
   }
 
+  Future<List<WaterBubbler>> getWaterBubblersCreatedByUser(String token) async {
+    final uri = Uri.parse('$baseUrl/api/waterbubblers/user');
+    
+    final response = await http.get(
+      uri, 
+      headers: _addAuthHeader(token),
+    );
+    if (response.statusCode != 200) {
+      throw Exception('Failed to load bubblers');
+    }
+
+    final List<dynamic> body = jsonDecode(response.body);
+    return body.map((dynamic item) => WaterBubbler.fromJson(item)).toList();
+  }
+
+  Future<bool> deleteWaterBubbler(String token, String bubblerId) async {
+    final uri = Uri.parse('$baseUrl/api/waterbubblers');
+    
+    final body = json.encode({
+      "bubblerId": bubblerId,
+      "openStreetId": null,
+    });
+
+    try {
+      final response = await http.delete(
+        uri,
+        headers: {
+          "Content-Type": "application/json",
+          ..._addAuthHeader(token), // Přidáme autorizační hlavičku
+        },
+        body: body,
+      );
+
+      return response.statusCode == 200;
+    } on SocketException {
+      throw Exception('No Internet connection');
+    } catch (e) {
+      throw Exception('Failed to remove from favorites: $e');
+    }
+  }
+
   /////////////////////////////////////////////////////////////////
   // FAVORITE WATER BUBBLERS
   /////////////////////////////////////////////////////////////////
