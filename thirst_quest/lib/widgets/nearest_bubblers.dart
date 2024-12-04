@@ -73,7 +73,7 @@ class NearestBubblersState extends State<NearestBubblers> {
       final waterBubbler = nearestBubblers[0];
       bubblerMapState.mapPixelOffset =
           mounted ? -(MediaQuery.of(context).size.height * constants.bigInfoCardHeight / 2) : 0;
-      bubblerMapState.mapMove(waterBubbler.position);
+      bubblerMapState.animatedMapMove(waterBubbler.position);
 
       bubblerMapState.selectedBubbler = waterBubbler;
       bubblerMapState.waterBubblers = nearestBubblers;

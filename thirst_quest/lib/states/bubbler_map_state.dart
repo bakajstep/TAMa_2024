@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:thirst_quest/api/models/water_bubbler.dart';
+import 'package:thirst_quest/assets/constants.dart' as constants;
+import 'package:thirst_quest/utils/animataion_ticker_provider.dart';
 
 class BubblerMapState extends ChangeNotifier {
   final MapController _mapController = MapController();
@@ -89,5 +91,40 @@ class BubblerMapState extends ChangeNotifier {
     );
 
     _mapController.move(movedPosition, targetDetailZoom);
+  }
+
+  void animatedMapMove(LatLng position) {
+    final pixelOffset = Point(0.0, _mapPixelOffset);
+    final crs = _mapController.camera.crs;
+    final screenPoint = crs.latLngToPoint(position, targetDetailZoom);
+
+    final offsetPoint = screenPoint + pixelOffset;
+    final latLngOffset = crs.pointToLatLng(offsetPoint, targetDetailZoom);
+    final movedPosition = LatLng(
+      position.latitude - (latLngOffset.latitude - position.latitude),
+      position.longitude - (latLngOffset.longitude - position.longitude),
+    );
+
+    final latTween = Tween<double>(begin: mapController.camera.center.latitude, end: movedPosition.latitude);
+    final lngTween = Tween<double>(begin: mapController.camera.center.longitude, end: movedPosition.longitude);
+    final zoomTween = Tween<double>(begin: mapController.camera.zoom, end: targetDetailZoom);
+
+    final controller = AnimationController(
+        duration: const Duration(milliseconds: constants.longAnimationDuration), vsync: AnimationTickerProvider());
+
+    final Animation<double> animation = CurvedAnimation(parent: controller, curve: Curves.fastOutSlowIn);
+
+    controller.addListener(() {
+      mapController.move(
+          LatLng(latTween.evaluate(animation), lngTween.evaluate(animation)), zoomTween.evaluate(animation));
+    });
+
+    animation.addStatusListener((status) {
+      if (status == AnimationStatus.completed || status == AnimationStatus.dismissed) {
+        controller.dispose();
+      }
+    });
+
+    controller.forward();
   }
 }
