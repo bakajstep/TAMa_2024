@@ -12,7 +12,7 @@ Review _$ReviewFromJson(Map<String, dynamic> json) => Review(
       userId: json['userId'] as String,
       waterBubblerId: json['waterBubblerId'] as String,
       waterBubblerOsmId: (json['waterBubblerOsmId'] as num).toInt(),
-    );
+    )..voteTypeEnum = $enumDecode(_$VoteTypeEnumMap, json['voteTypeEnum']);
 
 Map<String, dynamic> _$ReviewToJson(Review instance) => <String, dynamic>{
       'id': instance.id,
@@ -20,4 +20,10 @@ Map<String, dynamic> _$ReviewToJson(Review instance) => <String, dynamic>{
       'userId': instance.userId,
       'waterBubblerId': instance.waterBubblerId,
       'waterBubblerOsmId': instance.waterBubblerOsmId,
+      'voteTypeEnum': _$VoteTypeEnumMap[instance.voteTypeEnum]!,
     };
+
+const _$VoteTypeEnumMap = {
+  VoteType.UPVOTE: 'UPVOTE',
+  VoteType.DOWNVOTE: 'DOWNVOTE',
+};

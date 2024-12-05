@@ -54,6 +54,7 @@ dependencies:
   rename_app: ^1.6.1
   flutter_map_marker_cluster: ^1.4.0
   google_sign_in_web: ^0.12.4+3
+  flutter_typeahead: ^5.2.0
 
 dev_dependencies:
   flutter_test:

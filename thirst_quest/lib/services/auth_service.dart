@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:thirst_quest/api/api_client.dart';
+import 'package:thirst_quest/api/thirst_quest_api_client.dart';
 import 'package:thirst_quest/api/models/auth_response.dart';
 import 'package:thirst_quest/config.dart';
 import 'package:thirst_quest/states/global_state.dart';
@@ -10,7 +10,7 @@ import 'package:thirst_quest/utils/cache.dart';
 
 class AuthService {
   static const _tokenKey = 'token';
-  final ApiClient apiClient;
+  final ThirstQuestApiClient apiClient;
   final Cache cache;
   final GoogleSignIn googleSignIn = GoogleSignIn(
     clientId: kIsWeb ? Config.googleClientId : null,

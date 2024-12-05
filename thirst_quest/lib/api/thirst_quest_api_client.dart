@@ -6,8 +6,8 @@ import 'package:thirst_quest/api/models/auth_response.dart';
 import 'package:thirst_quest/api/models/water_bubbler.dart';
 import 'package:thirst_quest/config.dart';
 
-class ApiClient {
-  final String baseUrl = Config.apiUrl;
+class ThirstQuestApiClient {
+  final String baseUrl = Config.thirstQuestApiUrl;
 
   /////////////////////////////////////////////////////////////////
   // WATER BUBBLERS
@@ -35,9 +35,9 @@ class ApiClient {
 
   Future<List<WaterBubbler>> getWaterBubblersCreatedByUser(String token) async {
     final uri = Uri.parse('$baseUrl/api/waterbubblers/user');
-    
+
     final response = await http.get(
-      uri, 
+      uri,
       headers: _addAuthHeader(token),
     );
     if (response.statusCode != 200) {
@@ -50,7 +50,7 @@ class ApiClient {
 
   Future<bool> deleteWaterBubbler(String token, String bubblerId) async {
     final uri = Uri.parse('$baseUrl/api/waterbubblers');
-    
+
     final body = json.encode({
       "bubblerId": bubblerId,
       "openStreetId": null,
@@ -120,9 +120,9 @@ class ApiClient {
 
   Future<List<WaterBubbler>> getUsersFavoriteWaterBubblers(String token) async {
     final uri = Uri.parse('$baseUrl/api/users/favorites');
-    
+
     final response = await http.get(
-      uri, 
+      uri,
       headers: _addAuthHeader(token),
     );
     if (response.statusCode != 200) {
