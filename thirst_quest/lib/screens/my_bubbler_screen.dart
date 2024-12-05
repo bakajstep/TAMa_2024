@@ -3,23 +3,23 @@ import 'package:thirst_quest/api/models/water_bubbler.dart';
 import 'package:thirst_quest/di.dart';
 import 'package:thirst_quest/services/water_bubbler_service.dart';
 
-class FavoriteBubblerScreen extends StatefulWidget {
-  const FavoriteBubblerScreen({super.key});
+class MyBubblerScreen extends StatefulWidget {
+  const MyBubblerScreen({super.key});
 
   @override
-  FavoriteBubblerScreenState createState() => FavoriteBubblerScreenState();
+  MyBubblerScreenState createState() => MyBubblerScreenState();
 }
 
-class FavoriteBubblerScreenState extends State<FavoriteBubblerScreen> {
+class MyBubblerScreenState extends State<MyBubblerScreen> {
   final WaterBubblerService bubblerService = DI.get<WaterBubblerService>();
-  bool isLoading = true; // Stav pro načítání
+  bool isLoading = true; // Loading state
   List<WaterBubbler> bubblers = []; // List of bubblers from API
   String? errorMessage;
 
   @override
   void initState() {
     super.initState();
-    fetchBubblers();
+    fetchBubblers(); // Fetch bubblers on initialization
   }
 
   Future<void> fetchBubblers() async {
@@ -30,7 +30,7 @@ class FavoriteBubblerScreenState extends State<FavoriteBubblerScreen> {
 
     try {
       // Fetch user-created bubblers using the service
-      final userBubblers = await bubblerService.getUsersFavoriteWaterBubblers();
+      final userBubblers = await bubblerService.getWaterBubblerCreatedByUser();
       setState(() {
         bubblers = userBubblers;
         isLoading = false;
@@ -43,15 +43,15 @@ class FavoriteBubblerScreenState extends State<FavoriteBubblerScreen> {
     }
   }
 
-  void removeFavoriteWaterBubbler(WaterBubbler waterBubbler) async {
+  void deleteBubbler(String bubblerId) async {
     try {
-      await bubblerService.toggleFavorite(waterBubbler); // Remove buubler from favorite
+      await bubblerService.deleteWaterBubbler(bubblerId); // Delete the bubbler using the service
       setState(() {
-        bubblers.removeWhere((bubbler) => bubbler.id == waterBubbler.id);
+        bubblers.removeWhere((bubbler) => bubbler.id == bubblerId);
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error during removing bubbler from favorite: $e')),
+        SnackBar(content: Text('Error during deletion: $e')),
       );
     }
   }
@@ -59,7 +59,7 @@ class FavoriteBubblerScreenState extends State<FavoriteBubblerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("My Favorite Bubblers")),
+      appBar: AppBar(title: const Text("My Bubblers")),
       body: isLoading
           ? const Center(
               child: CircularProgressIndicator(), // Loading indicator
@@ -117,9 +117,8 @@ class FavoriteBubblerScreenState extends State<FavoriteBubblerScreen> {
                                     context: context,
                                     builder: (BuildContext context) {
                                       return AlertDialog(
-                                        title: const Text('Confirm Removing Favorite WatterBubbler'),
-                                        content:
-                                            const Text('Are you sure you want to remove this bubbler from favorite?'),
+                                        title: const Text('Confirm Delete'),
+                                        content: const Text('Are you sure you want to delete this bubbler?'),
                                         actions: [
                                           TextButton(
                                             onPressed: () {
@@ -130,13 +129,12 @@ class FavoriteBubblerScreenState extends State<FavoriteBubblerScreen> {
                                           ),
                                           TextButton(
                                             onPressed: () {
-                                              // Perform removing favorite bubbler
-                                              bubbler.favorite = false;
-                                              removeFavoriteWaterBubbler(bubbler);
+                                              // Perform the delete action
+                                              deleteBubbler(bubbler.id!);
                                               // Close the dialog
                                               Navigator.of(context).pop();
                                             },
-                                            child: const Text('Remove'),
+                                            child: const Text('Delete'),
                                           ),
                                         ],
                                       );

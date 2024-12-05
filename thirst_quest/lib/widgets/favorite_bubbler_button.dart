@@ -25,7 +25,7 @@ class FavoriteBubblerButtonState extends State<FavoriteBubblerButton> {
   @override
   void initState() {
     super.initState();
-    _isFavorite = widget.waterBubbler.isFavorite;
+    _isFavorite = widget.waterBubbler.favorite;
   }
 
   void _onPresed() async {
@@ -33,7 +33,7 @@ class FavoriteBubblerButtonState extends State<FavoriteBubblerButton> {
       _isFavorite = !_isFavorite;
     });
     await waterBubblerService.toggleFavorite(widget.waterBubbler);
-    _isFavorite = widget.waterBubbler.isFavorite;
+    _isFavorite = widget.waterBubbler.favorite;
   }
 
   void _redirectToLogin() {
@@ -55,6 +55,7 @@ class FavoriteBubblerButtonState extends State<FavoriteBubblerButton> {
     final globalState = context.watch<GlobalState>();
 
     // return IconButton(
+    //   key: ValueKey(widget.waterBubbler.id ?? widget.waterBubbler.osmId),
     //   onPressed: globalState.user.isLoggedIn ? _onPresed : _redirectToLogin,
     //   padding: EdgeInsets.all(5),
     //   iconSize: widget.size != null ? (widget.size! - 10) : null,
@@ -82,6 +83,7 @@ class FavoriteBubblerButtonState extends State<FavoriteBubblerButton> {
         shape: BoxShape.circle, // Makes the background circular
       ),
       child: IconButton(
+        key: ValueKey(widget.waterBubbler.id ?? widget.waterBubbler.osmId),
         onPressed: globalState.user.isLoggedIn ? _onPresed : _redirectToLogin,
         iconSize: widget.size != null ? (widget.size! - 20) : 24,
         icon: Icon(_isFavorite ? Icons.favorite : Icons.favorite_border, color: _isFavorite ? Colors.pinkAccent : Colors.white),

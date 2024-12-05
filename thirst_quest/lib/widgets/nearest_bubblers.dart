@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:thirst_quest/api/models/water_bubbler.dart';
 import 'package:thirst_quest/controllers/draggable_sheet_child_controller.dart';
@@ -121,7 +123,7 @@ class NearestBubblersState extends State<NearestBubblers> {
                   child: ListTile(
                     onTap: () =>
                         BubblerSelected(selectedWaterBubbler: waterBubbler, showFullDetail: true).dispatch(context),
-                    title: Text(waterBubbler.name ?? 'Water Bubbler'),
+                    title: Text(utf8.decode((waterBubbler.name ?? 'Water Bubbler').codeUnits)),
                     subtitle: Text('Distance: ~${distanceToDisplay(waterBubbler.distanceTo(positionOnLoad!))}'),
                     leading: waterBubbler.photos.isNotEmpty
                         ? Image.network(waterBubbler.photos[0].url)

@@ -24,14 +24,4 @@ class GlobalState extends ChangeNotifier {
     user.identity!.email = newEmail;
     notifyListeners();
   }
-
-  ColorScheme _colorScheme =
-      ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 22, 98, 160));
-
-  ColorScheme get colorScheme => _colorScheme;
-
-  set colorScheme(ColorScheme value) {
-    _colorScheme = value;
-    notifyListeners();
-  }
 }

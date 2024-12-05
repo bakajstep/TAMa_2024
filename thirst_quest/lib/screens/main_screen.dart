@@ -10,6 +10,7 @@ import 'package:thirst_quest/notifications/draggable_sheet_changed_size.dart';
 import 'package:thirst_quest/states/bubbler_map_state.dart';
 import 'package:thirst_quest/states/main_screen_action.dart';
 import 'package:thirst_quest/utils/double_equals.dart';
+import 'package:thirst_quest/widgets/city_search_widget.dart';
 import 'package:thirst_quest/widgets/draggable_sheet.dart';
 import 'package:thirst_quest/widgets/full_detail_sheet_child.dart';
 import 'package:thirst_quest/widgets/location_map.dart';
@@ -31,7 +32,6 @@ class MainScreenState extends State<MainScreen> {
   final LocationController _locationController = LocationController();
   final BubblerMapState _bubblerMapState = BubblerMapState();
   final MainActionController _mainActionController = MainActionController();
-  final TextEditingController _searchController = TextEditingController();
   final DraggableScrollableController _draggableController = DraggableScrollableController();
 
   @override
@@ -234,27 +234,10 @@ class MainScreenState extends State<MainScreen> {
                                 ? 1.0
                                 : 0.0,
                             child: Padding(
-                                padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-                                child: Column(children: <Widget>[
-                                  const SizedBox(height: 16.0),
-                                  SearchBar(
-                                    controller: _searchController,
-                                    leading: IconButton(
-                                        onPressed: () {
-                                          // searchbar login here
-                                        },
-                                        icon: const Icon(Icons.search)),
-                                    // trailing: [
-                                    //   IconButton(
-                                    //     onPressed: () {
-                                    //       // searchbar login here
-                                    //     },
-                                    //     icon: const Icon(Icons.mic)
-                                    //   )
-                                    // ],
-                                    hintText: 'Search...',
-                                  )
-                                ])),
+                              padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+                              child:
+                                  CitySearchWidget(onCitySelected: (city) => _bubblerMapState.mapMove(city.position)),
+                            ),
                           )),
                       MapControls(
                         onCenterButtonPressed: _centerToCurrentLocation,

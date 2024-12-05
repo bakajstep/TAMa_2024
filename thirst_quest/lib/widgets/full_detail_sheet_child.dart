@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:thirst_quest/api/models/water_bubbler.dart';
@@ -108,7 +110,8 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(selectedBubbler.name ?? 'Water Bubbler',
+                          Text(
+                              utf8.decode((selectedBubbler.name ?? 'Water Bubbler').codeUnits),
                               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                           Text(
                             "Distance: ${'~${distanceToDisplay(selectedBubbler.distanceTo(currentLocation),)}'}",
@@ -231,7 +234,7 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Text(
-                  selectedBubbler.description ?? 'No description available.',
+                  utf8.decode((selectedBubbler.description ?? 'No description available.').codeUnits),
                   style: TextStyle(fontSize: 16),
                 ),
               ],

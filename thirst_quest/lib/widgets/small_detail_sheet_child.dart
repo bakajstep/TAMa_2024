@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:thirst_quest/assets/assign_color_to_bubbler_votes.dart';
 import 'package:thirst_quest/controllers/draggable_sheet_child_controller.dart';
@@ -75,13 +77,13 @@ class _SmallDetailSheetChildState extends State<SmallDetailSheetChild> {
                     Icon(
                       Icons.circle,
                       size: _buttonsSize,
-                      color: assignColorToBubblerVotes(waterBubbler.upvoteCount,waterBubbler.downvoteCount),
+                      color: assignColorToBubblerVotes(waterBubbler.upvoteCount, waterBubbler.downvoteCount),
                     ),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(waterBubbler.name ?? 'Water Bubbler',
+                          Text(utf8.decode((waterBubbler.name ?? 'Water Bubbler').codeUnits),
                               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                           Text(
                               "Distance: ${distanceBetweenBubblerAndCurrent != null ? '~${distanceToDisplay(distanceBetweenBubblerAndCurrent)}' : "UNKNOWN"}",
