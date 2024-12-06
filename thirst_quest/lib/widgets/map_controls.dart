@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:thirst_quest/screens/login_screen.dart';
 import 'package:thirst_quest/screens/profile_screen.dart';
+import 'package:thirst_quest/states/bubbler_map_state.dart';
 import 'package:thirst_quest/states/global_state.dart';
 import 'package:thirst_quest/assets/constants.dart' as constants;
 
@@ -23,6 +24,17 @@ class MapControls extends StatelessWidget {
       context,
       MaterialPageRoute(builder: (context) => const ProfileScreen()),
     );
+  }
+
+  void _filterFavorites(BuildContext context) {
+    final state = Provider.of<GlobalState>(context, listen: false);
+    if (!state.user.isLoggedIn) {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+      return;
+    }
+
+    final bubblerState = Provider.of<BubblerMapState>(context, listen: false);
+    bubblerState.toggleFavoritesFilter();
   }
 
   @override
@@ -88,7 +100,7 @@ class MapControls extends StatelessWidget {
                     onSelected: (value) {
                       // Perform action based on selected option
                       if (value == 'Filter map') {
-                        // Action for Filter map
+                        _filterFavorites(context);
                       } else if (value == 'New source') {
                         // Action for New source
                       }

@@ -39,7 +39,7 @@ class CitySearchWidget extends StatelessWidget {
       },
       itemBuilder: (context, suggestion) {
         return ListTile(
-          title: Text(suggestion.name),
+          title: Text('${suggestion.name} (${suggestion.countryCode})'),
         );
       },
       onSelected: (suggestion) {
