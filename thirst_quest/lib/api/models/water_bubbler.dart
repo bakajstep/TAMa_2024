@@ -36,6 +36,23 @@ class WaterBubbler {
   })  : photos = photos ?? <Photo>[],
         position = LatLng(latitude, longitude);
 
+  WaterBubbler.fromLatLng({
+    required LatLng latLng,
+    required this.name,
+    required this.description,
+    this.favorite = false,
+    this.review,
+    List<Photo>? photos,
+  })  : id = null,
+        osmId = null,
+        latitude = latLng.latitude,
+        longitude = latLng.longitude,
+        position = latLng,
+        upvoteCount = 0,
+        downvoteCount = 0,
+        photos = photos ?? <Photo>[];
+
+
   factory WaterBubbler.fromJson(Map<String, dynamic> json) => _$WaterBubblerFromJson(json);
 
   Map<String, dynamic> toJson() => _$WaterBubblerToJson(this);

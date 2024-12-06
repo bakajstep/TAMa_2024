@@ -57,6 +57,11 @@ class WaterBubblerService {
     apiClient.deleteWaterBubbler(token, bubblerId);
   }
 
+    Future<void> createWaterBubbler(WaterBubbler bubbler) async {
+    final token = await authService.getToken();
+    apiClient.createWaterBubbler(token, bubbler);
+  }
+
   LatLngBounds _extendBounds(LatLngBounds bounds) {
     final latDiff = bounds.north - bounds.south;
     final lonDiff = bounds.east - bounds.west;
