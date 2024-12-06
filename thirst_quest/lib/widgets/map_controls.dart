@@ -35,13 +35,14 @@ class MapControls extends StatelessWidget {
       Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
       return;
     }
-    
+
     final position = state.mapController.camera.center;
 
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => AddBubblerMapScreen(location: position)),
     );
+  }
 
   void _filterFavorites(BuildContext context) {
     final state = Provider.of<GlobalState>(context, listen: false);
