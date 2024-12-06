@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:thirst_quest/di.dart';
-import 'package:thirst_quest/screens/screen.dart';
 import 'package:thirst_quest/services/auth_service.dart';
 import 'package:thirst_quest/states/global_state.dart';
 import 'package:thirst_quest/widgets/form_error.dart';
@@ -20,8 +19,7 @@ class RegisterScreenState extends State<RegisterScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  final ValueNotifier<String?> _confirmPasswordError =
-      ValueNotifier<String?>(null);
+  final ValueNotifier<String?> _confirmPasswordError = ValueNotifier<String?>(null);
   final _authService = DI.get<AuthService>();
   String? _errorMessage;
   bool _isLoading = false;
@@ -43,15 +41,14 @@ class RegisterScreenState extends State<RegisterScreen> {
   }
 
   void _validateConfirmPassword() {
-    _confirmPasswordError.value = _confirmPasswordController.text != '' &&
-            _confirmPasswordController.text != _passwordController.text
-        ? 'Passwords do not match'
-        : null;
+    _confirmPasswordError.value =
+        _confirmPasswordController.text != '' && _confirmPasswordController.text != _passwordController.text
+            ? 'Passwords do not match'
+            : null;
   }
 
   Future<void> _submitForm() async {
-    if (!_formKey.currentState!.validate() ||
-        _confirmPasswordError.value != null) {
+    if (!_formKey.currentState!.validate() || _confirmPasswordError.value != null) {
       return;
     }
 
@@ -60,8 +57,8 @@ class RegisterScreenState extends State<RegisterScreen> {
     });
 
     final globalState = Provider.of<GlobalState>(context, listen: false);
-    final response = await _authService.register(_emailController.text,
-        _usernameController.text, _passwordController.text, globalState);
+    final response = await _authService.register(
+        _emailController.text, _usernameController.text, _passwordController.text, globalState);
 
     if (response == null) {
       setState(() {
@@ -75,12 +72,7 @@ class RegisterScreenState extends State<RegisterScreen> {
       return;
     }
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => MyHomePage(),
-      ),
-    );
+    Navigator.pop(context);
   }
 
   @override
@@ -99,30 +91,23 @@ class RegisterScreenState extends State<RegisterScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     const Text('Register Page', style: TextStyle(fontSize: 25)),
-                    const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 20.0)),
+                    const Padding(padding: EdgeInsets.symmetric(vertical: 20.0)),
                     FormError(errorMessage: _errorMessage),
                     TextFormField(
                       controller: _usernameController,
                       decoration: const InputDecoration(labelText: 'Username'),
-                      validator: (value) => (value == null || value.isEmpty)
-                          ? 'Please enter your username'
-                          : null,
+                      validator: (value) => (value == null || value.isEmpty) ? 'Please enter your username' : null,
                     ),
                     TextFormField(
                       controller: _emailController,
                       decoration: const InputDecoration(labelText: 'Email'),
-                      validator: (value) => (value == null || value.isEmpty)
-                          ? 'Please enter your email'
-                          : null,
+                      validator: (value) => (value == null || value.isEmpty) ? 'Please enter your email' : null,
                     ),
                     TextFormField(
                       controller: _passwordController,
                       decoration: const InputDecoration(labelText: 'Password'),
                       obscureText: true,
-                      validator: (value) => (value == null || value.isEmpty)
-                          ? 'Please enter your password'
-                          : null,
+                      validator: (value) => (value == null || value.isEmpty) ? 'Please enter your password' : null,
                     ),
                     ValueListenableBuilder<String?>(
                       valueListenable: _confirmPasswordError,
@@ -134,14 +119,12 @@ class RegisterScreenState extends State<RegisterScreen> {
                             errorText: errorText,
                           ),
                           obscureText: true,
-                          validator: (value) => (value == null || value.isEmpty)
-                              ? 'Please confirm your password'
-                              : null,
+                          validator: (value) =>
+                              (value == null || value.isEmpty) ? 'Please confirm your password' : null,
                         );
                       },
                     ),
-                    const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 16.0)),
+                    const Padding(padding: EdgeInsets.symmetric(vertical: 16.0)),
                     ElevatedButton(
                       onPressed: _submitForm,
                       child: const Text('Register'),

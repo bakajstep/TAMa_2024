@@ -11,8 +11,9 @@ import 'package:thirst_quest/widgets/sign_in_button.dart';
 
 class LoginScreen extends StatefulWidget {
   final MaterialPageRoute? onLoginSuccess;
+  final bool popOnSuccess;
 
-  const LoginScreen({this.onLoginSuccess, super.key});
+  const LoginScreen({this.onLoginSuccess, this.popOnSuccess = false, super.key});
 
   @override
   LoginScreenState createState() => LoginScreenState();
@@ -142,6 +143,11 @@ class LoginScreenState extends State<LoginScreen> {
   }
 
   void _redirectAfterLogin() {
+    if (widget.popOnSuccess) {
+      Navigator.pop(context);
+      return;
+    }
+
     Navigator.pushReplacement(
         context, widget.onLoginSuccess ?? MaterialPageRoute(builder: (context) => ProfileScreen()));
   }

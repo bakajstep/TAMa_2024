@@ -30,13 +30,16 @@ class MapControls extends StatelessWidget {
   void _goToCreateBubbler(BuildContext context) {
     final globalState = Provider.of<GlobalState>(context, listen: false);
     final state = Provider.of<BubblerMapState>(context, listen: false);
+    final position = state.mapController.camera.center;
 
     if (!globalState.user.isLoggedIn) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => LoginScreen(
+                  onLoginSuccess: MaterialPageRoute(builder: (context) => AddBubblerMapScreen(location: position)))));
       return;
     }
-
-    final position = state.mapController.camera.center;
 
     Navigator.push(
       context,
@@ -47,7 +50,7 @@ class MapControls extends StatelessWidget {
   void _filterFavorites(BuildContext context) {
     final state = Provider.of<GlobalState>(context, listen: false);
     if (!state.user.isLoggedIn) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen(popOnSuccess: true)));
       return;
     }
 

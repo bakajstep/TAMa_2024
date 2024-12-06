@@ -10,10 +10,10 @@ class AddBubblerDetailsScreen extends StatefulWidget {
   const AddBubblerDetailsScreen({super.key, required this.location});
 
   @override
-  _AddBubblerDetailsScreenState createState() => _AddBubblerDetailsScreenState();
+  AddBubblerDetailsScreenState createState() => AddBubblerDetailsScreenState();
 }
 
-class _AddBubblerDetailsScreenState extends State<AddBubblerDetailsScreen> {
+class AddBubblerDetailsScreenState extends State<AddBubblerDetailsScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final WaterBubblerService bubblerService = DI.get<WaterBubblerService>();
