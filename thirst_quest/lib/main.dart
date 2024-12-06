@@ -5,16 +5,19 @@ import 'package:thirst_quest/di.dart';
 import 'package:thirst_quest/screens/screen.dart';
 import 'package:thirst_quest/services/auth_service.dart';
 import 'package:thirst_quest/states/global_state.dart';
+import 'package:thirst_quest/utils/route_observer_provider.dart';
 import 'package:thirst_quest/widgets/loading.dart';
 
 void main() async {
   DI.configure();
 
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final RouteObserver<MaterialPageRoute> routeObserver = RouteObserver<MaterialPageRoute>();
+
+  MyApp({super.key});
 
   Future _checkAutoLogin(BuildContext context) async {
     final authService = DI.get<AuthService>();
@@ -30,21 +33,25 @@ class MyApp extends StatelessWidget {
       create: (context) => GlobalState(),
       child: Consumer<GlobalState>(
         builder: (context, globalState, child) {
-          return MaterialApp(
-            title: constants.appName,
-            theme: ThemeData(
-              colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 22, 98, 160)),
-              useMaterial3: true,
-            ),
-            home: FutureBuilder(
-              future: _checkAutoLogin(context),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Loading();
-                }
+          return RouteObserverProvider(
+            routeObserver: routeObserver,
+            child: MaterialApp(
+              title: constants.appName,
+              navigatorObservers: [routeObserver],
+              theme: ThemeData(
+                colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 22, 98, 160)),
+                useMaterial3: true,
+              ),
+              home: FutureBuilder(
+                future: _checkAutoLogin(context),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Loading();
+                  }
 
-                return const MyHomePage();
-              },
+                  return const MyHomePage();
+                },
+              ),
             ),
           );
         },

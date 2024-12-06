@@ -42,6 +42,16 @@ class MapControls extends StatelessWidget {
       context,
       MaterialPageRoute(builder: (context) => AddBubblerMapScreen(location: position)),
     );
+
+  void _filterFavorites(BuildContext context) {
+    final state = Provider.of<GlobalState>(context, listen: false);
+    if (!state.user.isLoggedIn) {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+      return;
+    }
+
+    final bubblerState = Provider.of<BubblerMapState>(context, listen: false);
+    bubblerState.toggleFavoritesFilter();
   }
 
   @override
@@ -107,7 +117,7 @@ class MapControls extends StatelessWidget {
                     onSelected: (value) {
                       // Perform action based on selected option
                       if (value == 'Filter map') {
-                        // Action for Filter map
+                        _filterFavorites(context);
                       } else if (value == 'New source') {
                         _goToCreateBubbler(context);
                       }

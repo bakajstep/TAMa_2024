@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
+import 'package:thirst_quest/controllers/bubblers_controller.dart';
 import 'package:thirst_quest/di.dart';
 import 'package:thirst_quest/services/water_bubbler_service.dart';
 import 'package:thirst_quest/states/bubbler_map_state.dart';
@@ -10,8 +11,9 @@ import 'package:thirst_quest/widgets/map_widget.dart';
 
 class LocationMap extends StatefulWidget {
   final LatLng initialPosition;
+  final BubblersController bubblersController;
 
-  const LocationMap({super.key, required this.initialPosition});
+  const LocationMap({super.key, required this.initialPosition, required this.bubblersController});
 
   @override
   LocationMapState createState() => LocationMapState();
@@ -24,6 +26,10 @@ class LocationMapState extends State<LocationMap> {
   @override
   void initState() {
     super.initState();
+    widget.bubblersController.refreshBubblers = () async {
+      final bubblerMapState = Provider.of<BubblerMapState>(context, listen: false);
+      await _loadBubblers(bubblerMapState.mapController.camera);
+    };
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final bubblerMapState = Provider.of<BubblerMapState>(context, listen: false);
