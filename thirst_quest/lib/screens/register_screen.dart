@@ -84,7 +84,7 @@ class RegisterScreenState extends State<RegisterScreen> {
         body: Stack(children: [
           Center(
             child: SingleChildScrollView(
-              padding: EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(30.0),
               child: Form(
                 key: _formKey,
                 child: Column(
