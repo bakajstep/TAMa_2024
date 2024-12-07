@@ -38,13 +38,13 @@ class MyApp extends StatelessWidget {
             ),
             home: FutureBuilder(
               future: _checkAutoLogin(context),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Loading();
-                }
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Loading();
+                  }
 
-                return const MyHomePage();
-              },
+                  return const MyHomePage();
+                },
             ),
           );
         },

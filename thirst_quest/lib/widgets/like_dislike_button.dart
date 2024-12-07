@@ -1,6 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:thirst_quest/api/models/review.dart';
+import 'package:thirst_quest/api/models/vote_type.dart';
 import 'package:thirst_quest/api/models/water_bubbler.dart';
 import 'package:thirst_quest/assets/assign_color_to_bubbler_votes.dart';
+import 'package:thirst_quest/di.dart';
+import 'package:thirst_quest/screens/login_screen.dart';
+import 'package:thirst_quest/screens/main_screen.dart';
+import 'package:thirst_quest/services/water_bubbler_service.dart';
+import 'package:thirst_quest/states/bubbler_map_state.dart';
+import 'package:provider/provider.dart';
+import 'package:thirst_quest/states/global_state.dart';
 
 class LikeDislikeButton extends StatefulWidget {
     final WaterBubbler waterBubbler;
@@ -12,11 +21,97 @@ class LikeDislikeButton extends StatefulWidget {
 }
 
 class LikeDislikeButtonState extends State<LikeDislikeButton> {
+  final WaterBubblerService waterBubblerService = DI.get<WaterBubblerService>();
   bool isLiked = false;
   bool isDisliked = false;
 
   @override
+  void initState() {
+    super.initState();
+    Review? review = widget.waterBubbler.review;
+    if (review != null) {
+      isLiked = review.voteTypeEnum == VoteType.UPVOTE ? true : false;
+      isDisliked = !isLiked;
+    }
+  }
+
+  void _redirectToLogin() {
+    final mapState = context.read<BubblerMapState>();
+
+    ModalRoute.of(context)?.settings.name;
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LoginScreen(
+            onLoginSuccess: MaterialPageRoute(
+                builder: (context) => MainScreen(initialPosition: mapState.mapController.camera.center))),
+      ),
+    );
+  }
+
+  void _onPresedLike() async {
+    Review review = Review.createReview(voteTypeEnum: VoteType.UPVOTE, waterBubblerId: widget.waterBubbler.id, waterBubblerOsmId: widget.waterBubbler.osmId);
+    bool negReview = false;
+    String? revId = widget.waterBubbler.review?.id;
+    // if (widget.waterBubbler.review != null) {
+    //   revId = widget.waterBubbler.review!.id;
+    // }
+
+    setState(() {
+      isLiked = !isLiked;
+      // if (isLiked && isDisliked) {
+      //   isDisliked = false;
+      //   widget.waterBubbler.upvoteCount++;
+      //   widget.waterBubbler.review = review;
+      // }
+      if (isDisliked) {
+        isDisliked = false;
+        negReview = true;
+        widget.waterBubbler.upvoteCount++;
+        widget.waterBubbler.downvoteCount--;
+        widget.waterBubbler.review = review;
+      }
+      else if (isLiked) {
+        widget.waterBubbler.upvoteCount++;
+        widget.waterBubbler.review = review;
+      }
+      else {
+        widget.waterBubbler.upvoteCount--;
+        widget.waterBubbler.review = null;
+      }
+    });
+
+    // TODO: null check cuz of refresh error
+    if (negReview && widget.waterBubbler.review != null) { // review was dislike 
+      await waterBubblerService.updateReview(revId!, VoteType.UPVOTE);
+    }
+    else if (isLiked) { // no previous review
+      await waterBubblerService.addReview(review);
+    }
+    else { // review was like
+      await waterBubblerService.deleteReview(revId!);
+    }
+
+
+
+
+
+
+    // if (!isLiked || delReview) {
+    //   await waterBubblerService.deleteReview(widget.waterBubbler); // isLiked was true, delete review
+    // }
+
+    // if (isLiked) {
+    //   await waterBubblerService.addReview(review);
+    // }
+
+
+    
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final globalState = context.watch<GlobalState>();
     final int upVotesCount = widget.waterBubbler.upvoteCount;
     final int downVotesCount = widget.waterBubbler.downvoteCount;
 
@@ -26,11 +121,20 @@ class LikeDislikeButtonState extends State<LikeDislikeButton> {
         // Like Button
         GestureDetector(
           onTap: () {
-            setState(() {
-              isLiked = !isLiked;
-              if (isLiked) isDisliked = false;
-            });
+            globalState.user.isLoggedIn ? _onPresedLike() : _redirectToLogin();
           },
+          //   if (globalState.user.isLoggedIn) {
+          //     setState(() {
+          //       isLiked = !isLiked;
+          //       if (isLiked) {
+          //         isDisliked = false;
+                  
+          //       }
+          //     });
+          //   } else {
+          //     _redirectToLogin();
+          //   }
+          // },
           child: AnimatedContainer(
             duration: Duration(milliseconds: 150),
             padding: EdgeInsets.all(15),
@@ -87,10 +191,14 @@ class LikeDislikeButtonState extends State<LikeDislikeButton> {
         // Dislike Button
         GestureDetector(
           onTap: () {
-            setState(() {
-              isDisliked = !isDisliked;
-              if (isDisliked) isLiked = false;
-            });
+            if (globalState.user.isLoggedIn) {
+              setState(() {
+                isDisliked = !isDisliked;
+                if (isDisliked) isLiked = false;
+              });
+            } else {
+              _redirectToLogin();
+            }
           },
           child: AnimatedContainer(
             duration: Duration(milliseconds: 150),

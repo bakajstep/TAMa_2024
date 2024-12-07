@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:thirst_quest/api/models/auth_response.dart';
+import 'package:thirst_quest/api/models/review.dart';
+import 'package:thirst_quest/api/models/vote_type.dart';
 import 'package:thirst_quest/api/models/water_bubbler.dart';
 import 'package:thirst_quest/config.dart';
 
@@ -131,6 +133,66 @@ class ThirstQuestApiClient {
 
     final List<dynamic> body = jsonDecode(response.body);
     return body.map((dynamic item) => WaterBubbler.fromJson(item)).toList();
+  }
+
+  /////////////////////////////////////////////////////////////////
+  // REVIEW WATER BUBBLERS
+  /////////////////////////////////////////////////////////////////
+  
+  Future<bool> addReview(String token, Review review) async {
+    final uri = Uri.parse('$baseUrl/api/reviews');
+    try {
+      final response = await http.post(
+        uri,
+        headers: _addAuthHeader(token, headers: {'Content-Type': 'application/json'}),
+        body: jsonEncode({
+          "voteType": review.voteType,
+          "waterBubblerId": review.waterBubblerId,
+          "waterBubblerOsmId": review.waterBubblerOsmId
+        }),
+      );
+
+      return response.statusCode == 200;
+    } on SocketException {
+      throw Exception('No Internet connection');
+    } catch (e) {
+      throw Exception('Failed to add to favorites: $e');
+    }
+  }
+
+  Future<bool> deleteReview(String token, String id) async {
+    final uri = Uri.parse('$baseUrl/api/reviews/$id');
+    try {
+      final response = await http.delete(
+        uri,
+        headers: _addAuthHeader(token),
+      );
+
+      return response.statusCode == 200;
+    } on SocketException {
+      throw Exception('No Internet connection');
+    } catch (e) {
+      throw Exception('Failed to remove from favorites: $e');
+    }
+  }
+
+  Future<bool> updateReview(String token, String id, VoteType voteType) async {
+    final uri = Uri.parse('$baseUrl/api/reviews/$id');
+    try { 
+      final response = await http.put(
+        uri,
+        headers: _addAuthHeader(token, headers: {'Content-Type': 'application/json'}),
+        body: jsonEncode({
+          "voteType": voteType == VoteType.UPVOTE ? "UPVOTE" : "DOWNVOTE",
+        }),
+      );
+
+      return response.statusCode == 200;
+    } on SocketException {
+      throw Exception('No Internet connection');
+    } catch (e) {
+      throw Exception('Failed to remove from favorites: $e');
+    }
   }
 
   /////////////////////////////////////////////////////////////////
