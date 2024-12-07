@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:thirst_quest/api/models/water_bubbler.dart';
+import 'package:thirst_quest/assets/thirst_quest_icons.dart';
 import 'package:thirst_quest/controllers/bubblers_controller.dart';
 import 'package:thirst_quest/controllers/draggable_sheet_child_controller.dart';
 import 'package:thirst_quest/controllers/location_controller.dart';
@@ -292,8 +293,8 @@ class MainScreenState extends State<MainScreen> with RouteAware {
                                 child: IconButton(
                                   onPressed: _showNearestBubblers,
                                   icon: Icon(
-                                    Icons.surfing,
-                                    size: 60, // Adjust icon size as needed
+                                    ThirstQuestIcons.nearestV2SquaredSize,
+                                    size: 70, // Adjust icon size as needed
                                   ),
                                   color: Colors.white,
                                 ),
