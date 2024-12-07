@@ -67,20 +67,15 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
     final mapState = context.watch<BubblerMapState>();
     final selectedBubbler = mapState.selectedBubbler!;
     final currentLocation = mapState.currentPosition!;
-    final List<Image> carouselItems = [
-      Image.network('https://d34-a.sdn.cz/d_34/c_img_QK_3/IYU6je.mpo?fl=res,,500,1'),
-      Image.network('https://d34-a.sdn.cz/d_34/c_img_G_p/oFQQ2j.jpeg?fl=res,,500,1'),
-      Image.network('https://d34-a.sdn.cz/d_34/c_img_QM_x/mtXrCt.mpo?fl=res,,500,1'),
-      Image.network('https://d34-a.sdn.cz/d_34/c_img_QJ_u/4mnrGE.mpo?fl=res,,500,1'),
-    ];
     final iconDataList = [
       IconDataInfo(icon: Icons.accessible, size: 30, color: Colors.blue),
       IconDataInfo(icon: Icons.paid, size: 35, color: Colors.orange),
       IconDataInfo(icon: Icons.schedule, size: 30, color: Colors.red),
       IconDataInfo(icon: Icons.not_accessible, size: 30, color: Colors.grey),
       IconDataInfo(icon: Icons.forest, size: 30, color: Colors.green),
-      // IconDataInfo(icon: Icons.verified, size: 30, color: Colors.purple),
+      IconDataInfo(icon: Icons.verified, size: 30, color: Colors.purple),
   ];
+    final List<String> images = selectedBubbler.photos.map((photo) => photo.url).toList();
 
     return Column(
       children: [
@@ -186,35 +181,35 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
                         ],
                       ),
                     ),
-                    Flexible(
-                      flex: 4,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            height: 100,
-                            width: 140,
-                            child: GridView.builder(
-                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 3,
-                                crossAxisSpacing: 10,
-                                mainAxisSpacing: 10, 
-                              ),
-                              itemCount: iconDataList.length,
-                              itemBuilder: (context, index) {
-                                return Icon(
-                                  iconDataList[index].icon,
-                                  size: iconDataList[index].size,
-                                  color: iconDataList[index].color,
-                                );
-                              },
-                              physics: NeverScrollableScrollPhysics(), 
-                              shrinkWrap: true, 
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    // Flexible(
+                    //   flex: 4,
+                    //   child: Column(
+                    //     crossAxisAlignment: CrossAxisAlignment.start,
+                    //     children: [
+                    //       Container(
+                    //         height: 100,
+                    //         width: 140,
+                    //         child: GridView.builder(
+                    //           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    //             crossAxisCount: 3,
+                    //             crossAxisSpacing: 10,
+                    //             mainAxisSpacing: 10, 
+                    //           ),
+                    //           itemCount: iconDataList.length,
+                    //           itemBuilder: (context, index) {
+                    //             return Icon(
+                    //               iconDataList[index].icon,
+                    //               size: iconDataList[index].size,
+                    //               color: iconDataList[index].color,
+                    //             );
+                    //           },
+                    //           physics: NeverScrollableScrollPhysics(), 
+                    //           shrinkWrap: true, 
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
                   ],
                 ),
               ],
@@ -247,21 +242,14 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
         //   child: Text('Read more'),
         // ),
 
-        ImageGallery(
-            imageUrls: [
-              'https://d34-a.sdn.cz/d_34/c_img_QK_3/IYU6je.mpo?fl=res,,500,1',
-              'https://d34-a.sdn.cz/d_34/c_img_G_p/oFQQ2j.jpeg?fl=res,,500,1',
-              'https://d34-a.sdn.cz/d_34/c_img_QM_x/mtXrCt.mpo?fl=res,,500,1',
-              'https://d34-a.sdn.cz/d_34/c_img_QJ_u/4mnrGE.mpo?fl=res,,500,1',
-              'https://d34-a.sdn.cz/d_34/c_img_QK_3/IYU6je.mpo?fl=res,,500,1',
-              'https://d34-a.sdn.cz/d_34/c_img_G_p/oFQQ2j.jpeg?fl=res,,500,1',
-              'https://d34-a.sdn.cz/d_34/c_img_QM_x/mtXrCt.mpo?fl=res,,500,1',
-              'https://d34-a.sdn.cz/d_34/c_img_QJ_u/4mnrGE.mpo?fl=res,,500,1',
-              'https://d34-a.sdn.cz/d_34/c_img_QK_3/IYU6je.mpo?fl=res,,500,1',
-              'https://d34-a.sdn.cz/d_34/c_img_G_p/oFQQ2j.jpeg?fl=res,,500,1',
-              'https://d34-a.sdn.cz/d_34/c_img_QM_x/mtXrCt.mpo?fl=res,,500,1',
-              'https://d34-a.sdn.cz/d_34/c_img_QJ_u/4mnrGE.mpo?fl=res,,500,1',
-            ],
+        images.isNotEmpty
+          ? ImageGallery(imageUrls: images)
+          : Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Image.network(
+              'https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=170667a&w=0&k=20&c=Q7gLG-xfScdlTlPGFohllqpNqpxsU1jy8feD_fob87U=',
+              fit: BoxFit.cover,
+            )
           ),
       ],
     );
