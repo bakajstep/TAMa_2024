@@ -74,41 +74,40 @@ class ThirstQuestApiClient {
     }
   }
 
-Future<bool> createWaterBubbler(String token, WaterBubbler bubbler) async {
-  final uri = Uri.parse('$baseUrl/api/waterbubblers');
+  Future<bool> createWaterBubbler(String token, WaterBubbler bubbler) async {
+    final uri = Uri.parse('$baseUrl/api/waterbubblers');
 
-  final body = json.encode({
-    "name": bubbler.name,
-    "description": bubbler.description,
-    "latitude": bubbler.latitude,
-    "longitude": bubbler.longitude,
-    "favorite": bubbler.favorite,
-    "upvoteCount": bubbler.upvoteCount,
-    "downvoteCount": bubbler.downvoteCount,
-  });
+    final body = json.encode({
+      "name": bubbler.name,
+      "description": bubbler.description,
+      "latitude": bubbler.latitude,
+      "longitude": bubbler.longitude,
+      "favorite": bubbler.favorite,
+      "upvoteCount": bubbler.upvoteCount,
+      "downvoteCount": bubbler.downvoteCount,
+    });
 
-  try {
-    final response = await http.post(
-      uri,
-      headers: {
-        "Content-Type": "application/json",
-        ..._addAuthHeader(token),
-      },
-      body: body,
-    );
+    try {
+      final response = await http.post(
+        uri,
+        headers: {
+          "Content-Type": "application/json",
+          ..._addAuthHeader(token),
+        },
+        body: body,
+      );
 
-    if (response.statusCode == 201) {
-      return true;
-    } else {
-      throw Exception('Failed to create bubbler: ${response.statusCode}, ${response.body}');
+      if (response.statusCode == 201) {
+        return true;
+      } else {
+        throw Exception('Failed to create bubbler: ${response.statusCode}, ${response.body}');
+      }
+    } on SocketException {
+      throw Exception('No Internet connection');
+    } catch (e) {
+      throw Exception('Failed to create bubbler: $e');
     }
-  } on SocketException {
-    throw Exception('No Internet connection');
-  } catch (e) {
-    throw Exception('Failed to create bubbler: $e');
   }
-}
-
 
   /////////////////////////////////////////////////////////////////
   // FAVORITE WATER BUBBLERS
@@ -246,7 +245,7 @@ Future<bool> createWaterBubbler(String token, WaterBubbler bubbler) async {
   }
 
   Future<AuthResponse?> extend(String token) async {
-    final uri = Uri.parse('$baseUrl/api/auth/google');
+    final uri = Uri.parse('$baseUrl/api/auth/extend');
     try {
       final response = await http.post(
         uri,
