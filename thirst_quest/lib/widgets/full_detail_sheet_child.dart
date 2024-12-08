@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:thirst_quest/controllers/draggable_sheet_child_controller.dart';
 import 'package:thirst_quest/assets/constants.dart' as constants;
@@ -63,14 +62,14 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
     final mapState = context.watch<BubblerMapState>();
     final selectedBubbler = mapState.selectedBubbler!;
     final currentLocation = mapState.currentPosition!;
-    final iconDataList = [
-      IconDataInfo(icon: Icons.accessible, size: 30, color: Colors.blue),
-      IconDataInfo(icon: Icons.paid, size: 35, color: Colors.orange),
-      IconDataInfo(icon: Icons.schedule, size: 30, color: Colors.red),
-      // IconDataInfo(icon: Icons.not_accessible, size: 30, color: Colors.grey),
-      IconDataInfo(icon: Icons.forest, size: 30, color: Colors.green),
-      IconDataInfo(icon: Icons.verified, size: 30, color: Colors.purple),
-    ];
+    // final iconDataList = [
+    //   IconDataInfo(icon: Icons.accessible, size: 30, color: Colors.blue),
+    //   IconDataInfo(icon: Icons.paid, size: 35, color: Colors.orange),
+    //   IconDataInfo(icon: Icons.schedule, size: 30, color: Colors.red),
+    //   // IconDataInfo(icon: Icons.not_accessible, size: 30, color: Colors.grey),
+    //   IconDataInfo(icon: Icons.forest, size: 30, color: Colors.green),
+    //   IconDataInfo(icon: Icons.verified, size: 30, color: Colors.purple),
+    // ];
     final List<String> images = selectedBubbler.photos.map((photo) => photo.url).toList();
 
     return Column(
@@ -173,36 +172,36 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
           ),
         ),
 
-        Padding(
-          padding: EdgeInsets.only(left: 10.0, right: 10.0),
-          child: Container(
-            height: MediaQuery.of(context).size.height * 0.07,
-            decoration: BoxDecoration(
-              color: Colors.grey[300],
-              border: Border.all(color: Colors.grey[300]!, width: 1),
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: iconDataList.map((iconDataInfo) {
-                    return Icon(
-                      iconDataInfo.icon,
-                      size: MediaQuery.of(context).size.height * 0.035,
-                      color: iconDataInfo.color,
-                    );
-                  }).toList(),
-                ),
-              ],
-            ),
-          ),
-        ),
+        // Padding(
+        //   padding: EdgeInsets.only(left: 10.0, right: 10.0),
+        //   child: Container(
+        //     height: MediaQuery.of(context).size.height * 0.07,
+        //     decoration: BoxDecoration(
+        //       color: Colors.grey[300],
+        //       border: Border.all(color: Colors.grey[300]!, width: 1),
+        //       borderRadius: BorderRadius.circular(16),
+        //     ),
+        //     child: Column(
+        //       mainAxisAlignment: MainAxisAlignment.center,
+        //       children: [
+        //         Row(
+        //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        //           children: iconDataList.map((iconDataInfo) {
+        //             return Icon(
+        //               iconDataInfo.icon,
+        //               size: MediaQuery.of(context).size.height * 0.035,
+        //               color: iconDataInfo.color,
+        //             );
+        //           }).toList(),
+        //         ),
+        //       ],
+        //     ),
+        //   ),
+        // ),
 
 
         Padding(
-          padding: EdgeInsets.only(right: 10.0, left: 10.0, top: 10.0),
+          padding: EdgeInsets.only(right: 10.0, left: 10.0),
           child: Container(
             height: MediaQuery.of(context).size.height * 0.1,
             decoration: BoxDecoration(
