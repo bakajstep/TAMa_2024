@@ -7,6 +7,7 @@ import 'package:thirst_quest/di.dart';
 import 'package:thirst_quest/screens/login_screen.dart';
 import 'package:thirst_quest/services/water_bubbler_service.dart';
 import 'package:provider/provider.dart';
+import 'package:thirst_quest/states/bubbler_map_state.dart';
 import 'package:thirst_quest/states/global_state.dart';
 
 class LikeDislikeButton extends StatefulWidget {
@@ -43,6 +44,7 @@ class LikeDislikeButtonState extends State<LikeDislikeButton> {
   }
 
   void _onPresedLike() async {
+    final mapState = context.read<BubblerMapState>();
     String? revId = widget.waterBubbler.review?.id;
     Review review = Review.createReview(
         reviewId: revId,
@@ -67,6 +69,8 @@ class LikeDislikeButtonState extends State<LikeDislikeButton> {
       }
     });
 
+    mapState.selectedBubbler = widget.waterBubbler;
+
     if (negReview) {
       // review was dislike
       await waterBubblerService.updateReview(review);
@@ -80,6 +84,7 @@ class LikeDislikeButtonState extends State<LikeDislikeButton> {
   }
 
   void _onPresedDislike() async {
+    final mapState = context.read<BubblerMapState>();
     String? revId = widget.waterBubbler.review?.id;
     Review review = Review.createReview(
         reviewId: revId,
@@ -103,6 +108,8 @@ class LikeDislikeButtonState extends State<LikeDislikeButton> {
         widget.waterBubbler.review = null;
       }
     });
+
+    mapState.selectedBubbler = widget.waterBubbler;
 
     if (posReview) {
       // review was like
