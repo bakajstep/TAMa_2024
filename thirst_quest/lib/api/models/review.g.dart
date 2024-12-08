@@ -8,11 +8,11 @@ part of 'review.dart';
 
 Review _$ReviewFromJson(Map<String, dynamic> json) => Review(
       id: json['id'] as String,
-      voteType: (json['voteType'] as num).toInt(),
+      voteType: json['voteType'] as String,
       userId: json['userId'] as String,
-      waterBubblerId: json['waterBubblerId'] as String,
-      waterBubblerOsmId: (json['waterBubblerOsmId'] as num).toInt(),
-    )..voteTypeEnum = $enumDecode(_$VoteTypeEnumMap, json['voteTypeEnum']);
+      waterBubblerId: json['waterBubblerId'] as String?,
+      waterBubblerOsmId: (json['waterBubblerOsmId'] as num?)?.toInt(),
+    );
 
 Map<String, dynamic> _$ReviewToJson(Review instance) => <String, dynamic>{
       'id': instance.id,
