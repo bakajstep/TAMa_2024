@@ -67,9 +67,9 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
       IconDataInfo(icon: Icons.accessible, size: 30, color: Colors.blue),
       IconDataInfo(icon: Icons.paid, size: 35, color: Colors.orange),
       IconDataInfo(icon: Icons.schedule, size: 30, color: Colors.red),
-      IconDataInfo(icon: Icons.not_accessible, size: 30, color: Colors.grey),
+      // IconDataInfo(icon: Icons.not_accessible, size: 30, color: Colors.grey),
       IconDataInfo(icon: Icons.forest, size: 30, color: Colors.green),
-      // IconDataInfo(icon: Icons.verified, size: 30, color: Colors.purple),
+      IconDataInfo(icon: Icons.verified, size: 30, color: Colors.purple),
     ];
     final List<String> images = selectedBubbler.photos.map((photo) => photo.url).toList();
 
@@ -92,11 +92,11 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
                 padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 15),
                 child: Row(
                   children: [
-                    Icon(
-                      Icons.circle,
-                      size: _buttonsSize,
-                      color: assignColorToBubblerVotes(selectedBubbler.upvoteCount, selectedBubbler.downvoteCount),
-                    ),
+                    // Icon(
+                    //   Icons.circle,
+                    //   size: _buttonsSize,
+                    //   color: assignColorToBubblerVotes(selectedBubbler.upvoteCount, selectedBubbler.downvoteCount),
+                    // ),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -204,21 +204,42 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
         Padding(
           padding: EdgeInsets.only(right: 10.0, left: 10.0, top: 10.0),
           child: Container(
-              height: MediaQuery.of(context).size.height * 0.1,
-              decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Text(
-                    utf8.decode((selectedBubbler.description ?? 'No description available.').codeUnits),
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ],
-              )),
+            height: MediaQuery.of(context).size.height * 0.1,
+            decoration: BoxDecoration(
+              color: Colors.grey[300],
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(10.0),
+              child: selectedBubbler.description == null
+              ? Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'No description available.',
+                      style: TextStyle(fontSize: 14),
+                    ),
+                  ],
+                )
+              : Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Expanded( // Ensures the Text widget takes up the available space and wraps text
+                      child: Text(
+                        utf8.decode((selectedBubbler.description)!.codeUnits),
+                        style: TextStyle(fontSize: 12),
+                        overflow: TextOverflow.visible,
+                        maxLines: 3,
+                      ),
+                    ),
+                  ],
+                ),
+            ),
+          ),
         ),
+
 
         // TextButton(
         //   onPressed: () {},
