@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:thirst_quest/states/bubbler_map_state.dart';
 import 'package:provider/provider.dart';
 import 'package:thirst_quest/utils/distance_convertor.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 
 class FullDetail extends StatelessWidget {
   final VoidCallback onClose;
