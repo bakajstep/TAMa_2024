@@ -46,7 +46,7 @@ class IconDataInfo {
 }
 
 class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
-  final double _buttonsSize = 45.0;
+  final double _buttonsSize = 30.0;
 
   void _onHeightChanged() {}
 
@@ -89,20 +89,20 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 15),
+                padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 10.0),
                 child: Row(
                   children: [
-                    // Icon(
-                    //   Icons.circle,
-                    //   size: _buttonsSize,
-                    //   color: assignColorToBubblerVotes(selectedBubbler.upvoteCount, selectedBubbler.downvoteCount),
-                    // ),
+                    Icon(
+                      Icons.circle,
+                      size: _buttonsSize + 15,
+                      color: assignColorToBubblerVotes(selectedBubbler.upvoteCount, selectedBubbler.downvoteCount),
+                    ),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(utf8.decode((selectedBubbler.name ?? 'Water Bubbler').codeUnits),
-                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                           Text(
                             "Distance: ${'~${distanceToDisplay(
                               selectedBubbler.distanceTo(currentLocation),
@@ -115,7 +115,7 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
                     NavigationButton(waterBubbler: selectedBubbler, size: _buttonsSize),
                     FavoriteBubblerButton(waterBubbler: selectedBubbler, size: _buttonsSize),
                     MaintainBubblerButton(waterBubbler: selectedBubbler, size: _buttonsSize),
-                  ].expand((x) => [const SizedBox(width: 10), x]).skip(1).toList(),
+                  ].expand((x) => [const SizedBox(width: 5), x]).skip(1).toList(),
                 ),
               ),
             ],
@@ -127,8 +127,8 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
           // Draw a rectangle indication bubbler rating section
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.grey[300],
-              border: Border.all(color: Colors.grey[300]!, width: 1),
+              color: Colors.blueAccent.withOpacity(0.1),
+              // border: Border.all(color: Colors.grey[300]!, width: 1),
               borderRadius: BorderRadius.circular(24),
             ),
             child: Column(
@@ -173,73 +173,72 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
           ),
         ),
 
-        Padding(
-          padding: EdgeInsets.only(left: 10.0, right: 10.0),
-          child: Container(
-            height: MediaQuery.of(context).size.height * 0.07,
-            decoration: BoxDecoration(
-              color: Colors.grey[300],
-              border: Border.all(color: Colors.grey[300]!, width: 1),
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: iconDataList.map((iconDataInfo) {
-                    return Icon(
-                      iconDataInfo.icon,
-                      size: MediaQuery.of(context).size.height * 0.035,
-                      color: iconDataInfo.color,
-                    );
-                  }).toList(),
-                ),
-              ],
-            ),
-          ),
-        ),
-
+        // Padding(
+        //   padding: EdgeInsets.only(left: 10.0, right: 10.0),
+        //   child: Container(
+        //     height: MediaQuery.of(context).size.height * 0.07,
+        //     decoration: BoxDecoration(
+        //       color: Colors.grey[300],
+        //       border: Border.all(color: Colors.grey[300]!, width: 1),
+        //       borderRadius: BorderRadius.circular(16),
+        //     ),
+        //     child: Column(
+        //       mainAxisAlignment: MainAxisAlignment.center,
+        //       children: [
+        //         Row(
+        //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        //           children: iconDataList.map((iconDataInfo) {
+        //             return Icon(
+        //               iconDataInfo.icon,
+        //               size: MediaQuery.of(context).size.height * 0.035,
+        //               color: iconDataInfo.color,
+        //             );
+        //           }).toList(),
+        //         ),
+        //       ],
+        //     ),
+        //   ),
+        // ),
 
         Padding(
           padding: EdgeInsets.only(right: 10.0, left: 10.0, top: 10.0),
           child: Container(
             height: MediaQuery.of(context).size.height * 0.1,
             decoration: BoxDecoration(
-              color: Colors.grey[300],
+              color: Colors.blueAccent.withOpacity(0.1),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Padding(
               padding: EdgeInsets.all(10.0),
               child: selectedBubbler.description == null
-              ? Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'No description available.',
-                      style: TextStyle(fontSize: 14),
+                  ? Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'No description available.',
+                          style: TextStyle(fontSize: 14),
+                        ),
+                      ],
+                    )
+                  : Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          // Ensures the Text widget takes up the available space and wraps text
+                          child: Text(
+                            utf8.decode((selectedBubbler.description)!.codeUnits),
+                            style: TextStyle(fontSize: 12),
+                            overflow: TextOverflow.visible,
+                            maxLines: 3,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                )
-              : Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Expanded( // Ensures the Text widget takes up the available space and wraps text
-                      child: Text(
-                        utf8.decode((selectedBubbler.description)!.codeUnits),
-                        style: TextStyle(fontSize: 12),
-                        overflow: TextOverflow.visible,
-                        maxLines: 3,
-                      ),
-                    ),
-                  ],
-                ),
             ),
           ),
         ),
-
 
         // TextButton(
         //   onPressed: () {},

@@ -170,7 +170,7 @@ class LikeDislikeButtonState extends State<LikeDislikeButton> {
           height: 60,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: assignColorToBubblerVotes(upVotesCount, downVotesCount),
+            color: assignColorToBubblerVotes(upVotesCount, downVotesCount).withOpacity(0.7),
             shape: BoxShape.rectangle,
             borderRadius: BorderRadius.circular(16),
           ),

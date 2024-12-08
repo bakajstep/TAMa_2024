@@ -47,13 +47,19 @@ class FavoriteBubblerButtonState extends State<FavoriteBubblerButton> {
   Widget build(BuildContext context) {
     final globalState = context.watch<GlobalState>();
 
-    // return IconButton(
-    //   key: ValueKey(widget.waterBubbler.id ?? widget.waterBubbler.osmId),
-    //   onPressed: globalState.user.isLoggedIn ? _onPresed : _redirectToLogin,
-    //   padding: EdgeInsets.all(5),
-    //   iconSize: widget.size != null ? (widget.size! - 10) : null,
-    //   icon: Icon(_isFavorite ? Icons.favorite : Icons.favorite_border),
-    // );
+    return Material(
+      shape: const CircleBorder(),
+      color: Colors.black.withOpacity(0.1),
+      child: IconButton(
+        key: ValueKey(widget.waterBubbler.id ?? widget.waterBubbler.osmId),
+        onPressed: globalState.user.isLoggedIn ? _onPresed : _redirectToLogin,
+        iconSize: widget.size != null ? (widget.size!) : null,
+        padding: EdgeInsets.all(5),
+        constraints: BoxConstraints(),
+        style: const ButtonStyle(tapTargetSize: MaterialTapTargetSize.shrinkWrap),
+        icon: Icon(_isFavorite ? Icons.favorite : Icons.favorite_border, color: Colors.black),
+      ),
+    );
 
     // return Material(
     //   elevation: 5,
@@ -70,17 +76,17 @@ class FavoriteBubblerButtonState extends State<FavoriteBubblerButton> {
     //   ),
     // );
 
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.grey[400], // Background color
-        shape: BoxShape.circle, // Makes the background circular
-      ),
-      child: IconButton(
-        key: ValueKey(widget.waterBubbler.id ?? widget.waterBubbler.osmId),
-        onPressed: globalState.user.isLoggedIn ? _onPresed : _redirectToLogin,
-        iconSize: widget.size != null ? (widget.size! - 20) : 24,
-        icon: Icon(_isFavorite ? Icons.favorite : Icons.favorite_border, color: _isFavorite ? Colors.pinkAccent : Colors.white),
-      ),
-    );
+    // return Container(
+    //   decoration: BoxDecoration(
+    //     color: Colors.grey[400], // Background color
+    //     shape: BoxShape.circle, // Makes the background circular
+    //   ),
+    //   child: IconButton(
+    //     key: ValueKey(widget.waterBubbler.id ?? widget.waterBubbler.osmId),
+    //     onPressed: globalState.user.isLoggedIn ? _onPresed : _redirectToLogin,
+    //     iconSize: widget.size != null ? (widget.size! - 20) : 24,
+    //     icon: Icon(_isFavorite ? Icons.favorite : Icons.favorite_border, color: _isFavorite ? Colors.pinkAccent : Colors.white),
+    //   ),
+    // );
   }
 }

@@ -36,7 +36,7 @@ class SmallDetailSheetChild extends StatefulWidget {
 }
 
 class _SmallDetailSheetChildState extends State<SmallDetailSheetChild> {
-  final double _buttonsSize = 45.0;
+  final double _buttonsSize = 30;
 
   void _onHeightChanged() {}
 
@@ -71,20 +71,20 @@ class _SmallDetailSheetChildState extends State<SmallDetailSheetChild> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 15),
+                padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 10.0),
                 child: Row(
                   children: [
-                    // Icon(
-                    //   Icons.circle,
-                    //   size: _buttonsSize,
-                    //   color: assignColorToBubblerVotes(waterBubbler.upvoteCount, waterBubbler.downvoteCount),
-                    // ),
+                    Icon(
+                      Icons.circle,
+                      size: _buttonsSize + 15,
+                      color: assignColorToBubblerVotes(waterBubbler.upvoteCount, waterBubbler.downvoteCount),
+                    ),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(utf8.decode((waterBubbler.name ?? 'Water Bubbler').codeUnits),
-                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                           Text(
                               "Distance: ${distanceBetweenBubblerAndCurrent != null ? '~${distanceToDisplay(distanceBetweenBubblerAndCurrent)}' : "UNKNOWN"}",
                               style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal)),
@@ -97,7 +97,7 @@ class _SmallDetailSheetChildState extends State<SmallDetailSheetChild> {
                         size: _buttonsSize,
                         key: ValueKey(waterBubbler.id ?? waterBubbler.osmId)),
                     MaintainBubblerButton(waterBubbler: waterBubbler, size: _buttonsSize),
-                  ].expand((x) => [const SizedBox(width: 10), x]).skip(1).toList(),
+                  ].expand((x) => [const SizedBox(width: 5), x]).skip(1).toList(),
                 ),
               ),
             ],

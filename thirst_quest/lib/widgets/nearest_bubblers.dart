@@ -45,6 +45,7 @@ class NearestBubblers extends StatefulWidget {
 
 class NearestBubblersState extends State<NearestBubblers> {
   final WaterBubblerService bubblerService = DI.get<WaterBubblerService>();
+  final _buttonSize = 25.0;
   List<WaterBubbler> nearestBubblers = [];
   LatLng? positionOnLoad;
   bool isLoading = true;
@@ -120,19 +121,22 @@ class NearestBubblersState extends State<NearestBubblers> {
                     color: Colors.blueAccent.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  margin: EdgeInsets.symmetric(vertical: 7.5, horizontal: 10),
+                  margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                   child: ListTile(
                     onTap: () =>
                         BubblerSelected(selectedWaterBubbler: waterBubbler, showFullDetail: true).dispatch(context),
-                    title: Text(utf8.decode((waterBubbler.name ?? 'Water Bubbler').codeUnits)),
+                    title: Text(utf8.decode((waterBubbler.name ?? 'Water Bubbler').codeUnits),
+                        style: TextStyle(fontWeight: FontWeight.bold)),
                     subtitle: Text('Distance: ~${distanceToDisplay(waterBubbler.distanceTo(positionOnLoad!))}'),
                     leading: Icon(
+                      size: _buttonSize + 10,
                       Icons.circle,
                       color: assignColorToBubblerVotes(waterBubbler.upvoteCount, waterBubbler.downvoteCount),
                     ),
                     trailing: Row(mainAxisSize: MainAxisSize.min, children: [
-                      NavigationButton(waterBubbler: waterBubbler),
-                      FavoriteBubblerButton(waterBubbler: waterBubbler),
+                      NavigationButton(waterBubbler: waterBubbler, size: _buttonSize),
+                      SizedBox(width: 10),
+                      FavoriteBubblerButton(waterBubbler: waterBubbler, size: _buttonSize),
                     ]),
                   ),
                 );

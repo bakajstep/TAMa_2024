@@ -4,7 +4,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 class ImageGallery extends StatelessWidget {
   final List<String> imageUrls;
 
-  const ImageGallery({required this.imageUrls, Key? key}) : super(key: key);
+  const ImageGallery({required this.imageUrls, super.key});
 
   @override
   Widget build(BuildContext context) {
