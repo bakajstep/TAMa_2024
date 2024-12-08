@@ -70,7 +70,9 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
     //   IconDataInfo(icon: Icons.forest, size: 30, color: Colors.green),
     //   IconDataInfo(icon: Icons.verified, size: 30, color: Colors.purple),
     // ];
-    final List<String> images = selectedBubbler.photos.map((photo) => photo.url).toList();
+    List<String> images = selectedBubbler.photos.map((photo) => photo.url).toList();
+    images.add('https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=170667a&w=0&k=20&c=Q7gLG-xfScdlTlPGFohllqpNqpxsU1jy8feD_fob87U=');
+
 
     return Column(
       children: [
@@ -92,7 +94,7 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
                 child: Row(
                   children: [
                     Icon(
-                      Icons.circle,
+                      Icons.water_drop,
                       size: _buttonsSize + 15,
                       color: assignColorToBubblerVotes(selectedBubbler.upvoteCount, selectedBubbler.downvoteCount),
                     ),
@@ -134,29 +136,29 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // First row in Bubbler rating containing title
-                Padding(
-                  padding: EdgeInsets.all(2.0),
-                  child: SizedBox(
-                    height: 18,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Bubbler rating",
-                          style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                // Draw a line in Bubbler rating section
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10.0),
-                  child: Container(
-                    height: 1,
-                    color: Colors.grey[400]!,
-                  ),
-                ),
+                // Padding(
+                //   padding: EdgeInsets.all(2.0),
+                //   child: SizedBox(
+                //     height: 18,
+                //     child: Row(
+                //       mainAxisAlignment: MainAxisAlignment.center,
+                //       children: [
+                //         Text(
+                //           "Bubbler rating",
+                //           style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
+                //         ),
+                //       ],
+                //     ),
+                //   ),
+                // ),
+                // // Draw a line in Bubbler rating section
+                // Padding(
+                //   padding: EdgeInsets.symmetric(horizontal: 10.0),
+                //   child: Container(
+                //     height: 1,
+                //     color: Colors.grey[400]!,
+                //   ),
+                // ),
                 // Second row in Bubbler rating section
                 Padding(
                   padding: EdgeInsets.all(10.0),
@@ -244,18 +246,18 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
         //   child: Text('Read more'),
         // ),
 
-        images.isNotEmpty
-            ? ImageGallery(imageUrls: images)
-            : Padding(
-                padding: EdgeInsets.all(10.0),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(15.0),
-                  child: Image.network(
-                    'https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=170667a&w=0&k=20&c=Q7gLG-xfScdlTlPGFohllqpNqpxsU1jy8feD_fob87U=',
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
+        SizedBox(height: 10),
+        Stack(
+          children: [
+            Column(
+              children: [
+                SizedBox(height: 10),
+                ImageGallery(imageUrls: images)
+                // photo add button
+              ],
+            ),
+          ],
+        ),
       ],
     );
   }
