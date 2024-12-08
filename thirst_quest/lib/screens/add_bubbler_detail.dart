@@ -1,4 +1,7 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:thirst_quest/api/models/water_bubbler.dart';
 import 'package:thirst_quest/di.dart';
@@ -19,11 +22,29 @@ class AddBubblerDetailsScreenState extends State<AddBubblerDetailsScreen> {
   final WaterBubblerService bubblerService = DI.get<WaterBubblerService>();
   bool _isFavorite = false;
 
+  final ImagePicker _picker = ImagePicker();
+  List<XFile>? _selectedImages;
+
+  Future<void> _pickImages() async {
+    final List<XFile>? pickedImages = await _picker.pickMultiImage();
+    if (pickedImages != null && pickedImages.isNotEmpty) {
+      setState(() {
+        _selectedImages = pickedImages;
+      });
+    }
+  }
+
+  Future<Uint8List> _loadImageBytes(XFile xfile) async {
+    return await xfile.readAsBytes();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Bubbler detail")),
-      body: Padding(
+      appBar: AppBar(
+        title: Text("Bubbler detail"),
+      ),
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,23 +71,74 @@ class AddBubblerDetailsScreenState extends State<AddBubblerDetailsScreen> {
             ),
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                if (_nameController.text.isEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Please enter the bubbler's name.")),
+              onPressed: _pickImages,
+              child: Text("Pick Images"),
+            ),
+            SizedBox(height: 10),
+            if (_selectedImages != null && _selectedImages!.isNotEmpty)
+              FutureBuilder(
+                future: Future.wait(
+                  _selectedImages!.map((xfile) => _loadImageBytes(xfile)),
+                ),
+                builder: (context, AsyncSnapshot<List<Uint8List>> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                  if (snapshot.hasData) {
+                    final imagesData = snapshot.data!;
+                    return GridView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: imagesData.length,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3, // počet obrázků v jednom řádku
+                        crossAxisSpacing: 5,
+                        mainAxisSpacing: 5,
+                      ),
+                      itemBuilder: (BuildContext context, int index) {
+                        return Image.memory(
+                          imagesData[index],
+                          fit: BoxFit.cover,
+                        );
+                      },
+                    );
+                  }
+                  return SizedBox();
+                },
+              ),
+            SizedBox(height: 20),
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  if (_nameController.text.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Please enter the bubbler's name.")),
+                    );
+                    return;
+                  }
+
+                  final WaterBubbler bubbler = WaterBubbler.fromLatLng(
+                    latLng: widget.location,
+                    name: _nameController.text,
+                    description: _descriptionController.text,
+                    favorite: _isFavorite,
                   );
-                  return;
-                }
-                final WaterBubbler bubbler = WaterBubbler.fromLatLng(
-                  latLng: widget.location,
-                  name: _nameController.text,
-                  description: _descriptionController.text,
-                  favorite: _isFavorite,
-                );
-                bubblerService.createWaterBubbler(bubbler);
-                Navigator.pop(context, bubbler);
-              },
-              child: Text("Create"),
+
+                  // Tady můžete uložit obrázky společně s bubblerem dle potřeby.
+
+                  bubblerService.createWaterBubbler(bubbler);
+                  Navigator.pop(context, bubbler);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.indigo,
+                  foregroundColor: Colors.white,
+                  textStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
+                child: Text("Create"),
+              ),
             ),
           ],
         ),
