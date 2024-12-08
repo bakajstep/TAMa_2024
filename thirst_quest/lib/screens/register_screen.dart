@@ -7,9 +7,13 @@ import 'package:thirst_quest/states/global_state.dart';
 import 'package:thirst_quest/widgets/form_error.dart';
 import 'package:thirst_quest/widgets/loading.dart';
 import 'package:thirst_quest/assets/constants.dart' as constants;
+import 'package:thirst_quest/screens/profile_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({super.key});
+  final MaterialPageRoute? onLoginSuccess;
+  final bool popOnSuccess;
+
+  const RegisterScreen({this.onLoginSuccess, this.popOnSuccess = false, super.key});
 
   @override
   RegisterScreenState createState() => RegisterScreenState();
@@ -75,7 +79,14 @@ class RegisterScreenState extends State<RegisterScreen> {
     }
 
     Navigator.pop(context);
-    Navigator.pop(context);
+    
+    if (widget.popOnSuccess) {
+      Navigator.pop(context);
+      return;
+    }
+
+    Navigator.pushReplacement(
+        context, widget.onLoginSuccess ?? MaterialPageRoute(builder: (context) => ProfileScreen()));
   }
 
   @override

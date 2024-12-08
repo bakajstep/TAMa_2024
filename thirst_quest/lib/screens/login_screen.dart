@@ -225,7 +225,7 @@ class LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 4),
                 ElevatedButton(
                   onPressed: () =>
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const RegisterScreen())),
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterScreen(onLoginSuccess: widget.onLoginSuccess, popOnSuccess: widget.popOnSuccess))),
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.indigo.shade800,
                     textStyle: TextStyle(fontSize: 15),
