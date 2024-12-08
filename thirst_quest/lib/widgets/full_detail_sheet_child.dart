@@ -176,7 +176,7 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
         Padding(
           padding: EdgeInsets.only(left: 10.0, right: 10.0),
           child: Container(
-            height: MediaQuery.of(context).size.height * 0.05,
+            height: MediaQuery.of(context).size.height * 0.07,
             decoration: BoxDecoration(
               color: Colors.grey[300],
               border: Border.all(color: Colors.grey[300]!, width: 1),
@@ -186,11 +186,11 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly, // To space icons evenly
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: iconDataList.map((iconDataInfo) {
                     return Icon(
                       iconDataInfo.icon,
-                      size: iconDataInfo.size,
+                      size: MediaQuery.of(context).size.height * 0.035,
                       color: iconDataInfo.color,
                     );
                   }).toList(),
@@ -199,6 +199,7 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
             ),
           ),
         ),
+
 
         Padding(
           padding: EdgeInsets.only(right: 10.0, left: 10.0, top: 10.0),
@@ -229,7 +230,7 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
             : Padding(
                 padding: EdgeInsets.all(10.0),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(15.0), // Adjust the value for the desired corner radius
+                  borderRadius: BorderRadius.circular(15.0),
                   child: Image.network(
                     'https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=170667a&w=0&k=20&c=Q7gLG-xfScdlTlPGFohllqpNqpxsU1jy8feD_fob87U=',
                     fit: BoxFit.cover,
