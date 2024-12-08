@@ -93,7 +93,7 @@ class _SmallDetailSheetChildState extends State<SmallDetailSheetChild> {
                     ),
                     NavigationButton(waterBubbler: waterBubbler, size: _buttonsSize),
                     FavoriteBubblerButton(waterBubbler: waterBubbler, size: _buttonsSize),
-                    // MaintainbubblerButton(waterBubbler: waterBubbler, size: _buttonsSize),
+                    MaintainbubblerButton(waterBubbler: waterBubbler, size: _buttonsSize),
                   ].expand((x) => [const SizedBox(width: 10), x]).skip(1).toList(),
                 ),
               ),
