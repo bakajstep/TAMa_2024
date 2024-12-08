@@ -155,20 +155,20 @@ class FullDetail extends StatelessWidget {
                   ),
                 ),
 
-                CarouselSlider(
-                  items: carouselItems,
-                  options: CarouselOptions(
-                    height: MediaQuery.of(context).size.height * 0.2, // Customize the height of the carousel
-                    autoPlay: false, // Enable auto-play
-                    enlargeCenterPage: false, // Don't enlarge the center item
-                    enableInfiniteScroll: false, // Enable infinite scroll
-                    viewportFraction: 0.5, // Show next/previous items more prominently on the sides
-                    onPageChanged: (index, reason) {
-                      // Optional callback when the page changes
-                      // You can use it to update any additional UI components
-                    },
-                  ),
-                ),
+                // CarouselSlider(
+                //   items: carouselItems,
+                //   options: CarouselOptions(
+                //     height: MediaQuery.of(context).size.height * 0.2, // Customize the height of the carousel
+                //     autoPlay: false, // Enable auto-play
+                //     enlargeCenterPage: false, // Don't enlarge the center item
+                //     enableInfiniteScroll: false, // Enable infinite scroll
+                //     viewportFraction: 0.5, // Show next/previous items more prominently on the sides
+                //     onPageChanged: (index, reason) {
+                //       // Optional callback when the page changes
+                //       // You can use it to update any additional UI components
+                //     },
+                //   ),
+                // ),
 
                 // Container(
                 //   height: 150,
