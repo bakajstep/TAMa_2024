@@ -74,11 +74,11 @@ class _SmallDetailSheetChildState extends State<SmallDetailSheetChild> {
                 padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 15),
                 child: Row(
                   children: [
-                    Icon(
-                      Icons.circle,
-                      size: _buttonsSize,
-                      color: assignColorToBubblerVotes(waterBubbler.upvoteCount, waterBubbler.downvoteCount),
-                    ),
+                    // Icon(
+                    //   Icons.circle,
+                    //   size: _buttonsSize,
+                    //   color: assignColorToBubblerVotes(waterBubbler.upvoteCount, waterBubbler.downvoteCount),
+                    // ),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,

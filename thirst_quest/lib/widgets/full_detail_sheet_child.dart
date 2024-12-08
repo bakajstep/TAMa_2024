@@ -67,9 +67,9 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
       IconDataInfo(icon: Icons.accessible, size: 30, color: Colors.blue),
       IconDataInfo(icon: Icons.paid, size: 35, color: Colors.orange),
       IconDataInfo(icon: Icons.schedule, size: 30, color: Colors.red),
-      IconDataInfo(icon: Icons.not_accessible, size: 30, color: Colors.grey),
+      // IconDataInfo(icon: Icons.not_accessible, size: 30, color: Colors.grey),
       IconDataInfo(icon: Icons.forest, size: 30, color: Colors.green),
-      // IconDataInfo(icon: Icons.verified, size: 30, color: Colors.purple),
+      IconDataInfo(icon: Icons.verified, size: 30, color: Colors.purple),
     ];
     final List<String> images = selectedBubbler.photos.map((photo) => photo.url).toList();
 
@@ -92,11 +92,11 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
                 padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 15),
                 child: Row(
                   children: [
-                    Icon(
-                      Icons.circle,
-                      size: _buttonsSize,
-                      color: assignColorToBubblerVotes(selectedBubbler.upvoteCount, selectedBubbler.downvoteCount),
-                    ),
+                    // Icon(
+                    //   Icons.circle,
+                    //   size: _buttonsSize,
+                    //   color: assignColorToBubblerVotes(selectedBubbler.upvoteCount, selectedBubbler.downvoteCount),
+                    // ),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -176,7 +176,7 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
         Padding(
           padding: EdgeInsets.only(left: 10.0, right: 10.0),
           child: Container(
-            height: MediaQuery.of(context).size.height * 0.05,
+            height: MediaQuery.of(context).size.height * 0.07,
             decoration: BoxDecoration(
               color: Colors.grey[300],
               border: Border.all(color: Colors.grey[300]!, width: 1),
@@ -186,11 +186,11 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly, // To space icons evenly
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: iconDataList.map((iconDataInfo) {
                     return Icon(
                       iconDataInfo.icon,
-                      size: iconDataInfo.size,
+                      size: MediaQuery.of(context).size.height * 0.035,
                       color: iconDataInfo.color,
                     );
                   }).toList(),
@@ -200,24 +200,46 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
           ),
         ),
 
+
         Padding(
           padding: EdgeInsets.only(right: 10.0, left: 10.0, top: 10.0),
           child: Container(
-              height: MediaQuery.of(context).size.height * 0.1,
-              decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Text(
-                    utf8.decode((selectedBubbler.description ?? 'No description available.').codeUnits),
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ],
-              )),
+            height: MediaQuery.of(context).size.height * 0.1,
+            decoration: BoxDecoration(
+              color: Colors.grey[300],
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(10.0),
+              child: selectedBubbler.description == null
+              ? Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'No description available.',
+                      style: TextStyle(fontSize: 14),
+                    ),
+                  ],
+                )
+              : Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Expanded( // Ensures the Text widget takes up the available space and wraps text
+                      child: Text(
+                        utf8.decode((selectedBubbler.description)!.codeUnits),
+                        style: TextStyle(fontSize: 12),
+                        overflow: TextOverflow.visible,
+                        maxLines: 3,
+                      ),
+                    ),
+                  ],
+                ),
+            ),
+          ),
         ),
+
 
         // TextButton(
         //   onPressed: () {},
@@ -229,7 +251,7 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
             : Padding(
                 padding: EdgeInsets.all(10.0),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(15.0), // Adjust the value for the desired corner radius
+                  borderRadius: BorderRadius.circular(15.0),
                   child: Image.network(
                     'https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=170667a&w=0&k=20&c=Q7gLG-xfScdlTlPGFohllqpNqpxsU1jy8feD_fob87U=',
                     fit: BoxFit.cover,
