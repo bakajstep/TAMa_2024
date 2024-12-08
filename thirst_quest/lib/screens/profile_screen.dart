@@ -24,7 +24,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final state = Provider.of<GlobalState>(context, listen: false);
+    final state = Provider.of<GlobalState>(context);
 
     if (!state.user.isLoggedIn) {
       Future.microtask(
@@ -276,9 +276,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       if (pickedFile != null) {
         Photo? result = await photoService.uploadProfilePicture(XFile(pickedFile.path));
-        setState(() {
-          state.updateProfilePicture(result!.url);
-        });
+        state.updateProfilePicture(result!.url);
       }
     } catch (e) {
       print("Error during picking profile picture: $e");
