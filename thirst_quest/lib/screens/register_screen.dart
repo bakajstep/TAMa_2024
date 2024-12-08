@@ -1,3 +1,4 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:thirst_quest/assets/thirst_quest_icons.dart';
@@ -122,7 +123,7 @@ class RegisterScreenState extends State<RegisterScreen> {
                         TextFormField(
                           controller: _emailController,
                           decoration: const InputDecoration(labelText: 'Email'),
-                          validator: (value) => (value == null || value.isEmpty) ? 'Please enter your email' : null,
+                          validator: (value) => (value == null || value.isEmpty) ? 'Please enter your email' : ((!EmailValidator.validate(value)) ? 'Please enter a valid email' : null),
                         ),
                         TextFormField(
                           controller: _passwordController,

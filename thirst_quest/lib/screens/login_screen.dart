@@ -1,3 +1,4 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
@@ -183,7 +184,7 @@ class LoginScreenState extends State<LoginScreen> {
                       TextFormField(
                         controller: _emailController,
                         decoration: const InputDecoration(labelText: 'Email'),
-                        validator: (value) => (value == null || value.isEmpty) ? 'Please enter your email' : null,
+                        validator: (value) => (value == null || value.isEmpty) ? 'Please enter your email' : ((!EmailValidator.validate(value)) ? 'Please enter a valid email' : null),
                       ),
                       TextFormField(
                         controller: _passwordController,
