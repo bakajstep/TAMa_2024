@@ -1,13 +1,16 @@
 import 'dart:convert';
 
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import 'package:flutter/material.dart';
+import 'package:thirst_quest/api/models/photo.dart';
 import 'package:thirst_quest/di.dart';
 import 'package:thirst_quest/screens/favourite_bubbler_screen.dart';
 import 'package:thirst_quest/screens/login_screen.dart';
 import 'package:thirst_quest/screens/my_bubbler_screen.dart';
 import 'package:thirst_quest/services/auth_service.dart';
+import 'package:thirst_quest/services/photo_service.dart';
 import 'package:thirst_quest/states/global_state.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -17,6 +20,8 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  final PhotoService photoService = DI.get<PhotoService>();
+
   @override
   Widget build(BuildContext context) {
     final state = Provider.of<GlobalState>(context, listen: false);
@@ -77,7 +82,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       IconButton(
                         icon: const Icon(Icons.edit, size: 20),
                         onPressed: () {
-                          // Akce pro úpravu profilového obrázku
+                          _pickImage(state);
                         },
                       ),
                     ],
@@ -262,5 +267,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
         );
       },
     );
+  }
+
+  Future<void> _pickImage(GlobalState state) async {
+    try {
+      final picker = ImagePicker();
+      final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+      if (pickedFile != null) {
+        Photo? result = await photoService.uploadProfilePicture(XFile(pickedFile.path));
+        setState(() {
+          state.updateProfilePicture(result!.url);
+        });
+      }
+    } catch (e) {
+      print("Error during picking profile picture: $e");
+    }
   }
 }
