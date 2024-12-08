@@ -6,7 +6,6 @@ import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:thirst_quest/api/models/auth_response.dart';
 import 'package:thirst_quest/api/models/review.dart';
-import 'package:thirst_quest/api/models/vote_type.dart';
 import 'package:thirst_quest/api/models/photo.dart';
 import 'package:thirst_quest/api/models/error.dart';
 import 'package:thirst_quest/api/models/water_bubbler.dart';
@@ -199,12 +198,16 @@ class ThirstQuestApiClient {
     }
   }
 
-  Future<bool> deleteReview(String token, String id) async {
-    final uri = Uri.parse('$baseUrl/api/reviews/$id');
+  Future<bool> deleteReview(String token, String? bubblerId, int? bubblerOsmId) async {
+    final uri = Uri.parse('$baseUrl/api/reviews');
     try {
       final response = await http.delete(
         uri,
-        headers: _addAuthHeader(token),
+        headers: _addAuthHeader(token, headers: {'Content-Type': 'application/json'}),
+        body: jsonEncode({
+          'bubblerId': bubblerId,
+          'openStreetId': bubblerOsmId,
+        }),
       );
 
       return response.statusCode == 200;
@@ -215,14 +218,17 @@ class ThirstQuestApiClient {
     }
   }
 
-  Future<bool> updateReview(String token, String id, VoteType voteType) async {
-    final uri = Uri.parse('$baseUrl/api/reviews/$id');
+  Future<bool> updateReview(String token, Review review) async {
+    final uri = Uri.parse('$baseUrl/api/reviews');
     try {
       final response = await http.put(
         uri,
         headers: _addAuthHeader(token, headers: {'Content-Type': 'application/json'}),
         body: jsonEncode({
-          "voteType": voteType == VoteType.UPVOTE ? "UPVOTE" : "DOWNVOTE",
+          "id": review.id,
+          "voteType": review.voteType,
+          "waterBubblerId": review.waterBubblerId,
+          "waterBubblerOsmId": review.waterBubblerOsmId
         }),
       );
 

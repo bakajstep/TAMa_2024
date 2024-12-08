@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:thirst_quest/states/global_state.dart';
 
 class LikeDislikeButton extends StatefulWidget {
-    final WaterBubbler waterBubbler;
+  final WaterBubbler waterBubbler;
 
   const LikeDislikeButton({required this.waterBubbler, super.key});
 
@@ -50,9 +50,13 @@ class LikeDislikeButtonState extends State<LikeDislikeButton> {
   }
 
   void _onPresedLike() async {
-    Review review = Review.createReview(voteTypeEnum: VoteType.UPVOTE, waterBubblerId: widget.waterBubbler.id, waterBubblerOsmId: widget.waterBubbler.osmId);
-    bool negReview = false;
     String? revId = widget.waterBubbler.review?.id;
+    Review review = Review.createReview(
+        reviewId: revId,
+        voteTypeEnum: VoteType.UPVOTE,
+        waterBubblerId: widget.waterBubbler.id,
+        waterBubblerOsmId: widget.waterBubbler.osmId);
+    bool negReview = false;
     setState(() {
       isLiked = !isLiked;
       if (isDisliked) {
@@ -61,32 +65,35 @@ class LikeDislikeButtonState extends State<LikeDislikeButton> {
         widget.waterBubbler.upvoteCount++;
         widget.waterBubbler.downvoteCount--;
         widget.waterBubbler.review = review;
-      }
-      else if (isLiked) {
+      } else if (isLiked) {
         widget.waterBubbler.upvoteCount++;
         widget.waterBubbler.review = review;
-      }
-      else {
+      } else {
         widget.waterBubbler.upvoteCount--;
         widget.waterBubbler.review = null;
       }
     });
 
-    if (negReview) { // review was dislike 
-      await waterBubblerService.updateReview(revId!, VoteType.UPVOTE);
-    }
-    else if (isLiked) { // no previous review
+    if (negReview) {
+      // review was dislike
+      await waterBubblerService.updateReview(review);
+    } else if (isLiked) {
+      // no previous review
       await waterBubblerService.addReview(review);
-    }
-    else { // review was like
-      await waterBubblerService.deleteReview(revId!);
+    } else {
+      // review was like
+      await waterBubblerService.deleteReview(widget.waterBubbler.id, widget.waterBubbler.osmId);
     }
   }
 
   void _onPresedDislike() async {
-    Review review = Review.createReview(voteTypeEnum: VoteType.DOWNVOTE, waterBubblerId: widget.waterBubbler.id, waterBubblerOsmId: widget.waterBubbler.osmId);
-    bool posReview = false;
     String? revId = widget.waterBubbler.review?.id;
+    Review review = Review.createReview(
+        reviewId: revId,
+        voteTypeEnum: VoteType.DOWNVOTE,
+        waterBubblerId: widget.waterBubbler.id,
+        waterBubblerOsmId: widget.waterBubbler.osmId);
+    bool posReview = false;
     setState(() {
       isDisliked = !isDisliked;
       if (isLiked) {
@@ -95,25 +102,24 @@ class LikeDislikeButtonState extends State<LikeDislikeButton> {
         widget.waterBubbler.upvoteCount--;
         widget.waterBubbler.downvoteCount++;
         widget.waterBubbler.review = review;
-      }
-      else if (isDisliked) {
+      } else if (isDisliked) {
         widget.waterBubbler.downvoteCount++;
         widget.waterBubbler.review = review;
-      }
-      else {
+      } else {
         widget.waterBubbler.downvoteCount--;
         widget.waterBubbler.review = null;
       }
     });
 
-    if (posReview) { // review was like
-      await waterBubblerService.updateReview(revId!, VoteType.DOWNVOTE);
-    }
-    else if (isDisliked) { // no previous review
+    if (posReview) {
+      // review was like
+      await waterBubblerService.updateReview(review);
+    } else if (isDisliked) {
+      // no previous review
       await waterBubblerService.addReview(review);
-    }
-    else { // review was dislike
-      await waterBubblerService.deleteReview(revId!);
+    } else {
+      // review was dislike
+      await waterBubblerService.deleteReview(widget.waterBubbler.id, widget.waterBubbler.osmId);
     }
   }
 
@@ -177,10 +183,7 @@ class LikeDislikeButtonState extends State<LikeDislikeButton> {
           ),
           child: Text(
             "${upVotesCount - downVotesCount}",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20
-            ),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
           ),
         ),
         SizedBox(width: 10),

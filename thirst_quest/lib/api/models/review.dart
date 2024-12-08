@@ -25,13 +25,13 @@ class Review {
   factory Review.fromJson(Map<String, dynamic> json) => _$ReviewFromJson(json);
 
   Review.createReview({
+    required String? reviewId,
     required VoteType voteTypeEnum,
     required this.waterBubblerId,
     required this.waterBubblerOsmId,
-  })  : id = "",
+  })  : id = reviewId ?? "",
         userId = "",
         voteType = voteTypeEnum == VoteType.UPVOTE ? "UPVOTE" : "DOWNVOTE";
-
 
   Map<String, dynamic> toJson() => _$ReviewToJson(this);
 }
