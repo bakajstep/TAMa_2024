@@ -31,4 +31,9 @@ class GlobalState extends ChangeNotifier {
     user.identity!.email = newEmail;
     notifyListeners();
   }
+
+    void updateProfilePicture(String pictureUrl) {
+    user.identity!.pictureUrl = pictureUrl;
+    notifyListeners();
+  }
 }

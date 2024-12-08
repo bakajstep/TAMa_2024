@@ -1,8 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:thirst_quest/api/models/auth_response.dart';
+import 'package:thirst_quest/api/models/photo.dart';
+import 'package:thirst_quest/api/models/error.dart';
 import 'package:thirst_quest/api/models/water_bubbler.dart';
 import 'package:thirst_quest/config.dart';
 
@@ -263,6 +267,52 @@ class ThirstQuestApiClient {
       throw Exception('Failed to sign in with Google: $e');
     }
   }
+
+  /////////////////////////////////////////////////////////////////
+  // Photos
+  /////////////////////////////////////////////////////////////////
+
+  Future<Photo?> uploadProfilePicture(String token, XFile pickedFile) async {
+    final uri = Uri.parse('$baseUrl/api/photos/upload/profile');
+    try {
+      var request = http.MultipartRequest('POST', uri);
+      request.headers.addAll(_addAuthHeader(token));
+
+      if (kIsWeb) {
+      // Web - použijeme fromBytes
+      final bytes = await pickedFile.readAsBytes();
+      request.files.add(http.MultipartFile.fromBytes(
+        'file',
+        bytes,
+        filename: 'profile_picture.jpg', // Libovolný název
+      ));
+    } else {
+      // Android/iOS - zde můžeme použít fromPath (protože dart:io je k dispozici)
+      request.files.add(await http.MultipartFile.fromPath(
+        'file',
+        pickedFile.path,
+      ));
+    }
+
+      final streamedResponse = await request.send();
+      final response = await http.Response.fromStream(streamedResponse);
+
+      if (response.statusCode == 200) {
+      // Úspěch: Vrací PhotoDTO
+      return Photo.fromJson(jsonDecode(response.body));
+      } else {
+        // Chyba: Vrací ErrorDTO
+        final error = Error.fromJson(jsonDecode(response.body));
+        print('Chyba při nahrávání: ${error.message}');
+        return null;
+      }
+    } on SocketException {
+      throw Exception('No Internet connection');
+    } catch (e) {
+      throw Exception('Failed to upload profile picture: $e');
+    }
+  }
+
 
   /////////////////////////////////////////////////////////////////
   // HELPERS
