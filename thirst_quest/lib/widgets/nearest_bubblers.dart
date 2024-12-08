@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:thirst_quest/api/models/water_bubbler.dart';
+import 'package:thirst_quest/assets/assign_color_to_bubbler_votes.dart';
 import 'package:thirst_quest/controllers/draggable_sheet_child_controller.dart';
 import 'package:thirst_quest/notifications/bubbler_selected.dart';
 import 'package:thirst_quest/widgets/favorite_bubbler_button.dart';
@@ -125,9 +126,10 @@ class NearestBubblersState extends State<NearestBubblers> {
                         BubblerSelected(selectedWaterBubbler: waterBubbler, showFullDetail: true).dispatch(context),
                     title: Text(utf8.decode((waterBubbler.name ?? 'Water Bubbler').codeUnits)),
                     subtitle: Text('Distance: ~${distanceToDisplay(waterBubbler.distanceTo(positionOnLoad!))}'),
-                    leading: waterBubbler.photos.isNotEmpty
-                        ? Image.network(waterBubbler.photos[0].url)
-                        : const Icon(Icons.local_drink),
+                    leading: Icon(
+                      Icons.circle,
+                      color: assignColorToBubblerVotes(waterBubbler.upvoteCount, waterBubbler.downvoteCount),
+                    ),
                     trailing: Row(mainAxisSize: MainAxisSize.min, children: [
                       NavigationButton(waterBubbler: waterBubbler),
                       FavoriteBubblerButton(waterBubbler: waterBubbler),

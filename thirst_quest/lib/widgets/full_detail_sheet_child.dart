@@ -1,8 +1,6 @@
 import 'dart:convert';
 
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:thirst_quest/api/models/water_bubbler.dart';
 import 'package:thirst_quest/controllers/draggable_sheet_child_controller.dart';
 import 'package:thirst_quest/assets/constants.dart' as constants;
 import 'package:thirst_quest/states/bubbler_map_state.dart';
@@ -49,10 +47,8 @@ class IconDataInfo {
 
 class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
   final double _buttonsSize = 45.0;
-  
-  void _onHeightChanged() {
-    
-  }
+
+  void _onHeightChanged() {}
 
   @override
   void initState() {
@@ -74,7 +70,7 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
       IconDataInfo(icon: Icons.not_accessible, size: 30, color: Colors.grey),
       IconDataInfo(icon: Icons.forest, size: 30, color: Colors.green),
       // IconDataInfo(icon: Icons.verified, size: 30, color: Colors.purple),
-  ];
+    ];
     final List<String> images = selectedBubbler.photos.map((photo) => photo.url).toList();
 
     return Column(
@@ -99,17 +95,18 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
                     Icon(
                       Icons.circle,
                       size: _buttonsSize,
-                      color: assignColorToBubblerVotes(selectedBubbler.upvoteCount,selectedBubbler.downvoteCount),
+                      color: assignColorToBubblerVotes(selectedBubbler.upvoteCount, selectedBubbler.downvoteCount),
                     ),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                              utf8.decode((selectedBubbler.name ?? 'Water Bubbler').codeUnits),
+                          Text(utf8.decode((selectedBubbler.name ?? 'Water Bubbler').codeUnits),
                               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                           Text(
-                            "Distance: ${'~${distanceToDisplay(selectedBubbler.distanceTo(currentLocation),)}'}",
+                            "Distance: ${'~${distanceToDisplay(
+                              selectedBubbler.distanceTo(currentLocation),
+                            )}'}",
                             style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
                           ),
                         ],
@@ -117,7 +114,7 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
                     ),
                     NavigationButton(waterBubbler: selectedBubbler, size: _buttonsSize),
                     FavoriteBubblerButton(waterBubbler: selectedBubbler, size: _buttonsSize),
-                    MaintainbubblerButton(waterBubbler: selectedBubbler, size: _buttonsSize)
+                    MaintainBubblerButton(waterBubbler: selectedBubbler, size: _buttonsSize),
                   ].expand((x) => [const SizedBox(width: 10), x]).skip(1).toList(),
                 ),
               ),
@@ -125,28 +122,21 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
           ),
         ),
 
-
-
-
-
-
-
-
-         Padding(
-          padding: EdgeInsets.all(10.0), 
+        Padding(
+          padding: EdgeInsets.all(10.0),
           // Draw a rectangle indication bubbler rating section
           child: Container(
             decoration: BoxDecoration(
               color: Colors.grey[300],
               border: Border.all(color: Colors.grey[300]!, width: 1),
-              borderRadius: BorderRadius.circular(24), 
+              borderRadius: BorderRadius.circular(24),
             ),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start, 
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // First row in Bubbler rating containing title
                 Padding(
-                  padding: EdgeInsets.all(2.0), 
+                  padding: EdgeInsets.all(2.0),
                   child: SizedBox(
                     height: 18,
                     child: Row(
@@ -162,10 +152,10 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
                 ),
                 // Draw a line in Bubbler rating section
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10.0), 
+                  padding: EdgeInsets.symmetric(horizontal: 10.0),
                   child: Container(
                     height: 1,
-                    color: Colors.grey[400]!, 
+                    color: Colors.grey[400]!,
                   ),
                 ),
                 // Second row in Bubbler rating section
@@ -210,44 +200,42 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
           ),
         ),
 
-
         Padding(
-          padding: EdgeInsets.only(right: 10.0, left: 10.0, top: 10.0), 
+          padding: EdgeInsets.only(right: 10.0, left: 10.0, top: 10.0),
           child: Container(
-            height: MediaQuery.of(context).size.height * 0.1,
-            decoration: BoxDecoration(
-              color: Colors.grey[300],
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Text(
-                  utf8.decode((selectedBubbler.description ?? 'No description available.').codeUnits),
-                  style: TextStyle(fontSize: 16),
-                ),
-              ],
-            )
-          ),
+              height: MediaQuery.of(context).size.height * 0.1,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    utf8.decode((selectedBubbler.description ?? 'No description available.').codeUnits),
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ],
+              )),
         ),
-        
+
         // TextButton(
         //   onPressed: () {},
         //   child: Text('Read more'),
         // ),
 
         images.isNotEmpty
-          ? ImageGallery(imageUrls: images)
-          : Padding(
-            padding: EdgeInsets.all(10.0),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(15.0), // Adjust the value for the desired corner radius
-              child: Image.network(
-                'https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=170667a&w=0&k=20&c=Q7gLG-xfScdlTlPGFohllqpNqpxsU1jy8feD_fob87U=',
-                fit: BoxFit.cover,
+            ? ImageGallery(imageUrls: images)
+            : Padding(
+                padding: EdgeInsets.all(10.0),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(15.0), // Adjust the value for the desired corner radius
+                  child: Image.network(
+                    'https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=170667a&w=0&k=20&c=Q7gLG-xfScdlTlPGFohllqpNqpxsU1jy8feD_fob87U=',
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
-            ),
-          ),
       ],
     );
   }

@@ -5,6 +5,13 @@ import 'package:thirst_quest/states/models/user.dart';
 class GlobalState extends ChangeNotifier {
   final User user = User(isLoggedIn: false);
 
+  /// This method is called when the app starts to check if the user is already logged in.
+  /// If the user is logged in, the [Identity] object is passed to the [User] object.
+  /// This method does not notify listeners.
+  void initialLogin(Identity identity) {
+    user.login(identity);
+  }
+
   void login(Identity newIdentity) {
     user.login(newIdentity);
     notifyListeners();
@@ -22,6 +29,11 @@ class GlobalState extends ChangeNotifier {
 
   void updateEmail(String newEmail) {
     user.identity!.email = newEmail;
+    notifyListeners();
+  }
+
+    void updateProfilePicture(String pictureUrl) {
+    user.identity!.pictureUrl = pictureUrl;
     notifyListeners();
   }
 }

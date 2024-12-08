@@ -1,10 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:thirst_quest/api/models/auth_response.dart';
 import 'package:thirst_quest/api/models/review.dart';
 import 'package:thirst_quest/api/models/vote_type.dart';
+import 'package:thirst_quest/api/models/photo.dart';
+import 'package:thirst_quest/api/models/error.dart';
 import 'package:thirst_quest/api/models/water_bubbler.dart';
 import 'package:thirst_quest/config.dart';
 
@@ -76,6 +80,41 @@ class ThirstQuestApiClient {
     }
   }
 
+  Future<bool> createWaterBubbler(String token, WaterBubbler bubbler) async {
+    final uri = Uri.parse('$baseUrl/api/waterbubblers');
+
+    final body = json.encode({
+      "name": bubbler.name,
+      "description": bubbler.description,
+      "latitude": bubbler.latitude,
+      "longitude": bubbler.longitude,
+      "favorite": bubbler.favorite,
+      "upvoteCount": bubbler.upvoteCount,
+      "downvoteCount": bubbler.downvoteCount,
+    });
+
+    try {
+      final response = await http.post(
+        uri,
+        headers: {
+          "Content-Type": "application/json",
+          ..._addAuthHeader(token),
+        },
+        body: body,
+      );
+
+      if (response.statusCode == 201) {
+        return true;
+      } else {
+        throw Exception('Failed to create bubbler: ${response.statusCode}, ${response.body}');
+      }
+    } on SocketException {
+      throw Exception('No Internet connection');
+    } catch (e) {
+      throw Exception('Failed to create bubbler: $e');
+    }
+  }
+
   /////////////////////////////////////////////////////////////////
   // FAVORITE WATER BUBBLERS
   /////////////////////////////////////////////////////////////////
@@ -138,7 +177,7 @@ class ThirstQuestApiClient {
   /////////////////////////////////////////////////////////////////
   // REVIEW WATER BUBBLERS
   /////////////////////////////////////////////////////////////////
-  
+
   Future<bool> addReview(String token, Review review) async {
     final uri = Uri.parse('$baseUrl/api/reviews');
     try {
@@ -178,7 +217,7 @@ class ThirstQuestApiClient {
 
   Future<bool> updateReview(String token, String id, VoteType voteType) async {
     final uri = Uri.parse('$baseUrl/api/reviews/$id');
-    try { 
+    try {
       final response = await http.put(
         uri,
         headers: _addAuthHeader(token, headers: {'Content-Type': 'application/json'}),
@@ -272,7 +311,7 @@ class ThirstQuestApiClient {
   }
 
   Future<AuthResponse?> extend(String token) async {
-    final uri = Uri.parse('$baseUrl/api/auth/google');
+    final uri = Uri.parse('$baseUrl/api/auth/extend');
     try {
       final response = await http.post(
         uri,
@@ -288,6 +327,51 @@ class ThirstQuestApiClient {
       throw Exception('No Internet connection');
     } catch (e) {
       throw Exception('Failed to sign in with Google: $e');
+    }
+  }
+
+  /////////////////////////////////////////////////////////////////
+  // Photos
+  /////////////////////////////////////////////////////////////////
+
+  Future<Photo?> uploadProfilePicture(String token, XFile pickedFile) async {
+    final uri = Uri.parse('$baseUrl/api/photos/upload/profile');
+    try {
+      var request = http.MultipartRequest('POST', uri);
+      request.headers.addAll(_addAuthHeader(token));
+
+      if (kIsWeb) {
+        // Web - použijeme fromBytes
+        final bytes = await pickedFile.readAsBytes();
+        request.files.add(http.MultipartFile.fromBytes(
+          'file',
+          bytes,
+          filename: 'profile_picture.jpg', // Libovolný název
+        ));
+      } else {
+        // Android/iOS - zde můžeme použít fromPath (protože dart:io je k dispozici)
+        request.files.add(await http.MultipartFile.fromPath(
+          'file',
+          pickedFile.path,
+        ));
+      }
+
+      final streamedResponse = await request.send();
+      final response = await http.Response.fromStream(streamedResponse);
+
+      if (response.statusCode == 200) {
+        // Úspěch: Vrací PhotoDTO
+        return Photo.fromJson(jsonDecode(response.body));
+      } else {
+        // Chyba: Vrací ErrorDTO
+        final error = Error.fromJson(jsonDecode(response.body));
+        print('Chyba při nahrávání: ${error.message}');
+        return null;
+      }
+    } on SocketException {
+      throw Exception('No Internet connection');
+    } catch (e) {
+      throw Exception('Failed to upload profile picture: $e');
     }
   }
 

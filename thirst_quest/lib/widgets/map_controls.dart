@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:thirst_quest/screens/add_bubbler.dart';
 import 'package:thirst_quest/screens/login_screen.dart';
 import 'package:thirst_quest/screens/profile_screen.dart';
+import 'package:thirst_quest/states/bubbler_map_state.dart';
 import 'package:thirst_quest/states/global_state.dart';
 import 'package:thirst_quest/assets/constants.dart' as constants;
 
@@ -23,6 +25,37 @@ class MapControls extends StatelessWidget {
       context,
       MaterialPageRoute(builder: (context) => const ProfileScreen()),
     );
+  }
+
+  void _goToCreateBubbler(BuildContext context) {
+    final globalState = Provider.of<GlobalState>(context, listen: false);
+    final state = Provider.of<BubblerMapState>(context, listen: false);
+    final position = state.mapController.camera.center;
+
+    if (!globalState.user.isLoggedIn) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => LoginScreen(
+                  onLoginSuccess: MaterialPageRoute(builder: (context) => AddBubblerMapScreen(location: position)))));
+      return;
+    }
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => AddBubblerMapScreen(location: position)),
+    );
+  }
+
+  void _filterFavorites(BuildContext context) {
+    final state = Provider.of<GlobalState>(context, listen: false);
+    if (!state.user.isLoggedIn) {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen(popOnSuccess: true)));
+      return;
+    }
+
+    final bubblerState = Provider.of<BubblerMapState>(context, listen: false);
+    bubblerState.toggleFavoritesFilter();
   }
 
   @override
@@ -88,9 +121,9 @@ class MapControls extends StatelessWidget {
                     onSelected: (value) {
                       // Perform action based on selected option
                       if (value == 'Filter map') {
-                        // Action for Filter map
+                        _filterFavorites(context);
                       } else if (value == 'New source') {
-                        // Action for New source
+                        _goToCreateBubbler(context);
                       }
                     },
                     itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[

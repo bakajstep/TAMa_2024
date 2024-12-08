@@ -9,5 +9,5 @@ import 'stub.dart';
 
 /// Renders a web-only SIGN IN button.
 Widget buildSignInButton({HandleSignInFn? onPressed}) {
-  return web.renderButton();
+  return web.renderButton(configuration: web.GSIButtonConfiguration(shape: web.GSIButtonShape.pill));
 }

@@ -13,6 +13,7 @@ class BubblerMapState extends ChangeNotifier {
   bool reloadBubblersOnMove = true;
   double _mapPixelOffset = 0.0;
 
+  bool _filterFavorites = false;
   bool _trackPosition = true;
   bool _showPositionMarker = false;
   LatLng? _currentPosition;
@@ -29,7 +30,8 @@ class BubblerMapState extends ChangeNotifier {
 
   WaterBubbler? get selectedBubbler => _selectedBubbler;
 
-  List<WaterBubbler> get waterBubblers => _waterBubblers;
+  List<WaterBubbler> get waterBubblers =>
+      _filterFavorites ? _waterBubblers.where((b) => b.favorite).toList() : _waterBubblers;
 
   set trackPosition(bool value) {
     _trackPosition = value;
@@ -48,6 +50,16 @@ class BubblerMapState extends ChangeNotifier {
 
   set mapPixelOffset(double value) {
     _mapPixelOffset = value;
+  }
+
+  set filterFavorites(bool value) {
+    _filterFavorites = value;
+    notifyListeners();
+  }
+
+  void toggleFavoritesFilter() {
+    _filterFavorites = !_filterFavorites;
+    notifyListeners();
   }
 
   void changeLocation(LatLng position, bool isGpsLocation, bool forceTracking) {

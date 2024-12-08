@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:thirst_quest/api/models/water_bubbler.dart';
+import 'package:thirst_quest/assets/thirst_quest_icons.dart';
+import 'package:thirst_quest/controllers/bubblers_controller.dart';
 import 'package:thirst_quest/controllers/draggable_sheet_child_controller.dart';
 import 'package:thirst_quest/controllers/location_controller.dart';
 import 'package:thirst_quest/controllers/main_action_controller.dart';
@@ -10,6 +12,7 @@ import 'package:thirst_quest/notifications/draggable_sheet_changed_size.dart';
 import 'package:thirst_quest/states/bubbler_map_state.dart';
 import 'package:thirst_quest/states/main_screen_action.dart';
 import 'package:thirst_quest/utils/double_equals.dart';
+import 'package:thirst_quest/utils/route_observer_provider.dart';
 import 'package:thirst_quest/widgets/city_search_widget.dart';
 import 'package:thirst_quest/widgets/draggable_sheet.dart';
 import 'package:thirst_quest/widgets/full_detail_sheet_child.dart';
@@ -28,11 +31,12 @@ class MainScreen extends StatefulWidget {
   MainScreenState createState() => MainScreenState();
 }
 
-class MainScreenState extends State<MainScreen> {
+class MainScreenState extends State<MainScreen> with RouteAware {
   final LocationController _locationController = LocationController();
   final BubblerMapState _bubblerMapState = BubblerMapState();
   final MainActionController _mainActionController = MainActionController();
   final DraggableScrollableController _draggableController = DraggableScrollableController();
+  final BubblersController _bubblersController = BubblersController();
 
   @override
   void initState() {
@@ -47,10 +51,32 @@ class MainScreenState extends State<MainScreen> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final route = ModalRoute.of(context)!;
+    if (route is MaterialPageRoute) {
+      RouteObserverProvider.of(context).routeObserver.subscribe(this, route);
+    }
+  }
+
+  @override
   void dispose() {
+    RouteObserverProvider.of(context).routeObserver.unsubscribe(this);
     _locationController.dispose();
     // _bubblerMapState.dispose();
     super.dispose();
+  }
+
+  @override
+  void didPopNext() {
+    _bubblerMapState.reloadBubblersOnMove = true;
+    _bubblerMapState.filterFavorites = false;
+    _bubblerMapState.mapPixelOffset = 0.0;
+    _bubblerMapState.selectedBubbler = null;
+    _bubblerMapState.waterBubblers = [];
+    _mainActionController.pushAction(MainScreenAction.none);
+    _draggableController.animateTo(0.0, duration: const Duration(microseconds: 1), curve: Curves.easeInOut);
+    _bubblersController.refreshBubblers();
   }
 
   void _centerToCurrentLocation() {
@@ -222,7 +248,9 @@ class MainScreenState extends State<MainScreen> {
                 Positioned.fill(
                   child: Stack(
                     children: [
-                      LocationMap(initialPosition: _locationController.currentPosition),
+                      LocationMap(
+                          initialPosition: _locationController.currentPosition,
+                          bubblersController: _bubblersController),
                       Positioned(
                           top: 15,
                           left: 20,
@@ -265,8 +293,8 @@ class MainScreenState extends State<MainScreen> {
                                 child: IconButton(
                                   onPressed: _showNearestBubblers,
                                   icon: Icon(
-                                    Icons.surfing,
-                                    size: 60, // Adjust icon size as needed
+                                    ThirstQuestIcons.nearestV2SquaredSize,
+                                    size: 70, // Adjust icon size as needed
                                   ),
                                   color: Colors.white,
                                 ),

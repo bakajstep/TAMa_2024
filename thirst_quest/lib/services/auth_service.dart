@@ -38,19 +38,22 @@ class AuthService {
     return _handleAuthResponse(response, globalState);
   }
 
-  Future<AuthResponse?> _handleAuthResponse(AuthResponse? response, GlobalState globalState) async {
+  Future<AuthResponse?> _handleAuthResponse(AuthResponse? response, GlobalState globalState,
+      {bool initial = false}) async {
     if (response == null) {
       return null;
     }
 
-    globalState.login(Identity(
+    final identity = Identity(
       id: response.user.id,
       email: response.user.email,
       username: response.user.username,
       googleAuth: response.user.authByGoogle,
       pictureUrl: response.user.profilePicture,
       roles: response.roles,
-    ));
+    );
+
+    initial ? globalState.initialLogin(identity) : globalState.login(identity);
 
     final pref = await SharedPreferences.getInstance();
     await pref.setString(_tokenKey, response.token);
@@ -87,6 +90,6 @@ class AuthService {
       return;
     }
 
-    _handleAuthResponse(await apiClient.extend(token), globalState);
+    _handleAuthResponse(await apiClient.extend(token), globalState, initial: true);
   }
 }
