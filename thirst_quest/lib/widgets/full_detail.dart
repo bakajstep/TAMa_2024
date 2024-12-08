@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:thirst_quest/states/bubbler_map_state.dart';
 import 'package:provider/provider.dart';
 import 'package:thirst_quest/utils/distance_convertor.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 
 class FullDetail extends StatelessWidget {
   final VoidCallback onClose;
@@ -155,20 +154,20 @@ class FullDetail extends StatelessWidget {
                   ),
                 ),
 
-                CarouselSlider(
-                  items: carouselItems,
-                  options: CarouselOptions(
-                    height: MediaQuery.of(context).size.height * 0.2, // Customize the height of the carousel
-                    autoPlay: false, // Enable auto-play
-                    enlargeCenterPage: false, // Don't enlarge the center item
-                    enableInfiniteScroll: false, // Enable infinite scroll
-                    viewportFraction: 0.5, // Show next/previous items more prominently on the sides
-                    onPageChanged: (index, reason) {
-                      // Optional callback when the page changes
-                      // You can use it to update any additional UI components
-                    },
-                  ),
-                ),
+                // CarouselSlider(
+                //   items: carouselItems,
+                //   options: CarouselOptions(
+                //     height: MediaQuery.of(context).size.height * 0.2, // Customize the height of the carousel
+                //     autoPlay: false, // Enable auto-play
+                //     enlargeCenterPage: false, // Don't enlarge the center item
+                //     enableInfiniteScroll: false, // Enable infinite scroll
+                //     viewportFraction: 0.5, // Show next/previous items more prominently on the sides
+                //     onPageChanged: (index, reason) {
+                //       // Optional callback when the page changes
+                //       // You can use it to update any additional UI components
+                //     },
+                //   ),
+                // ),
 
                 // Container(
                 //   height: 150,
