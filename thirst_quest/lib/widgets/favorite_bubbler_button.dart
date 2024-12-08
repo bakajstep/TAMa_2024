@@ -35,8 +35,7 @@ class FavoriteBubblerButtonState extends State<FavoriteBubblerButton> {
   }
 
   void _redirectToLogin() {
-    ModalRoute.of(context)?.settings.name;
-    Navigator.pushReplacement(
+    Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => LoginScreen(popOnSuccess: true),

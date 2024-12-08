@@ -5,9 +5,7 @@ import 'package:thirst_quest/api/models/water_bubbler.dart';
 import 'package:thirst_quest/assets/assign_color_to_bubbler_votes.dart';
 import 'package:thirst_quest/di.dart';
 import 'package:thirst_quest/screens/login_screen.dart';
-import 'package:thirst_quest/screens/main_screen.dart';
 import 'package:thirst_quest/services/water_bubbler_service.dart';
-import 'package:thirst_quest/states/bubbler_map_state.dart';
 import 'package:provider/provider.dart';
 import 'package:thirst_quest/states/global_state.dart';
 
@@ -36,15 +34,10 @@ class LikeDislikeButtonState extends State<LikeDislikeButton> {
   }
 
   void _redirectToLogin() {
-    final mapState = context.read<BubblerMapState>();
-
-    ModalRoute.of(context)?.settings.name;
-    Navigator.pushReplacement(
+    Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => LoginScreen(
-            onLoginSuccess: MaterialPageRoute(
-                builder: (context) => MainScreen(initialPosition: mapState.mapController.camera.center))),
+        builder: (context) => LoginScreen(popOnSuccess: true),
       ),
     );
   }

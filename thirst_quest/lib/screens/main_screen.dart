@@ -252,7 +252,7 @@ class MainScreenState extends State<MainScreen> with RouteAware {
                           initialPosition: _locationController.currentPosition,
                           bubblersController: _bubblersController),
                       Positioned(
-                          top: 15,
+                          top: 30,
                           left: 20,
                           right: 20,
                           child: AnimatedOpacity(

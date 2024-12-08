@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:thirst_quest/api/models/water_bubbler.dart';
 import 'package:thirst_quest/di.dart';
@@ -97,7 +99,7 @@ class FavoriteBubblerScreenState extends State<FavoriteBubblerScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      bubbler.name ?? 'Unnamed Bubbler',
+                                      utf8.decode((bubbler.name ?? 'Water Bubbler').codeUnits),
                                       style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
