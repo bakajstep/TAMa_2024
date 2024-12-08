@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:thirst_quest/api/models/auth_response.dart';
+import 'package:thirst_quest/api/models/review.dart';
 import 'package:thirst_quest/api/models/photo.dart';
 import 'package:thirst_quest/api/models/error.dart';
 import 'package:thirst_quest/api/models/water_bubbler.dart';
@@ -173,6 +174,73 @@ class ThirstQuestApiClient {
   }
 
   /////////////////////////////////////////////////////////////////
+  // REVIEW WATER BUBBLERS
+  /////////////////////////////////////////////////////////////////
+
+  Future<bool> addReview(String token, Review review) async {
+    final uri = Uri.parse('$baseUrl/api/reviews');
+    try {
+      final response = await http.post(
+        uri,
+        headers: _addAuthHeader(token, headers: {'Content-Type': 'application/json'}),
+        body: jsonEncode({
+          "voteType": review.voteType,
+          "waterBubblerId": review.waterBubblerId,
+          "waterBubblerOsmId": review.waterBubblerOsmId
+        }),
+      );
+
+      return response.statusCode == 200;
+    } on SocketException {
+      throw Exception('No Internet connection');
+    } catch (e) {
+      throw Exception('Failed to add to favorites: $e');
+    }
+  }
+
+  Future<bool> deleteReview(String token, String? bubblerId, int? bubblerOsmId) async {
+    final uri = Uri.parse('$baseUrl/api/reviews');
+    try {
+      final response = await http.delete(
+        uri,
+        headers: _addAuthHeader(token, headers: {'Content-Type': 'application/json'}),
+        body: jsonEncode({
+          'bubblerId': bubblerId,
+          'openStreetId': bubblerOsmId,
+        }),
+      );
+
+      return response.statusCode == 200;
+    } on SocketException {
+      throw Exception('No Internet connection');
+    } catch (e) {
+      throw Exception('Failed to remove from favorites: $e');
+    }
+  }
+
+  Future<bool> updateReview(String token, Review review) async {
+    final uri = Uri.parse('$baseUrl/api/reviews');
+    try {
+      final response = await http.put(
+        uri,
+        headers: _addAuthHeader(token, headers: {'Content-Type': 'application/json'}),
+        body: jsonEncode({
+          "id": review.id,
+          "voteType": review.voteType,
+          "waterBubblerId": review.waterBubblerId,
+          "waterBubblerOsmId": review.waterBubblerOsmId
+        }),
+      );
+
+      return response.statusCode == 200;
+    } on SocketException {
+      throw Exception('No Internet connection');
+    } catch (e) {
+      throw Exception('Failed to remove from favorites: $e');
+    }
+  }
+
+  /////////////////////////////////////////////////////////////////
   // USER AUTH
   /////////////////////////////////////////////////////////////////
 
@@ -279,27 +347,27 @@ class ThirstQuestApiClient {
       request.headers.addAll(_addAuthHeader(token));
 
       if (kIsWeb) {
-      // Web - použijeme fromBytes
-      final bytes = await pickedFile.readAsBytes();
-      request.files.add(http.MultipartFile.fromBytes(
-        'file',
-        bytes,
-        filename: 'profile_picture.jpg', // Libovolný název
-      ));
-    } else {
-      // Android/iOS - zde můžeme použít fromPath (protože dart:io je k dispozici)
-      request.files.add(await http.MultipartFile.fromPath(
-        'file',
-        pickedFile.path,
-      ));
-    }
+        // Web - použijeme fromBytes
+        final bytes = await pickedFile.readAsBytes();
+        request.files.add(http.MultipartFile.fromBytes(
+          'file',
+          bytes,
+          filename: 'profile_picture.jpg', // Libovolný název
+        ));
+      } else {
+        // Android/iOS - zde můžeme použít fromPath (protože dart:io je k dispozici)
+        request.files.add(await http.MultipartFile.fromPath(
+          'file',
+          pickedFile.path,
+        ));
+      }
 
       final streamedResponse = await request.send();
       final response = await http.Response.fromStream(streamedResponse);
 
       if (response.statusCode == 200) {
-      // Úspěch: Vrací PhotoDTO
-      return Photo.fromJson(jsonDecode(response.body));
+        // Úspěch: Vrací PhotoDTO
+        return Photo.fromJson(jsonDecode(response.body));
       } else {
         // Chyba: Vrací ErrorDTO
         final error = Error.fromJson(jsonDecode(response.body));
@@ -312,7 +380,6 @@ class ThirstQuestApiClient {
       throw Exception('Failed to upload profile picture: $e');
     }
   }
-
 
   /////////////////////////////////////////////////////////////////
   // HELPERS

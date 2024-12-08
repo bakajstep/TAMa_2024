@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:thirst_quest/assets/constants.dart' as constants;
 import 'package:thirst_quest/di.dart';
 import 'package:thirst_quest/screens/main_screen.dart';
-import 'package:thirst_quest/screens/screen.dart';
 import 'package:thirst_quest/services/auth_service.dart';
 import 'package:thirst_quest/states/global_state.dart';
 import 'package:thirst_quest/utils/route_observer_provider.dart';

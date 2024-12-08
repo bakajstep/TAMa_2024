@@ -48,12 +48,40 @@ class FavoriteBubblerButtonState extends State<FavoriteBubblerButton> {
   Widget build(BuildContext context) {
     final globalState = context.watch<GlobalState>();
 
-    return IconButton(
-      key: ValueKey(widget.waterBubbler.id ?? widget.waterBubbler.osmId),
-      onPressed: globalState.user.isLoggedIn ? _onPresed : _redirectToLogin,
-      padding: EdgeInsets.all(5),
-      iconSize: widget.size != null ? (widget.size! - 10) : null,
-      icon: Icon(_isFavorite ? Icons.favorite : Icons.favorite_border),
+    // return IconButton(
+    //   key: ValueKey(widget.waterBubbler.id ?? widget.waterBubbler.osmId),
+    //   onPressed: globalState.user.isLoggedIn ? _onPresed : _redirectToLogin,
+    //   padding: EdgeInsets.all(5),
+    //   iconSize: widget.size != null ? (widget.size! - 10) : null,
+    //   icon: Icon(_isFavorite ? Icons.favorite : Icons.favorite_border),
+    // );
+
+    // return Material(
+    //   elevation: 5,
+    //   shape: CircleBorder(),
+    //   color: Colors.grey[400],
+    //   child: SizedBox(
+    //     width: widget.size,
+    //     height: widget.size,
+    //     child: IconButton(
+    //       onPressed: globalState.user.isLoggedIn ? _onPresed : _redirectToLogin,
+    //       iconSize: widget.size != null ? (widget.size! - 20) : 24,
+    //       icon: Icon(_isFavorite ? Icons.favorite : Icons.favorite_border, color: _isFavorite ? Colors.pinkAccent : Colors.white),
+    //     ),
+    //   ),
+    // );
+
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.grey[400], // Background color
+        shape: BoxShape.circle, // Makes the background circular
+      ),
+      child: IconButton(
+        key: ValueKey(widget.waterBubbler.id ?? widget.waterBubbler.osmId),
+        onPressed: globalState.user.isLoggedIn ? _onPresed : _redirectToLogin,
+        iconSize: widget.size != null ? (widget.size! - 20) : 24,
+        icon: Icon(_isFavorite ? Icons.favorite : Icons.favorite_border, color: _isFavorite ? Colors.pinkAccent : Colors.white),
+      ),
     );
   }
 }

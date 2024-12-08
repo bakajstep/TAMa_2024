@@ -1,5 +1,6 @@
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:thirst_quest/api/models/review.dart';
 import 'package:thirst_quest/api/thirst_quest_api_client.dart';
 import 'package:thirst_quest/api/models/water_bubbler.dart';
 import 'package:thirst_quest/services/auth_service.dart';
@@ -40,6 +41,21 @@ class WaterBubblerService {
         : await apiClient.addToFavorites(token, waterBubbler.id, waterBubbler.osmId);
 
     waterBubbler.favorite = !waterBubbler.favorite;
+  }
+
+  Future<void> addReview(Review review) async {
+    final token = await authService.getToken();
+    await apiClient.addReview(token, review);
+  }
+
+  Future<void> deleteReview(String? bubblerId, int? bubblerOsmId) async {
+    final token = await authService.getToken();
+    await apiClient.deleteReview(token, bubblerId, bubblerOsmId);
+  }
+
+  Future<void> updateReview(Review review) async {
+    final token = await authService.getToken();
+    await apiClient.updateReview(token, review);
   }
 
   Future<List<WaterBubbler>> getWaterBubblerCreatedByUser() async {

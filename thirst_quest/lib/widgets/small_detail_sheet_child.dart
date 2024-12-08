@@ -9,6 +9,7 @@ import 'package:thirst_quest/assets/constants.dart' as constants;
 import 'package:thirst_quest/utils/distance_convertor.dart';
 import 'package:thirst_quest/widgets/favorite_bubbler_button.dart';
 import 'package:thirst_quest/widgets/navigation_button.dart';
+import 'package:thirst_quest/widgets/maintain_bubbler_button.dart';
 
 class SmallDetailSheetChild extends StatefulWidget {
   final DraggableSheetChildController controller;
@@ -95,6 +96,7 @@ class _SmallDetailSheetChildState extends State<SmallDetailSheetChild> {
                         waterBubbler: waterBubbler,
                         size: _buttonsSize,
                         key: ValueKey(waterBubbler.id ?? waterBubbler.osmId)),
+                    MaintainBubblerButton(waterBubbler: waterBubbler, size: _buttonsSize),
                   ].expand((x) => [const SizedBox(width: 10), x]).skip(1).toList(),
                 ),
               ),
