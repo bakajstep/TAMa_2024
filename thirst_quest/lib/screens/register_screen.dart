@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:thirst_quest/assets/thirst_quest_icons.dart';
 import 'package:thirst_quest/di.dart';
 import 'package:thirst_quest/services/auth_service.dart';
 import 'package:thirst_quest/states/global_state.dart';
 import 'package:thirst_quest/widgets/form_error.dart';
 import 'package:thirst_quest/widgets/loading.dart';
+import 'package:thirst_quest/assets/constants.dart' as constants;
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -73,6 +75,7 @@ class RegisterScreenState extends State<RegisterScreen> {
     }
 
     Navigator.pop(context);
+    Navigator.pop(context);
   }
 
   @override
@@ -84,54 +87,71 @@ class RegisterScreenState extends State<RegisterScreen> {
         body: Stack(children: [
           Center(
             child: SingleChildScrollView(
-              padding: EdgeInsets.all(30.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    const Text('Register Page', style: TextStyle(fontSize: 25)),
-                    const Padding(padding: EdgeInsets.symmetric(vertical: 20.0)),
-                    FormError(errorMessage: _errorMessage),
-                    TextFormField(
-                      controller: _usernameController,
-                      decoration: const InputDecoration(labelText: 'Username'),
-                      validator: (value) => (value == null || value.isEmpty) ? 'Please enter your username' : null,
-                    ),
-                    TextFormField(
-                      controller: _emailController,
-                      decoration: const InputDecoration(labelText: 'Email'),
-                      validator: (value) => (value == null || value.isEmpty) ? 'Please enter your email' : null,
-                    ),
-                    TextFormField(
-                      controller: _passwordController,
-                      decoration: const InputDecoration(labelText: 'Password'),
-                      obscureText: true,
-                      validator: (value) => (value == null || value.isEmpty) ? 'Please enter your password' : null,
-                    ),
-                    ValueListenableBuilder<String?>(
-                      valueListenable: _confirmPasswordError,
-                      builder: (context, errorText, child) {
-                        return TextFormField(
-                          controller: _confirmPasswordController,
-                          decoration: InputDecoration(
-                            labelText: 'Confirm Password',
-                            errorText: errorText,
-                          ),
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+              child: Column(
+                mainAxisSize:MainAxisSize.min,
+                children: [
+                  Icon(ThirstQuestIcons.thirstQuest, color: Colors.indigo, size: 70,),
+                  const SizedBox(height: 10,),
+                  const Text('Welcome to ${constants.appName}!', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold), textAlign: TextAlign.center,),
+                  const SizedBox(height: 30),
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        const Text('Register your new account', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+                        const SizedBox(height: 15),
+                        FormError(errorMessage: _errorMessage),
+                        TextFormField(
+                          controller: _usernameController,
+                          decoration: const InputDecoration(labelText: 'Username'),
+                          validator: (value) => (value == null || value.isEmpty) ? 'Please enter your username' : null,
+                        ),
+                        TextFormField(
+                          controller: _emailController,
+                          decoration: const InputDecoration(labelText: 'Email'),
+                          validator: (value) => (value == null || value.isEmpty) ? 'Please enter your email' : null,
+                        ),
+                        TextFormField(
+                          controller: _passwordController,
+                          decoration: const InputDecoration(labelText: 'Password'),
                           obscureText: true,
-                          validator: (value) =>
-                              (value == null || value.isEmpty) ? 'Please confirm your password' : null,
-                        );
-                      },
+                          validator: (value) => (value == null || value.isEmpty) ? 'Please enter your password' : null,
+                        ),
+                        ValueListenableBuilder<String?>(
+                          valueListenable: _confirmPasswordError,
+                          builder: (context, errorText, child) {
+                            return TextFormField(
+                              controller: _confirmPasswordController,
+                              decoration: InputDecoration(
+                                labelText: 'Confirm Password',
+                                errorText: errorText,
+                              ),
+                              obscureText: true,
+                              validator: (value) =>
+                                  (value == null || value.isEmpty) ? 'Please confirm your password' : null,
+                            );
+                          },
+                        ),
+                        const SizedBox(height: 15),
+                        ElevatedButton(
+                          onPressed: _submitForm,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.indigo,
+                            foregroundColor: Colors.white,
+                            textStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                          ),
+                          child: const Text('Register'),
+                        ),
+                      ],
                     ),
-                    const Padding(padding: EdgeInsets.symmetric(vertical: 16.0)),
-                    ElevatedButton(
-                      onPressed: _submitForm,
-                      child: const Text('Register'),
-                    ),
-                  ],
-                ),
-              ),
+                  ),
+                ],
+              )
             ),
           ),
           if (_isLoading) const Loading(),

@@ -10,6 +10,12 @@ import 'stub.dart';
 Widget buildSignInButton({HandleSignInFn? onPressed}) {
   return ElevatedButton(
     onPressed: onPressed,
+    style: ElevatedButton.styleFrom(
+      textStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(30),
+      ),
+    ),
     child: const Text('Sign In with Google'),
   );
 }

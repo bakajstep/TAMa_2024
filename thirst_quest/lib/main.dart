@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:thirst_quest/assets/constants.dart' as constants;
 import 'package:thirst_quest/di.dart';
+import 'package:thirst_quest/screens/main_screen.dart';
 import 'package:thirst_quest/screens/screen.dart';
 import 'package:thirst_quest/services/auth_service.dart';
 import 'package:thirst_quest/states/global_state.dart';
@@ -40,7 +41,7 @@ class MyApp extends StatelessWidget {
                 colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 22, 98, 160)),
                 useMaterial3: true,
               ),
-              home: const MyHomePage(),
+              home: const MainScreen(),
             ),
           );
         },
