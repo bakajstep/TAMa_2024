@@ -6,6 +6,7 @@ import 'package:thirst_quest/screens/profile_screen.dart';
 import 'package:thirst_quest/states/bubbler_map_state.dart';
 import 'package:thirst_quest/states/global_state.dart';
 import 'package:thirst_quest/assets/constants.dart' as constants;
+import 'package:thirst_quest/widgets/filter_dialog.dart';
 
 class MapControls extends StatelessWidget {
   final VoidCallback onCenterButtonPressed;
@@ -39,7 +40,8 @@ class MapControls extends StatelessWidget {
           context,
           MaterialPageRoute(
               builder: (context) => LoginScreen(
-                  onLoginSuccess: MaterialPageRoute(builder: (context) => AddBubblerMapScreen(location: position, zoom: zoom, rotation: rotation)))));
+                  onLoginSuccess: MaterialPageRoute(
+                      builder: (context) => AddBubblerMapScreen(location: position, zoom: zoom, rotation: rotation)))));
       return;
     }
 
@@ -49,15 +51,22 @@ class MapControls extends StatelessWidget {
     );
   }
 
-  void _filterFavorites(BuildContext context) {
-    final state = Provider.of<GlobalState>(context, listen: false);
-    if (!state.user.isLoggedIn) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen(popOnSuccess: true)));
-      return;
-    }
-
+  void _showFilterDialog(BuildContext context) {
     final bubblerState = Provider.of<BubblerMapState>(context, listen: false);
-    bubblerState.toggleFavoritesFilter();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return FilterDialog(
+          filterFavorites: bubblerState.filterFavorites,
+          minHappinessLevel: bubblerState.minHappinessLevel,
+          onApplyFilters: (bool filterFavorites, int minHappinessLevel) {
+            bubblerState.filterFavorites = filterFavorites;
+            bubblerState.minHappinessLevel = minHappinessLevel;
+          },
+        );
+      },
+    );
   }
 
   @override
@@ -124,7 +133,8 @@ class MapControls extends StatelessWidget {
                     onSelected: (value) {
                       // Perform action based on selected option
                       if (value == 'Filter map') {
-                        _filterFavorites(context);
+                        _showFilterDialog(context);
+                        //_filterFavorites(context);
                       } else if (value == 'New source') {
                         _goToCreateBubbler(context);
                       }
@@ -135,12 +145,12 @@ class MapControls extends StatelessWidget {
                         child: Row(
                           children: [
                             Icon(
-                              (state.filterFavorites) ? Icons.filter_alt_off : Icons.filter_alt,
-                              color: Colors.white),
+                                (state.filterFavorites || state.minHappinessLevel != constants.maxHappinessLevel)
+                                    ? Icons.filter_alt_off
+                                    : Icons.filter_alt,
+                                color: Colors.white),
                             SizedBox(width: 10),
-                            Text(
-                              (state.filterFavorites) ? 'Show all bubblers' : 'Filter favorites',
-                              style: TextStyle(color: Colors.white)),
+                            Text('Filter bubblers', style: TextStyle(color: Colors.white)),
                           ],
                         ),
                       ),

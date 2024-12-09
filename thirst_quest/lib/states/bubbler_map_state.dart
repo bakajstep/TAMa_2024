@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:thirst_quest/api/models/water_bubbler.dart';
+import 'package:thirst_quest/assets/assign_color_to_bubbler_votes.dart';
 import 'package:thirst_quest/assets/constants.dart' as constants;
 import 'package:thirst_quest/utils/animataion_ticker_provider.dart';
 
@@ -14,6 +15,7 @@ class BubblerMapState extends ChangeNotifier {
   double _mapPixelOffset = 0.0;
 
   bool _filterFavorites = false;
+  int _minHappinessLevel = constants.maxHappinessLevel;
   bool _trackPosition = true;
   bool _showPositionMarker = false;
   LatLng? _currentPosition;
@@ -24,6 +26,8 @@ class BubblerMapState extends ChangeNotifier {
 
   bool get filterFavorites => _filterFavorites;
 
+  int get minHappinessLevel => _minHappinessLevel;
+
   bool get showPositionMarker => _showPositionMarker;
 
   bool get trackPosition => _trackPosition;
@@ -32,8 +36,14 @@ class BubblerMapState extends ChangeNotifier {
 
   WaterBubbler? get selectedBubbler => _selectedBubbler;
 
-  List<WaterBubbler> get waterBubblers =>
-      _filterFavorites ? _waterBubblers.where((b) => b.favorite).toList() : _waterBubblers;
+  List<WaterBubbler> get waterBubblers => _filterFavorites || _minHappinessLevel != constants.maxHappinessLevel
+      ? _waterBubblers
+          .where((b) =>
+              (b.favorite || !_filterFavorites) &&
+              (_minHappinessLevel == constants.maxHappinessLevel ||
+                  isInHappinessLevel(_minHappinessLevel, b.upvoteCount, b.downvoteCount)))
+          .toList()
+      : _waterBubblers;
 
   set trackPosition(bool value) {
     _trackPosition = value;
@@ -59,8 +69,8 @@ class BubblerMapState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void toggleFavoritesFilter() {
-    _filterFavorites = !_filterFavorites;
+  set minHappinessLevel(int value) {
+    _minHappinessLevel = value;
     notifyListeners();
   }
 

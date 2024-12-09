@@ -10,6 +10,7 @@ import 'package:thirst_quest/controllers/main_action_controller.dart';
 import 'package:thirst_quest/notifications/bubbler_selected.dart';
 import 'package:thirst_quest/notifications/draggable_sheet_changed_size.dart';
 import 'package:thirst_quest/states/bubbler_map_state.dart';
+import 'package:thirst_quest/states/global_state.dart';
 import 'package:thirst_quest/states/main_screen_action.dart';
 import 'package:thirst_quest/utils/double_equals.dart';
 import 'package:thirst_quest/utils/route_observer_provider.dart';
@@ -69,8 +70,10 @@ class MainScreenState extends State<MainScreen> with RouteAware {
 
   @override
   void didPopNext() {
+    final state = Provider.of<GlobalState>(context, listen: false);
+
     _bubblerMapState.reloadBubblersOnMove = true;
-    _bubblerMapState.filterFavorites = false;
+    _bubblerMapState.filterFavorites = _bubblerMapState.filterFavorites && state.user.isLoggedIn;
     _bubblerMapState.mapPixelOffset = 0.0;
     _bubblerMapState.selectedBubbler = null;
     _bubblerMapState.waterBubblers = [];
