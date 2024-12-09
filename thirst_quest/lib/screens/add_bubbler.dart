@@ -9,8 +9,9 @@ class AddBubblerMapScreen extends StatefulWidget {
   final LatLng location;
   final double zoom;
   final double rotation;
+  final bool popOnSuccess;
 
-  const AddBubblerMapScreen({super.key, required this.location, required this.zoom, required this.rotation});
+  const AddBubblerMapScreen({super.key, required this.location, this.zoom = 17.0, this.rotation = 0.0, this.popOnSuccess = false});
 
   @override
   State<AddBubblerMapScreen> createState() => _AddBubblerMapScreenState();
@@ -69,14 +70,19 @@ class _AddBubblerMapScreenState extends State<AddBubblerMapScreen> {
             right: 20,
             child: ElevatedButton(
               onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AddBubblerDetailsScreen(
-                      location: _selectedLocation,
+                if (widget.popOnSuccess) {
+                  Navigator.pop(context, _selectedLocation);
+                }
+                else{
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AddBubblerDetailsScreen(
+                        location: _selectedLocation,
+                      ),
                     ),
-                  ),
-                );
+                  );
+                }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.indigo,
