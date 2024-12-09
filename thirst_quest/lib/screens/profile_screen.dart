@@ -80,10 +80,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               )),
                       ),
                       IconButton(
-                        icon: const Icon(Icons.edit, size: 20),
                         onPressed: () {
                           _pickImage(state);
                         },
+                        style: IconButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: Colors.black.withOpacity(0.4),
+                          shape: const CircleBorder(),
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap
+                        ),
+                        constraints: const BoxConstraints(),
+                        padding: EdgeInsets.all(5.0),
+                        iconSize: 20,
+                        icon: const Icon(Icons.edit),
                       ),
                     ],
                   ),
