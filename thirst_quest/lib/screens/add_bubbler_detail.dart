@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:thirst_quest/api/models/water_bubbler.dart';
 import 'package:thirst_quest/di.dart';
+import 'package:thirst_quest/services/photo_service.dart';
 import 'package:thirst_quest/services/water_bubbler_service.dart';
 
 class AddBubblerDetailsScreen extends StatefulWidget {
@@ -20,14 +21,15 @@ class AddBubblerDetailsScreenState extends State<AddBubblerDetailsScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final WaterBubblerService bubblerService = DI.get<WaterBubblerService>();
+  final PhotoService photoService = DI.get<PhotoService>();
   bool _isFavorite = false;
 
   final ImagePicker _picker = ImagePicker();
   List<XFile>? _selectedImages;
 
   Future<void> _pickImages() async {
-    final List<XFile>? pickedImages = await _picker.pickMultiImage();
-    if (pickedImages != null && pickedImages.isNotEmpty) {
+    final List<XFile> pickedImages = await _picker.pickMultiImage();
+    if (pickedImages.isNotEmpty) {
       setState(() {
         _selectedImages = pickedImages;
       });
@@ -124,7 +126,7 @@ class AddBubblerDetailsScreenState extends State<AddBubblerDetailsScreen> {
               SizedBox(height: 20),
               Center(
                 child: ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (_nameController.text.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text("Please enter the bubbler's name.")),
@@ -139,9 +141,14 @@ class AddBubblerDetailsScreenState extends State<AddBubblerDetailsScreen> {
                       favorite: _isFavorite,
                     );
 
-                    // Tady můžete uložit obrázky společně s bubblerem dle potřeby.
-
-                    bubblerService.createWaterBubbler(bubbler);
+                    final tmpBubbler = await bubblerService.createWaterBubbler(bubbler);                    
+                      if (_selectedImages != null && _selectedImages!.isNotEmpty) {
+                        final uploadFutures = _selectedImages!.map((imageFile)  {
+                          return photoService.uploadBubblerPhoto(imageFile, tmpBubbler.id, tmpBubbler.osmId);
+                        });
+                        await Future.wait(uploadFutures);
+                      } 
+                    
                     Navigator.pop(context, bubbler);
                   },
                   style: ElevatedButton.styleFrom(
