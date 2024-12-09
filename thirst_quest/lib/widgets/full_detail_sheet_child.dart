@@ -62,15 +62,11 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
     final mapState = context.watch<BubblerMapState>();
     final selectedBubbler = mapState.selectedBubbler!;
     final currentLocation = mapState.currentPosition!;
-    // final iconDataList = [
-    //   IconDataInfo(icon: Icons.accessible, size: 30, color: Colors.blue),
-    //   IconDataInfo(icon: Icons.paid, size: 35, color: Colors.orange),
-    //   IconDataInfo(icon: Icons.schedule, size: 30, color: Colors.red),
-    //   // IconDataInfo(icon: Icons.not_accessible, size: 30, color: Colors.grey),
-    //   IconDataInfo(icon: Icons.forest, size: 30, color: Colors.green),
-    //   IconDataInfo(icon: Icons.verified, size: 30, color: Colors.purple),
-    // ];
     List<String> images = selectedBubbler.photos.map((photo) => photo.url).toList();
+    // images.add('https://d34-a.sdn.cz/d_34/c_img_QK_3/IYU6je.mpo?fl=res,,500,1');
+    // images.add('https://d34-a.sdn.cz/d_34/c_img_G_p/oFQQ2j.jpeg?fl=res,,500,1');
+    // images.add('https://d34-a.sdn.cz/d_34/c_img_QM_x/mtXrCt.mpo?fl=res,,500,1');
+    // images.add('https://d34-a.sdn.cz/d_34/c_img_QJ_u/4mnrGE.mpo?fl=res,,500,1');
     images.add('https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=170667a&w=0&k=20&c=Q7gLG-xfScdlTlPGFohllqpNqpxsU1jy8feD_fob87U=');
 
 
@@ -124,48 +120,23 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
         ),
 
         Padding(
-          padding: EdgeInsets.all(10.0),
-          // Draw a rectangle indication bubbler rating section
+          padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 15.0, bottom: 10.0),
           child: Container(
             decoration: BoxDecoration(
               color: Colors.blueAccent.withOpacity(0.1),
-              // border: Border.all(color: Colors.grey[300]!, width: 1),
               borderRadius: BorderRadius.circular(24),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // First row in Bubbler rating containing title
-                // Padding(
-                //   padding: EdgeInsets.all(2.0),
-                //   child: SizedBox(
-                //     height: 18,
-                //     child: Row(
-                //       mainAxisAlignment: MainAxisAlignment.center,
-                //       children: [
-                //         Text(
-                //           "Bubbler rating",
-                //           style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
-                //         ),
-                //       ],
-                //     ),
-                //   ),
-                // ),
-                // // Draw a line in Bubbler rating section
-                // Padding(
-                //   padding: EdgeInsets.symmetric(horizontal: 10.0),
-                //   child: Container(
-                //     height: 1,
-                //     color: Colors.grey[400]!,
-                //   ),
-                // ),
-                // Second row in Bubbler rating section
                 Padding(
-                  padding: EdgeInsets.all(10.0),
+                  padding: EdgeInsets.only(left: 20.0, right: 20.0, bottom: 10.0, top: 10.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      LikeDislikeButton(waterBubbler: selectedBubbler),
+                      Expanded( // Add Expanded here to make LikeDislikeButton take available space
+                        child: LikeDislikeButton(waterBubbler: selectedBubbler),
+                      ),
                     ],
                   ),
                 ),
@@ -173,33 +144,6 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
             ),
           ),
         ),
-
-        // Padding(
-        //   padding: EdgeInsets.only(left: 10.0, right: 10.0),
-        //   child: Container(
-        //     height: MediaQuery.of(context).size.height * 0.07,
-        //     decoration: BoxDecoration(
-        //       color: Colors.grey[300],
-        //       border: Border.all(color: Colors.grey[300]!, width: 1),
-        //       borderRadius: BorderRadius.circular(16),
-        //     ),
-        //     child: Column(
-        //       mainAxisAlignment: MainAxisAlignment.center,
-        //       children: [
-        //         Row(
-        //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        //           children: iconDataList.map((iconDataInfo) {
-        //             return Icon(
-        //               iconDataInfo.icon,
-        //               size: MediaQuery.of(context).size.height * 0.035,
-        //               color: iconDataInfo.color,
-        //             );
-        //           }).toList(),
-        //         ),
-        //       ],
-        //     ),
-        //   ),
-        // ),
 
         Padding(
           padding: EdgeInsets.only(right: 10.0, left: 10.0),
@@ -249,15 +193,29 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
         SizedBox(height: 10),
         Stack(
           children: [
-            Column(
-              children: [
-                SizedBox(height: 10),
-                ImageGallery(imageUrls: images)
-                // photo add button
-              ],
+            ImageGallery(imageUrls: images),
+            Align(
+              alignment: Alignment.topRight,
+              child: Transform.translate(
+                offset: Offset(-_buttonsSize / 2, -5),
+                child: Material(
+                  shape: const CircleBorder(),
+                  // color: Colors.grey[200],
+                  color: Colors.blue[50],
+                  child: IconButton(
+                    onPressed: () => null, // TODO: add image logic
+                    iconSize: _buttonsSize,
+                    padding: EdgeInsets.all(5),
+                    constraints: BoxConstraints(),
+                    style: const ButtonStyle(tapTargetSize: MaterialTapTargetSize.shrinkWrap),
+                    icon: const Icon(Icons.add_photo_alternate, color: Colors.black),
+                  ),
+                ),
+              ),
             ),
           ],
         ),
+
       ],
     );
   }
