@@ -84,7 +84,9 @@ class _SmallDetailSheetChildState extends State<SmallDetailSheetChild> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(utf8.decode((waterBubbler.name ?? 'Water Bubbler').codeUnits),
-                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           Text(
                               "Distance: ${distanceBetweenBubblerAndCurrent != null ? '~${distanceToDisplay(distanceBetweenBubblerAndCurrent)}' : "UNKNOWN"}",
                               style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal)),
