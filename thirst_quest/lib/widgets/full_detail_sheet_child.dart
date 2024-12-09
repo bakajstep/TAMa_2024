@@ -99,7 +99,8 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(utf8.decode((selectedBubbler.name ?? 'Water Bubbler').codeUnits),
-                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold,
+                              overflow: TextOverflow.ellipsis)),
                           Text(
                             "Distance: ${'~${distanceToDisplay(
                               selectedBubbler.distanceTo(currentLocation),
@@ -153,15 +154,40 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
               borderRadius: BorderRadius.circular(20),
             ),
             child: Padding(
-              padding: EdgeInsets.only(top: 10.0, bottom: 10.0, left: 15.0, right: 15.0),
-              child: (selectedBubbler.description == null || selectedBubbler.description!.isEmpty)
+              padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0, bottom: 10.0),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                    child: Column(
+                      children: [
+                        Text(
+                          selectedBubbler.name ?? 'Water Bubbler',
+                          textAlign: TextAlign.justify,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black.withOpacity(0.7),
+                          ),
+                        ),
+                      ],
+                    )
+                  ),
+
+                  Divider(color: Colors.black.withOpacity(0.4), thickness: 1),
+
+                  (selectedBubbler.description == null || selectedBubbler.description!.isEmpty)
                   ? Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           'No description available.',
-                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black.withOpacity(0.4)),
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black.withOpacity(0.4),
+                          ),
                         ),
                       ],
                     )
@@ -172,7 +198,7 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
                         Expanded(
                           child: Container(
                             constraints: BoxConstraints(
-                              minHeight: 50.0, // Base minimum height
+                              minHeight: 50.0,
                             ),
                             child: Text(
                               utf8.decode((selectedBubbler.description)!.codeUnits),
@@ -183,15 +209,11 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
                         ),
                       ],
                     ),
+                ],
+              ),
             ),
           ),
         ),
-
-
-        // TextButton(
-        //   onPressed: () {},
-        //   child: Text('Read more'),
-        // ),
 
         SizedBox(height: 10),
         Stack(
