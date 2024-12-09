@@ -39,3 +39,27 @@ Color assignColorToBubblerVotes(int upvoteCount, int downvoteCount) {
     return Colors.green;
   }
 }
+
+bool isInHappinessLevel(int level, int upvoteCount, int downvoteCount) {
+  final totalVotes = upvoteCount + downvoteCount;
+  final upvotePercentage = totalVotes == 0 ? 0.6 : upvoteCount / totalVotes; // neutral for no votes
+
+  return level * 0.2 >= upvotePercentage;
+}
+
+Color getColorByLevel(int level) {
+  switch (level) {
+    case 1:
+      return Colors.red;
+    case 2:
+      return Colors.deepOrangeAccent;
+    case 3:
+      return Colors.yellow;
+    case 4:
+      return Colors.lightGreen;
+    case 5:
+      return Colors.green;
+    default:
+      return Colors.grey;
+  }
+}
