@@ -62,6 +62,7 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
     final mapState = context.watch<BubblerMapState>();
     final selectedBubbler = mapState.selectedBubbler!;
     final currentLocation = mapState.currentPosition!;
+    final bubblerName = utf8.decode((selectedBubbler.name ?? 'Water Bubbler').codeUnits);
     List<String> images = selectedBubbler.photos.map((photo) => photo.url).toList();
     // images.add('https://d34-a.sdn.cz/d_34/c_img_QK_3/IYU6je.mpo?fl=res,,500,1');
     // images.add('https://d34-a.sdn.cz/d_34/c_img_G_p/oFQQ2j.jpeg?fl=res,,500,1');
@@ -98,7 +99,7 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(utf8.decode((selectedBubbler.name ?? 'Water Bubbler').codeUnits),
+                          Text(bubblerName,
                               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold,
                               overflow: TextOverflow.ellipsis)),
                           Text(
@@ -162,7 +163,7 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
                     child: Column(
                       children: [
                         Text(
-                          selectedBubbler.name ?? 'Water Bubbler',
+                          bubblerName,
                           textAlign: TextAlign.justify,
                           style: TextStyle(
                             fontSize: 16,
