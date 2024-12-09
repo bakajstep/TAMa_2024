@@ -15,6 +15,7 @@ WaterBubbler _$WaterBubblerFromJson(Map<String, dynamic> json) => WaterBubbler(
       longitude: (json['longitude'] as num).toDouble(),
       upvoteCount: (json['upvoteCount'] as num).toInt(),
       downvoteCount: (json['downvoteCount'] as num).toInt(),
+      userId: json['userId'] as String?,
       favorite: json['favorite'] as bool? ?? false,
       review: json['review'] == null
           ? null
@@ -33,6 +34,7 @@ Map<String, dynamic> _$WaterBubblerToJson(WaterBubbler instance) =>
       'latitude': instance.latitude,
       'longitude': instance.longitude,
       'photos': instance.photos,
+      'userId': instance.userId,
       'upvoteCount': instance.upvoteCount,
       'downvoteCount': instance.downvoteCount,
       'favorite': instance.favorite,

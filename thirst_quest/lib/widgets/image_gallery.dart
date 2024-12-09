@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:thirst_quest/widgets/network_image_with_loading.dart';
 
 class ImageGallery extends StatelessWidget {
   final List<String> imageUrls;
@@ -16,14 +17,9 @@ class ImageGallery extends StatelessWidget {
           crossAxisCount: 3,
           itemCount: imageUrls.length,
           itemBuilder: (BuildContext context, int index) {
-            return Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                image: DecorationImage(
-                  image: NetworkImage(imageUrls[index]),
-                  fit: BoxFit.cover,
-                ),
-              ),
+            return ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: NetworkImageWithLoading(imageUrl: imageUrls[index]),
             );
           },
           staggeredTileBuilder: (int index) => StaggeredTile.count(1, index.isEven ? 1.5 : 1),

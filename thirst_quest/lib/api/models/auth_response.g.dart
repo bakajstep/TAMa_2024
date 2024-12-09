@@ -12,7 +12,8 @@ AuthResponse _$AuthResponseFromJson(Map<String, dynamic> json) => AuthResponse(
       role: (json['role'] as List<dynamic>?)?.map((e) => e as String).toList(),
     );
 
-Map<String, dynamic> _$AuthResponseToJson(AuthResponse instance) => <String, dynamic>{
+Map<String, dynamic> _$AuthResponseToJson(AuthResponse instance) =>
+    <String, dynamic>{
       'token': instance.token,
       'role': instance.role,
       'user': instance.user,

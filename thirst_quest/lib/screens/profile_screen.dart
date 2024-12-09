@@ -12,6 +12,7 @@ import 'package:thirst_quest/screens/my_bubbler_screen.dart';
 import 'package:thirst_quest/services/auth_service.dart';
 import 'package:thirst_quest/services/photo_service.dart';
 import 'package:thirst_quest/states/global_state.dart';
+import 'package:thirst_quest/widgets/network_image_with_loading.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -72,23 +73,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: state.user.identity!.pictureUrl == null
                             ? const Icon(Icons.person, size: 50)
                             : ClipOval(
-                                child: Image.network(
-                                state.user.identity!.pictureUrl!,
-                                width: 100,
-                                height: 100,
-                                fit: BoxFit.cover,
-                              )),
+                                child: NetworkImageWithLoading(
+                                    imageUrl: state.user.identity!.pictureUrl!, width: 100, height: 100),
+                              ),
                       ),
                       IconButton(
                         onPressed: () {
                           _pickImage(state);
                         },
                         style: IconButton.styleFrom(
-                          foregroundColor: Colors.white,
-                          backgroundColor: Colors.black.withOpacity(0.4),
-                          shape: const CircleBorder(),
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap
-                        ),
+                            foregroundColor: Colors.white,
+                            backgroundColor: Colors.black.withOpacity(0.4),
+                            shape: const CircleBorder(),
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap),
                         constraints: const BoxConstraints(),
                         padding: EdgeInsets.all(5.0),
                         iconSize: 20,
