@@ -13,4 +13,9 @@ class PhotoService {
     final token = await authService.getToken();
     return apiClient.uploadProfilePicture(token, imageFile);
   }
+
+  Future<Photo?> uploadBubblerPhoto(XFile imageFile, String? bubblerId, int? osmId) async {
+    final token = await authService.getToken();
+    return apiClient.uploadBubblerPhoto(token, imageFile, bubblerId);
+  }
 }
