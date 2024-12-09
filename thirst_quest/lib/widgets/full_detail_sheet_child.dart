@@ -162,7 +162,7 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
                       children: [
                         Text(
                           'No description available.',
-                          style: TextStyle(fontSize: 14),
+                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black.withOpacity(0.4)),
                         ),
                       ],
                     )
