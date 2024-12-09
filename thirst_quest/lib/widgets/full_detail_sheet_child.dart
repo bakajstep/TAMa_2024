@@ -208,7 +208,7 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
                     padding: EdgeInsets.all(5),
                     constraints: BoxConstraints(),
                     style: const ButtonStyle(tapTargetSize: MaterialTapTargetSize.shrinkWrap),
-                    icon: const Icon(Icons.add, color: Colors.black),
+                    icon: const Icon(Icons.add_photo_alternate, color: Colors.black),
                   ),
                 ),
               ),
