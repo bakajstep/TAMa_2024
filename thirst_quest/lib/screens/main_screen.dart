@@ -8,8 +8,10 @@ import 'package:thirst_quest/controllers/draggable_sheet_child_controller.dart';
 import 'package:thirst_quest/controllers/location_controller.dart';
 import 'package:thirst_quest/controllers/main_action_controller.dart';
 import 'package:thirst_quest/notifications/bubbler_selected.dart';
+import 'package:thirst_quest/notifications/bubblers_reload.dart';
 import 'package:thirst_quest/notifications/draggable_sheet_changed_size.dart';
 import 'package:thirst_quest/states/bubbler_map_state.dart';
+import 'package:thirst_quest/states/global_state.dart';
 import 'package:thirst_quest/states/main_screen_action.dart';
 import 'package:thirst_quest/utils/double_equals.dart';
 import 'package:thirst_quest/utils/route_observer_provider.dart';
@@ -69,8 +71,10 @@ class MainScreenState extends State<MainScreen> with RouteAware {
 
   @override
   void didPopNext() {
+    final state = Provider.of<GlobalState>(context, listen: false);
+
     _bubblerMapState.reloadBubblersOnMove = true;
-    _bubblerMapState.filterFavorites = false;
+    _bubblerMapState.filterFavorites = _bubblerMapState.filterFavorites && state.user.isLoggedIn;
     _bubblerMapState.mapPixelOffset = 0.0;
     _bubblerMapState.selectedBubbler = null;
     _bubblerMapState.waterBubblers = [];
@@ -243,107 +247,113 @@ class MainScreenState extends State<MainScreen> with RouteAware {
                   : _showBubblerSmallDetail(notification.selectedWaterBubbler);
               return true;
             },
-            child: Stack(
-              children: [
-                Positioned.fill(
-                  child: Stack(
-                    children: [
-                      LocationMap(
-                          initialPosition: _locationController.currentPosition,
-                          bubblersController: _bubblersController),
-                      Positioned(
-                          top: 30,
-                          left: 20,
-                          right: 20,
-                          child: AnimatedOpacity(
-                            duration: const Duration(milliseconds: constants.shortAnimationDuration),
-                            opacity: _mainActionController.currentAction == MainScreenAction.none ||
-                                    _mainActionController.currentAction == MainScreenAction.smallDetail
-                                ? 1.0
-                                : 0.0,
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-                              child:
-                                  CitySearchWidget(onCitySelected: (city) => _bubblerMapState.mapMove(city.position)),
-                            ),
-                          )),
-                      MapControls(
-                        onCenterButtonPressed: _centerToCurrentLocation,
-                        bottomOffset: _mainActionController.currentAction == MainScreenAction.none
-                            ? 0.0
-                            : MediaQuery.of(context).size.height * constants.smallInfoCardHeight,
-                        visible: _mainActionController.currentAction == MainScreenAction.none ||
-                            _mainActionController.currentAction == MainScreenAction.smallDetail,
-                      ),
-                      Positioned(
-                        bottom: 20,
-                        left: 0,
-                        right: 0,
-                        child: AnimatedOpacity(
-                            duration: Duration(milliseconds: constants.shortAnimationDuration),
-                            opacity: _mainActionController.currentAction == MainScreenAction.none ? 1.0 : 0.0,
-                            child: Center(
-                              child: Container(
-                                width: 100,
-                                height: 100,
-                                decoration: BoxDecoration(
-                                  color: Colors.blueAccent.withOpacity(0.6),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: IconButton(
-                                  onPressed: _showNearestBubblers,
-                                  icon: Icon(
-                                    ThirstQuestIcons.nearestV2SquaredSize,
-                                    size: 70, // Adjust icon size as needed
-                                  ),
-                                  color: Colors.white,
-                                ),
+            child: NotificationListener<BubblersReload>(
+              onNotification:(notification) {
+                didPopNext();
+                return true;
+              },
+              child: Stack(
+                children: [
+                  Positioned.fill(
+                    child: Stack(
+                      children: [
+                        LocationMap(
+                            initialPosition: _locationController.currentPosition,
+                            bubblersController: _bubblersController),
+                        Positioned(
+                            top: 30,
+                            left: 20,
+                            right: 20,
+                            child: AnimatedOpacity(
+                              duration: const Duration(milliseconds: constants.shortAnimationDuration),
+                              opacity: _mainActionController.currentAction == MainScreenAction.none ||
+                                      _mainActionController.currentAction == MainScreenAction.smallDetail
+                                  ? 1.0
+                                  : 0.0,
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+                                child:
+                                    CitySearchWidget(onCitySelected: (city) => _bubblerMapState.mapMove(city.position)),
                               ),
                             )),
-                      ),
-                    ],
-                  ),
-                ),
-                Align(
-                    alignment: Alignment.bottomCenter,
-                    child: SizedBox(
-                      height: MediaQuery.of(context).size.height,
-                      width: MediaQuery.of(context).size.width,
-                      child: NotificationListener<DraggableSheetChangedSize>(
-                        onNotification: _onDraggableSheetChangedSize,
-                        child: DraggableSheet(
-                          controller: _draggableController,
-                          initialSize: switch (_mainActionController.currentAction) {
-                            MainScreenAction.nearestBubblers => constants.bigInfoCardHeight,
-                            MainScreenAction.fullDetail => constants.bigInfoCardHeight,
-                            MainScreenAction.smallDetail => constants.smallInfoCardHeight,
-                            _ => 0.0,
-                          },
-                          snapSizes: switch (_mainActionController.currentAction) {
-                            MainScreenAction.nearestBubblers => [0.0, constants.bigInfoCardHeight],
-                            MainScreenAction.fullDetail => [
-                                0.0,
-                                constants.smallInfoCardHeight,
-                                constants.bigInfoCardHeight
-                              ],
-                            MainScreenAction.smallDetail => [
-                                0.0,
-                                constants.smallInfoCardHeight,
-                                constants.bigInfoCardHeight
-                              ],
-                            _ => [0.0],
-                          },
-                          child: switch (_mainActionController.currentAction) {
-                            MainScreenAction.nearestBubblers => (controller, scrollController) =>
-                                NearestBubblers.build(controller, scrollController, _closeNearestBubblers),
-                            MainScreenAction.fullDetail => FullDetailSheetChild.build,
-                            MainScreenAction.smallDetail => SmallDetailSheetChild.build,
-                            _ => _buildEmptyDraggableSheet,
-                          },
+                        MapControls(
+                          onCenterButtonPressed: _centerToCurrentLocation,
+                          bottomOffset: _mainActionController.currentAction == MainScreenAction.none
+                              ? 0.0
+                              : MediaQuery.of(context).size.height * constants.smallInfoCardHeight,
+                          visible: _mainActionController.currentAction == MainScreenAction.none ||
+                              _mainActionController.currentAction == MainScreenAction.smallDetail,
                         ),
-                      ),
-                    ))
-              ],
+                        Positioned(
+                          bottom: 20,
+                          left: 0,
+                          right: 0,
+                          child: AnimatedOpacity(
+                              duration: Duration(milliseconds: constants.shortAnimationDuration),
+                              opacity: _mainActionController.currentAction == MainScreenAction.none ? 1.0 : 0.0,
+                              child: Center(
+                                child: Container(
+                                  width: 100,
+                                  height: 100,
+                                  decoration: BoxDecoration(
+                                    color: Colors.blueAccent.withOpacity(0.6),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: IconButton(
+                                    onPressed: _showNearestBubblers,
+                                    icon: Icon(
+                                      ThirstQuestIcons.nearestV2SquaredSize,
+                                      size: 70, // Adjust icon size as needed
+                                    ),
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              )),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Align(
+                      alignment: Alignment.bottomCenter,
+                      child: SizedBox(
+                        height: MediaQuery.of(context).size.height,
+                        width: MediaQuery.of(context).size.width,
+                        child: NotificationListener<DraggableSheetChangedSize>(
+                          onNotification: _onDraggableSheetChangedSize,
+                          child: DraggableSheet(
+                            controller: _draggableController,
+                            initialSize: switch (_mainActionController.currentAction) {
+                              MainScreenAction.nearestBubblers => constants.bigInfoCardHeight,
+                              MainScreenAction.fullDetail => constants.bigInfoCardHeight,
+                              MainScreenAction.smallDetail => constants.smallInfoCardHeight,
+                              _ => 0.0,
+                            },
+                            snapSizes: switch (_mainActionController.currentAction) {
+                              MainScreenAction.nearestBubblers => [0.0, constants.bigInfoCardHeight],
+                              MainScreenAction.fullDetail => [
+                                  0.0,
+                                  constants.smallInfoCardHeight,
+                                  constants.bigInfoCardHeight
+                                ],
+                              MainScreenAction.smallDetail => [
+                                  0.0,
+                                  constants.smallInfoCardHeight,
+                                  constants.bigInfoCardHeight
+                                ],
+                              _ => [0.0],
+                            },
+                            child: switch (_mainActionController.currentAction) {
+                              MainScreenAction.nearestBubblers => (controller, scrollController) =>
+                                  NearestBubblers.build(controller, scrollController, _closeNearestBubblers),
+                              MainScreenAction.fullDetail => FullDetailSheetChild.build,
+                              MainScreenAction.smallDetail => SmallDetailSheetChild.build,
+                              _ => _buildEmptyDraggableSheet,
+                            },
+                          ),
+                        ),
+                      ))
+                ],
+              ),
             ),
           ),
         ),

@@ -1,7 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:thirst_quest/api/models/photo.dart';
 import 'package:thirst_quest/controllers/draggable_sheet_child_controller.dart';
 import 'package:thirst_quest/assets/constants.dart' as constants;
+import 'package:thirst_quest/di.dart';
+import 'package:thirst_quest/services/photo_service.dart';
 import 'package:thirst_quest/states/bubbler_map_state.dart';
 import 'package:provider/provider.dart';
 import 'package:thirst_quest/utils/distance_convertor.dart';
@@ -45,7 +49,21 @@ class IconDataInfo {
 }
 
 class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
+  final PhotoService photoService = DI.get<PhotoService>();
+
   final double _buttonsSize = 30.0;
+
+  final ImagePicker _picker = ImagePicker();
+  List<XFile>? _selectedImages;
+
+  Future<void> _pickImages() async {
+    final List<XFile> pickedImages = await _picker.pickMultiImage();
+    if (pickedImages.isNotEmpty) {
+      setState(() {
+        _selectedImages = pickedImages;
+      });
+    }
+  }
 
   void _onHeightChanged() {}
 
@@ -68,7 +86,9 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
     // images.add('https://d34-a.sdn.cz/d_34/c_img_G_p/oFQQ2j.jpeg?fl=res,,500,1');
     // images.add('https://d34-a.sdn.cz/d_34/c_img_QM_x/mtXrCt.mpo?fl=res,,500,1');
     // images.add('https://d34-a.sdn.cz/d_34/c_img_QJ_u/4mnrGE.mpo?fl=res,,500,1');
-    images.add('https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=170667a&w=0&k=20&c=Q7gLG-xfScdlTlPGFohllqpNqpxsU1jy8feD_fob87U=');
+    if (images.isEmpty) {
+      images.add('https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=170667a&w=0&k=20&c=Q7gLG-xfScdlTlPGFohllqpNqpxsU1jy8feD_fob87U=');
+    }
 
 
     return Column(
@@ -219,7 +239,7 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
         SizedBox(height: 10),
         Stack(
           children: [
-            ImageGallery(imageUrls: images),
+            ImageGallery(key: ValueKey(images.length), imageUrls: images),
             Align(
               alignment: Alignment.topRight,
               child: Transform.translate(
@@ -229,7 +249,26 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
                   // color: Colors.grey[200],
                   color: Colors.blue[50],
                   child: IconButton(
-                    onPressed: () => null, // TODO: add image logic
+                    onPressed: () async {
+                      await _pickImages();
+
+                      if (_selectedImages != null && _selectedImages!.isNotEmpty) {
+                        final uploadFutures = _selectedImages!.map((imageFile) async {
+                          final uploadedImageUrl = await photoService.uploadBubblerPhoto(
+                            imageFile,
+                            selectedBubbler.id,
+                            selectedBubbler.osmId,
+                          );
+                          return uploadedImageUrl;
+                        });
+
+                        final newPhotos = await Future.wait(uploadFutures);
+
+                        images.addAll(newPhotos.map((photo) => photo!.url));
+                        selectedBubbler.photos.addAll(newPhotos.where((photo) => photo != null).cast<Photo>());
+                        mapState.selectedBubbler = selectedBubbler;
+                      }
+                    },
                     iconSize: _buttonsSize,
                     padding: EdgeInsets.all(5),
                     constraints: BoxConstraints(),
