@@ -50,7 +50,7 @@ class AuthService {
       username: response.user.username,
       googleAuth: response.user.authByGoogle,
       pictureUrl: response.user.profilePicture,
-      roles: response.roles,
+      roles: response.role,
     );
 
     initial ? globalState.initialLogin(identity) : globalState.login(identity);
