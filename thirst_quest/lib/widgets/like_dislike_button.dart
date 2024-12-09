@@ -125,7 +125,7 @@ class LikeDislikeButtonState extends State<LikeDislikeButton> {
 
   String _parseVoteVal(int downvote, int upvote) {
     double tempVal = (upvote - downvote).toDouble();
-    String returnS = "$tempVal";
+    String returnS = "${tempVal.toInt()}";
     List<String> si = ['K', 'M', 'G', 'T'];
     for (var i = 0; i < si.length; i++) {
       tempVal = tempVal / 1000.0;

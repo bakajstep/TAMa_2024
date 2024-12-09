@@ -155,7 +155,7 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
             ),
             child: Padding(
               padding: EdgeInsets.all(10.0),
-              child: selectedBubbler.description == null
+              child: (selectedBubbler.description == null || selectedBubbler.description!.isEmpty)
                   ? Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
