@@ -80,6 +80,7 @@ class MapWidget extends StatelessWidget {
                 borderColor: Colors.blue.shade700.withOpacity(0.35),
                 color: Colors.blue.shade700.withOpacity(0.35),
                 borderStrokeWidth: 3),
+            showPolygon: false,
             markers: _buildMapMarkers(),
             builder: (context, markers) {
               return Container(

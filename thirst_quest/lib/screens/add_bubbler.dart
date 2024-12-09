@@ -3,6 +3,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:thirst_quest/assets/thirst_quest_icons.dart';
 import 'package:thirst_quest/screens/add_bubbler_detail.dart';
+import 'package:thirst_quest/assets/constants.dart' as constants;
 
 class AddBubblerMapScreen extends StatefulWidget {
   final LatLng location;
@@ -10,7 +11,7 @@ class AddBubblerMapScreen extends StatefulWidget {
   const AddBubblerMapScreen({super.key, required this.location});
 
   @override
-  _AddBubblerMapScreenState createState() => _AddBubblerMapScreenState();
+  State<AddBubblerMapScreen> createState() => _AddBubblerMapScreenState();
 }
 
 class _AddBubblerMapScreenState extends State<AddBubblerMapScreen> {
@@ -50,10 +51,13 @@ class _AddBubblerMapScreenState extends State<AddBubblerMapScreen> {
             ],
           ),
           Center(
-            child: Icon(
-              ThirstQuestIcons.bubblerReflection,
-              color: Colors.indigoAccent,
-              size: 50.0,
+            child: Transform.translate(
+              offset: Offset(0.0, -(constants.createBubblerIconSize/2)), // Offset to have the pin's tip at the center of the screen
+              child: Icon(
+                ThirstQuestIcons.bubblerReflection,
+                color: Colors.indigoAccent,
+                size: constants.createBubblerIconSize,
+              ),
             ),
           ),
           Positioned(
@@ -71,6 +75,14 @@ class _AddBubblerMapScreenState extends State<AddBubblerMapScreen> {
                   ),
                 );
               },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.indigo,
+                foregroundColor: Colors.white,
+                textStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+              ),
               child: Text("Continue"),
             ),
           ),

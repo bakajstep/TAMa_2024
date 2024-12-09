@@ -72,6 +72,13 @@ class AddBubblerDetailsScreenState extends State<AddBubblerDetailsScreen> {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: _pickImages,
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.indigo.shade800,
+                textStyle: TextStyle(fontSize: 15),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+              ),
               child: Text("Pick Images"),
             ),
             SizedBox(height: 10),
