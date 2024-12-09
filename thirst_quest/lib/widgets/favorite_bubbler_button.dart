@@ -57,7 +57,7 @@ class FavoriteBubblerButtonState extends State<FavoriteBubblerButton> {
         padding: EdgeInsets.all(5),
         constraints: BoxConstraints(),
         style: const ButtonStyle(tapTargetSize: MaterialTapTargetSize.shrinkWrap),
-        icon: Icon(_isFavorite ? Icons.favorite : Icons.favorite_border, color: Colors.black),
+        icon: Icon(_isFavorite ? Icons.favorite : Icons.favorite_border, color: Colors.pinkAccent),
       ),
     );
 
