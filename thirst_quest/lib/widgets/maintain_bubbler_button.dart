@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:maps_launcher/maps_launcher.dart';
+import 'package:provider/provider.dart';
 import 'package:thirst_quest/api/models/water_bubbler.dart';
+import 'package:thirst_quest/main.dart';
+import 'package:thirst_quest/states/global_state.dart';
+import 'package:thirst_quest/states/models/identity.dart';
 
 class MaintainBubblerButton extends StatelessWidget {
   final WaterBubbler waterBubbler;
@@ -10,12 +14,21 @@ class MaintainBubblerButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final globalState = context.watch<GlobalState>();
+    // final Identity? identity = globalState.user.identity;
+    final String role = globalState.user.identity == null ? "" : globalState.user.identity!.roles[0];
+    final String? bubblerOwnerId = waterBubbler.userId;
+    final String? userId = role == "" ? null : globalState.user.identity!.id;
+
+    final invisibleCondition = (role == "ROLE_ADMIN") || (userId == bubblerOwnerId);
+
+    if (!invisibleCondition) return SizedBox.shrink();
+
     return Material(
       shape: const CircleBorder(),
       color: Colors.black.withOpacity(0.1),
       child: IconButton(
-        onPressed: () =>
-            null,
+        onPressed: null,
         iconSize: size != null ? (size!) : null,
         padding: EdgeInsets.all(5),
         constraints: BoxConstraints(),

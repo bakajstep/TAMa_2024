@@ -29,7 +29,7 @@ class LikeDislikeButtonState extends State<LikeDislikeButton> {
     super.initState();
     Review? review = widget.waterBubbler.review;
     if (review != null) {
-      isLiked = review.voteTypeEnum == VoteType.UPVOTE ? true : false;
+      isLiked = review.voteType == VoteType.UPVOTE ? true : false;
       isDisliked = !isLiked;
     }
   }
@@ -48,7 +48,7 @@ class LikeDislikeButtonState extends State<LikeDislikeButton> {
     String? revId = widget.waterBubbler.review?.id;
     Review review = Review.createReview(
         reviewId: revId,
-        voteTypeEnum: VoteType.UPVOTE,
+        voteType: VoteType.UPVOTE,
         waterBubblerId: widget.waterBubbler.id,
         waterBubblerOsmId: widget.waterBubbler.osmId);
     bool negReview = false;
@@ -88,7 +88,7 @@ class LikeDislikeButtonState extends State<LikeDislikeButton> {
     String? revId = widget.waterBubbler.review?.id;
     Review review = Review.createReview(
         reviewId: revId,
-        voteTypeEnum: VoteType.DOWNVOTE,
+        voteType: VoteType.DOWNVOTE,
         waterBubblerId: widget.waterBubbler.id,
         waterBubblerOsmId: widget.waterBubbler.osmId);
     bool posReview = false;
@@ -131,8 +131,7 @@ class LikeDislikeButtonState extends State<LikeDislikeButton> {
       tempVal = tempVal / 1000.0;
       if (tempVal.abs() < 1.0) {
         return returnS;
-      }
-      else {
+      } else {
         returnS = "${tempVal.toStringAsFixed(1)}${si[i]}";
       }
     }

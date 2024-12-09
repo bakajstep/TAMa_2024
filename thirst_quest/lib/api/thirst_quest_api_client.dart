@@ -184,7 +184,7 @@ class ThirstQuestApiClient {
         uri,
         headers: _addAuthHeader(token, headers: {'Content-Type': 'application/json'}),
         body: jsonEncode({
-          "voteType": review.voteType,
+          "voteType": review.voteType.name,
           "waterBubblerId": review.waterBubblerId,
           "waterBubblerOsmId": review.waterBubblerOsmId
         }),
@@ -226,7 +226,7 @@ class ThirstQuestApiClient {
         headers: _addAuthHeader(token, headers: {'Content-Type': 'application/json'}),
         body: jsonEncode({
           "id": review.id,
-          "voteType": review.voteType,
+          "voteType": review.voteType.name,
           "waterBubblerId": review.waterBubblerId,
           "waterBubblerOsmId": review.waterBubblerOsmId
         }),

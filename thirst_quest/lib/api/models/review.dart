@@ -6,13 +6,10 @@ part 'review.g.dart';
 @JsonSerializable()
 class Review {
   final String id;
-  String voteType;
+  final VoteType voteType;
   final String userId;
   final String? waterBubblerId;
   final int? waterBubblerOsmId;
-
-  VoteType get voteTypeEnum => voteType == "UPVOTE" ? VoteType.UPVOTE : VoteType.DOWNVOTE;
-  set voteTypeEnum(VoteType value) => voteType = value == VoteType.UPVOTE ? "UPVOTE" : "DOWNVOTE";
 
   Review({
     required this.id,
@@ -26,12 +23,11 @@ class Review {
 
   Review.createReview({
     required String? reviewId,
-    required VoteType voteTypeEnum,
+    required this.voteType,
     required this.waterBubblerId,
     required this.waterBubblerOsmId,
   })  : id = reviewId ?? "",
-        userId = "",
-        voteType = voteTypeEnum == VoteType.UPVOTE ? "UPVOTE" : "DOWNVOTE";
+        userId = "";
 
   Map<String, dynamic> toJson() => _$ReviewToJson(this);
 }
