@@ -15,7 +15,7 @@ class MaintainBubblerButton extends StatelessWidget {
       color: Colors.black.withOpacity(0.1),
       child: IconButton(
         onPressed: () =>
-            MapsLauncher.launchCoordinates(waterBubbler.latitude, waterBubbler.longitude, waterBubbler.name),
+            null,
         iconSize: size != null ? (size!) : null,
         padding: EdgeInsets.all(5),
         constraints: BoxConstraints(),
