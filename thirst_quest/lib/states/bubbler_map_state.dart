@@ -9,7 +9,7 @@ import 'package:thirst_quest/utils/animataion_ticker_provider.dart';
 
 class BubblerMapState extends ChangeNotifier {
   final MapController _mapController = MapController();
-  final double targetDetailZoom = 15.0;
+  final double targetDetailZoom = 17.0;
   bool reloadBubblersOnMove = true;
   double _mapPixelOffset = 0.0;
 
