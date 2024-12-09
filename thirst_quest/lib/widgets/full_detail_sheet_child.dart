@@ -72,6 +72,12 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
     // ];
     List<String> images = selectedBubbler.photos.map((photo) => photo.url).toList();
     images.add('https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=170667a&w=0&k=20&c=Q7gLG-xfScdlTlPGFohllqpNqpxsU1jy8feD_fob87U=');
+    images.add('https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=170667a&w=0&k=20&c=Q7gLG-xfScdlTlPGFohllqpNqpxsU1jy8feD_fob87U=');
+    images.add('https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=170667a&w=0&k=20&c=Q7gLG-xfScdlTlPGFohllqpNqpxsU1jy8feD_fob87U=');
+    images.add('https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=170667a&w=0&k=20&c=Q7gLG-xfScdlTlPGFohllqpNqpxsU1jy8feD_fob87U=');
+    images.add('https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=170667a&w=0&k=20&c=Q7gLG-xfScdlTlPGFohllqpNqpxsU1jy8feD_fob87U=');
+    images.add('https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=170667a&w=0&k=20&c=Q7gLG-xfScdlTlPGFohllqpNqpxsU1jy8feD_fob87U=');
+    images.add('https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=170667a&w=0&k=20&c=Q7gLG-xfScdlTlPGFohllqpNqpxsU1jy8feD_fob87U=');
 
 
     return Column(
@@ -124,48 +130,23 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
         ),
 
         Padding(
-          padding: EdgeInsets.all(10.0),
-          // Draw a rectangle indication bubbler rating section
+          padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 15.0, bottom: 10.0),
           child: Container(
             decoration: BoxDecoration(
               color: Colors.blueAccent.withOpacity(0.1),
-              // border: Border.all(color: Colors.grey[300]!, width: 1),
               borderRadius: BorderRadius.circular(24),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // First row in Bubbler rating containing title
-                // Padding(
-                //   padding: EdgeInsets.all(2.0),
-                //   child: SizedBox(
-                //     height: 18,
-                //     child: Row(
-                //       mainAxisAlignment: MainAxisAlignment.center,
-                //       children: [
-                //         Text(
-                //           "Bubbler rating",
-                //           style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
-                //         ),
-                //       ],
-                //     ),
-                //   ),
-                // ),
-                // // Draw a line in Bubbler rating section
-                // Padding(
-                //   padding: EdgeInsets.symmetric(horizontal: 10.0),
-                //   child: Container(
-                //     height: 1,
-                //     color: Colors.grey[400]!,
-                //   ),
-                // ),
-                // Second row in Bubbler rating section
                 Padding(
                   padding: EdgeInsets.all(10.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      LikeDislikeButton(waterBubbler: selectedBubbler),
+                      Expanded( // Add Expanded here to make LikeDislikeButton take available space
+                        child: LikeDislikeButton(waterBubbler: selectedBubbler),
+                      ),
                     ],
                   ),
                 ),
@@ -249,15 +230,28 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
         SizedBox(height: 10),
         Stack(
           children: [
-            Column(
-              children: [
-                SizedBox(height: 10),
-                ImageGallery(imageUrls: images)
-                // photo add button
-              ],
+            ImageGallery(imageUrls: images),
+            Align(
+              alignment: Alignment.topRight,
+              child: Transform.translate(
+                offset: Offset(-_buttonsSize / 2, -5),
+                child: Material(
+                  shape: const CircleBorder(),
+                  color: Colors.black.withOpacity(0.4),
+                  child: IconButton(
+                    onPressed: () => null, // TODO: add image logic
+                    iconSize: _buttonsSize,
+                    padding: EdgeInsets.all(5),
+                    constraints: BoxConstraints(),
+                    style: const ButtonStyle(tapTargetSize: MaterialTapTargetSize.shrinkWrap),
+                    icon: const Icon(Icons.add, color: Colors.black),
+                  ),
+                ),
+              ),
             ),
           ],
         ),
+
       ],
     );
   }

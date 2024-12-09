@@ -75,7 +75,7 @@ class _SmallDetailSheetChildState extends State<SmallDetailSheetChild> {
                 child: Row(
                   children: [
                     Icon(
-                      Icons.circle,
+                      Icons.water_drop,
                       size: _buttonsSize + 15,
                       color: assignColorToBubblerVotes(waterBubbler.upvoteCount, waterBubbler.downvoteCount),
                     ),

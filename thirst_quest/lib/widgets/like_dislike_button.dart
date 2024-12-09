@@ -123,6 +123,22 @@ class LikeDislikeButtonState extends State<LikeDislikeButton> {
     }
   }
 
+  String _parseVoteVal(int downvote, int upvote) {
+    double tempVal = (upvote - downvote).toDouble();
+    String returnS = "$tempVal";
+    List<String> si = ['K', 'M', 'G', 'T'];
+    for (var i = 0; i < si.length; i++) {
+      tempVal = tempVal / 1000.0;
+      if (tempVal.abs() < 1.0) {
+        return returnS;
+      }
+      else {
+        returnS = "${tempVal.toStringAsFixed(1)}${si[i]}";
+      }
+    }
+    return returnS;
+  }
+
   @override
   Widget build(BuildContext context) {
     final globalState = context.watch<GlobalState>();
@@ -172,18 +188,20 @@ class LikeDislikeButtonState extends State<LikeDislikeButton> {
           ),
         ),
         SizedBox(width: 10),
-        Container(
-          width: 60,
-          height: 60,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: assignColorToBubblerVotes(upVotesCount, downVotesCount).withOpacity(0.7),
-            shape: BoxShape.rectangle,
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Text(
-            "${upVotesCount - downVotesCount}",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+        Expanded(
+          child: Container(
+            width: double.infinity,
+            height: 60,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: assignColorToBubblerVotes(upVotesCount, downVotesCount).withOpacity(0.7),
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Text(
+              _parseVoteVal(downVotesCount, upVotesCount),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            ),
           ),
         ),
         SizedBox(width: 10),
