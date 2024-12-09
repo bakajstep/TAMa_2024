@@ -74,10 +74,10 @@ class WaterBubblerService {
     apiClient.deleteWaterBubbler(token, bubblerId);
   }
 
-  Future<void> createWaterBubbler(WaterBubbler bubbler) async {
+  Future<WaterBubbler> createWaterBubbler(WaterBubbler bubbler) async {
     final token = await authService.getToken();
     cache.clear(); // Clear cache to force reload of bubblers
-    apiClient.createWaterBubbler(token, bubbler);
+    return apiClient.createWaterBubbler(token, bubbler);
   }
 
   LatLngBounds _extendBounds(LatLngBounds bounds) {

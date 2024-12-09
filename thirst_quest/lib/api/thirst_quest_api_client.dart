@@ -79,7 +79,7 @@ class ThirstQuestApiClient {
     }
   }
 
-  Future<bool> createWaterBubbler(String token, WaterBubbler bubbler) async {
+  Future<WaterBubbler> createWaterBubbler(String token, WaterBubbler bubbler) async {
     final uri = Uri.parse('$baseUrl/api/waterbubblers');
 
     final body = json.encode({
@@ -103,7 +103,7 @@ class ThirstQuestApiClient {
       );
 
       if (response.statusCode == 201) {
-        return true;
+        return WaterBubbler.fromJson(jsonDecode(response.body));
       } else {
         throw Exception('Failed to create bubbler: ${response.statusCode}, ${response.body}');
       }
@@ -380,6 +380,59 @@ class ThirstQuestApiClient {
       throw Exception('Failed to upload profile picture: $e');
     }
   }
+
+  Future<Photo?> uploadBubblerPhoto(String token, XFile pickedFile, String? bubblerId) async {
+    final uri = Uri.parse('$baseUrl/api/photos/upload').replace(queryParameters: {
+      'waterBubblerId': bubblerId!
+    });
+    try {
+      var request = http.MultipartRequest('POST', uri);
+
+      // Přidání hlaviček
+      request.headers.addAll({
+        ..._addAuthHeader(token), // Přidání autorizace
+        'Content-Type': 'multipart/form-data', // Nastavení Content-Type
+      });
+
+      if (kIsWeb) {
+        // Web - použijeme fromBytes
+        final bytes = await pickedFile.readAsBytes();
+        request.files.add(http.MultipartFile.fromBytes(
+          'file',
+          bytes,
+          filename: 'bubbler.jpg',
+        ));
+      } else {
+        // Android/iOS - zde můžeme použít fromPath (protože dart:io je k dispozici)
+        request.files.add(await http.MultipartFile.fromPath(
+          'file',
+          pickedFile.path,
+        ));
+      }
+
+      final streamedResponse = await request.send();
+      final response = await http.Response.fromStream(streamedResponse);
+
+      print(response.body);
+      if (response.statusCode == 200) {
+        if (response.body.isNotEmpty) {
+          return Photo.fromJson(jsonDecode(response.body));
+        } else {
+          throw Exception('Empty response body');
+        }
+      } else {
+        // Chyba: Vrací ErrorDTO
+        final error = Error.fromJson(jsonDecode(response.body));
+        print('Chyba při nahrávání: ${error.message}');
+        return null;
+      }
+    } on SocketException {
+      throw Exception('No Internet connection');
+    } catch (e) {
+      throw Exception('Failed to upload bubbler picture: $e');
+    }
+  }
+
 
   /////////////////////////////////////////////////////////////////
   // HELPERS
