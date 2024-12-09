@@ -23,6 +23,7 @@ class AddBubblerDetailsScreenState extends State<AddBubblerDetailsScreen> {
   final WaterBubblerService bubblerService = DI.get<WaterBubblerService>();
   final PhotoService photoService = DI.get<PhotoService>();
   bool _isFavorite = false;
+  bool _valid = true;
 
   final ImagePicker _picker = ImagePicker();
   List<XFile>? _selectedImages;
@@ -44,7 +45,7 @@ class AddBubblerDetailsScreenState extends State<AddBubblerDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Bubbler detail"),
+        title: Text("Edit Bubbler"),
       ),
       body: Center(
         child:
@@ -57,7 +58,11 @@ class AddBubblerDetailsScreenState extends State<AddBubblerDetailsScreen> {
               SizedBox(height: 20),
               TextField(
                 controller: _nameController,
-                decoration: InputDecoration(labelText: "Bubbler's name"),
+                maxLength: 60,
+                decoration: InputDecoration(
+                  labelText: "Bubbler's name",
+                  errorText: _valid ? null : "Please enter the bubbler's name.",
+                  ),
               ),
               SizedBox(height: 10),
               TextField(
@@ -128,9 +133,9 @@ class AddBubblerDetailsScreenState extends State<AddBubblerDetailsScreen> {
                 child: ElevatedButton(
                   onPressed: () async {
                     if (_nameController.text.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("Please enter the bubbler's name.")),
-                      );
+                      setState(() {
+                        _valid = false;
+                      });
                       return;
                     }
 
