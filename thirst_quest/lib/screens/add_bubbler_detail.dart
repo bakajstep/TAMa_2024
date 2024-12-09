@@ -69,7 +69,7 @@ class AddBubblerDetailsScreenState extends State<AddBubblerDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Edit Bubbler"),
+        title: Text("Create Bubbler"),
       ),
       body: Center(
         child:
