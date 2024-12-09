@@ -148,7 +148,6 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
         Padding(
           padding: EdgeInsets.only(right: 10.0, left: 10.0),
           child: Container(
-            height: MediaQuery.of(context).size.height * 0.1,
             decoration: BoxDecoration(
               color: Colors.blueAccent.withOpacity(0.1),
               borderRadius: BorderRadius.circular(20),
@@ -171,12 +170,15 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Expanded(
-                          // Ensures the Text widget takes up the available space and wraps text
-                          child: Text(
-                            utf8.decode((selectedBubbler.description)!.codeUnits),
-                            style: TextStyle(fontSize: 12),
-                            overflow: TextOverflow.visible,
-                            maxLines: 3,
+                          child: Container(
+                            constraints: BoxConstraints(
+                              minHeight: 50.0, // Base minimum height
+                            ),
+                            child: Text(
+                              utf8.decode((selectedBubbler.description)!.codeUnits),
+                              style: TextStyle(fontSize: 12),
+                              overflow: TextOverflow.visible,
+                            ),
                           ),
                         ),
                       ],
@@ -184,6 +186,7 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
             ),
           ),
         ),
+
 
         // TextButton(
         //   onPressed: () {},
