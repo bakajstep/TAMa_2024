@@ -153,7 +153,7 @@ class _FullDetailSheetChildState extends State<FullDetailSheetChild> {
               borderRadius: BorderRadius.circular(20),
             ),
             child: Padding(
-              padding: EdgeInsets.all(10.0),
+              padding: EdgeInsets.only(top: 10.0, bottom: 10.0, left: 15.0, right: 15.0),
               child: (selectedBubbler.description == null || selectedBubbler.description!.isEmpty)
                   ? Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
