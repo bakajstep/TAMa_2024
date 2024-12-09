@@ -7,8 +7,10 @@ import 'package:thirst_quest/assets/constants.dart' as constants;
 
 class AddBubblerMapScreen extends StatefulWidget {
   final LatLng location;
+  final double zoom;
+  final double rotation;
 
-  const AddBubblerMapScreen({super.key, required this.location});
+  const AddBubblerMapScreen({super.key, required this.location, required this.zoom, required this.rotation});
 
   @override
   State<AddBubblerMapScreen> createState() => _AddBubblerMapScreenState();
@@ -28,14 +30,15 @@ class _AddBubblerMapScreenState extends State<AddBubblerMapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Choose Bubbler location")),
+      appBar: AppBar(title: Text("Choose Bubbler Location")),
       body: Stack(
         children: [
           FlutterMap(
             mapController: _mapController,
             options: MapOptions(
               initialCenter: _selectedLocation,
-              initialZoom: 17.0,
+              initialZoom: widget.zoom,
+              initialRotation: widget.rotation,
               onMapEvent: (mapEvent) {
                 if (mapEvent is MapEventMove) {
                   setState(() {

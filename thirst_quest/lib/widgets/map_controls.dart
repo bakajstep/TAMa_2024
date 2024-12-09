@@ -31,19 +31,21 @@ class MapControls extends StatelessWidget {
     final globalState = Provider.of<GlobalState>(context, listen: false);
     final state = Provider.of<BubblerMapState>(context, listen: false);
     final position = state.mapController.camera.center;
+    final zoom = state.mapController.camera.zoom;
+    final rotation = state.mapController.camera.rotation;
 
     if (!globalState.user.isLoggedIn) {
       Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => LoginScreen(
-                  onLoginSuccess: MaterialPageRoute(builder: (context) => AddBubblerMapScreen(location: position)))));
+                  onLoginSuccess: MaterialPageRoute(builder: (context) => AddBubblerMapScreen(location: position, zoom: zoom, rotation: rotation)))));
       return;
     }
 
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => AddBubblerMapScreen(location: position)),
+      MaterialPageRoute(builder: (context) => AddBubblerMapScreen(location: position, zoom: zoom, rotation: rotation)),
     );
   }
 
