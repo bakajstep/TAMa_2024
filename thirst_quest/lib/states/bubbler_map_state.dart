@@ -22,6 +22,8 @@ class BubblerMapState extends ChangeNotifier {
 
   MapController get mapController => _mapController;
 
+  bool get filterFavorites => _filterFavorites;
+
   bool get showPositionMarker => _showPositionMarker;
 
   bool get trackPosition => _trackPosition;

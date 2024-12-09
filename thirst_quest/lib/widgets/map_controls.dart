@@ -62,6 +62,7 @@ class MapControls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final state = Provider.of<BubblerMapState>(context, listen: false);
     return AnimatedPositioned(
         duration: const Duration(milliseconds: constants.longAnimationDuration),
         curve: Curves.easeInOut,
@@ -133,9 +134,13 @@ class MapControls extends StatelessWidget {
                         value: 'Filter map',
                         child: Row(
                           children: [
-                            Icon(Icons.filter_alt, color: Colors.white),
+                            Icon(
+                              (state.filterFavorites) ? Icons.filter_alt_off : Icons.filter_alt,
+                              color: Colors.white),
                             SizedBox(width: 10),
-                            Text('Filter map', style: TextStyle(color: Colors.white)),
+                            Text(
+                              (state.filterFavorites) ? 'Show all bubblers' : 'Filter favorites',
+                              style: TextStyle(color: Colors.white)),
                           ],
                         ),
                       ),
