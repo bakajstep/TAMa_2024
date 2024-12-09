@@ -60,6 +60,10 @@ class AddBubblerDetailsScreenState extends State<AddBubblerDetailsScreen> {
               SizedBox(height: 10),
               TextField(
                 controller: _descriptionController,
+                minLines: 1,
+                maxLines: null,
+                maxLength: 255,
+                keyboardType: TextInputType.multiline,
                 decoration: InputDecoration(labelText: "Description (optional)"),
               ),
               SizedBox(height: 25),

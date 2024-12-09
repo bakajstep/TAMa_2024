@@ -70,6 +70,7 @@ class WaterBubblerService {
 
   Future<void> deleteWaterBubbler(String bubblerId) async {
     final token = await authService.getToken();
+    cache.clear(); // Clear cache to force reload of bubblers
     apiClient.deleteWaterBubbler(token, bubblerId);
   }
 
