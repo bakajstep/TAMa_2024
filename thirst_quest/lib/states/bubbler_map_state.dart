@@ -37,12 +37,7 @@ class BubblerMapState extends ChangeNotifier {
   WaterBubbler? get selectedBubbler => _selectedBubbler;
 
   List<WaterBubbler> get waterBubblers => _filterFavorites || _minHappinessLevel != constants.minHappinessLevel
-      ? _waterBubblers
-          .where((b) =>
-              (b.favorite || !_filterFavorites) &&
-              (_minHappinessLevel == constants.minHappinessLevel ||
-                  isInHappinessLevel(_minHappinessLevel, b.upvoteCount, b.downvoteCount)))
-          .toList()
+      ? filterBubblers(_waterBubblers)
       : _waterBubblers;
 
   set trackPosition(bool value) {
@@ -152,7 +147,7 @@ class BubblerMapState extends ChangeNotifier {
     controller.forward();
   }
 
-  List<WaterBubbler> getFilteredBubblers(List<WaterBubbler> waterBubblers) {
+  List<WaterBubbler> filterBubblers(List<WaterBubbler> waterBubblers) {
     return waterBubblers
         .where((b) =>
             (b.favorite || !_filterFavorites) &&

@@ -1,103 +1,111 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:thirst_quest/api/models/water_bubbler.dart';
-import 'package:thirst_quest/utils/distance_convertor.dart';
-import 'package:thirst_quest/widgets/navigation_button.dart';
+import 'package:thirst_quest/assets/assign_color_to_bubbler_votes.dart';
+import 'package:thirst_quest/controllers/draggable_sheet_child_controller.dart';
+import 'package:provider/provider.dart';
+import 'package:thirst_quest/states/bubbler_map_state.dart';
 import 'package:thirst_quest/assets/constants.dart' as constants;
+import 'package:thirst_quest/utils/distance_convertor.dart';
+import 'package:thirst_quest/widgets/favorite_bubbler_button.dart';
+import 'package:thirst_quest/widgets/navigation_button.dart';
+import 'package:thirst_quest/widgets/maintain_bubbler_button.dart';
 
-class SmallDetail extends StatelessWidget {
-  final WaterBubbler waterBubbler;
-  final double? distanceBetweenBubblerAndCurrent;
-  final VoidCallback onClose;
-  final VoidCallback onSwipeUp;
+class SmallDetail extends StatefulWidget {
+  final DraggableSheetChildController controller;
 
-  final double _buttonsSize = 45.0;
+  const SmallDetail({required this.controller, super.key});
 
-  const SmallDetail(
-      {required this.waterBubbler,
-      this.distanceBetweenBubblerAndCurrent,
-      required this.onClose,
-      required this.onSwipeUp,
-      super.key});
+  @override
+  State<SmallDetail> createState() => _SmallDetailState();
+
+  static ScrollView build(DraggableSheetChildController controller, ScrollController scrollController) {
+    return CustomScrollView(
+      controller: scrollController,
+      slivers: [
+        SliverList(
+          delegate: SliverChildListDelegate(
+            [
+              SmallDetail(controller: controller),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _SmallDetailState extends State<SmallDetail> {
+  final double _buttonsSize = 30;
+
+  void _onHeightChanged() {}
+
+  @override
+  void initState() {
+    super.initState();
+    widget.controller.onHeightChanged = _onHeightChanged;
+    widget.controller.snapSizes = [0.0, constants.smallInfoCardHeight, constants.bigInfoCardHeight];
+    widget.controller.initialSize = constants.smallInfoCardHeight;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height:
-          MediaQuery.of(context).size.height * constants.smallInfoCardHeight,
-      width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
-        ),
-      ),
-      child: Column(
-        children: [
-          GestureDetector(
-            onVerticalDragEnd: (details) {
-              if (details.primaryVelocity! > 0) {
-                onClose();
-              } else if (details.primaryVelocity! < 0) {
-                onSwipeUp();
-              }
-            },
-            child: SizedBox(
-              width: MediaQuery.of(context).size.width,
-              child: Column(
-                children: [
-                  Container(
-                    width: 50,
-                    height: 5,
-                    margin: EdgeInsets.only(top: 10, bottom: 10),
-                    decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.circular(2.5),
-                    ),
-                  ),
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(vertical: 0.0, horizontal: 15),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.circle,
-                          size: _buttonsSize,
+    final bubblerMapState = context.watch<BubblerMapState>();
+    final waterBubbler = bubblerMapState.selectedBubbler!;
+    final currentLocation = bubblerMapState.currentPosition;
+    final distanceBetweenBubblerAndCurrent = currentLocation != null ? waterBubbler.distanceTo(currentLocation) : null;
 
-                          color: Colors.grey,
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(waterBubbler.name ?? 'Water Bubbler',
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold)),
-                              Text(
-                                  "Distance: ${distanceBetweenBubblerAndCurrent != null ? '~${distanceToDisplay(distanceBetweenBubblerAndCurrent!)}' : "UNKNOWN"}",
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.normal)),
-                            ],
-                          ),
-                        ),
-                        NavigationButton(
-                          waterBubbler: waterBubbler,
-                          size: _buttonsSize,
-                        ),
-                      ]
-                          .expand((x) => [const SizedBox(width: 10), x])
-                          .skip(1)
-                          .toList(),
-                    ),
-                  ),
-                ],
+    return Column(
+      children: [
+        SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+            children: [
+              Container(
+                width: 50,
+                height: 5,
+                margin: EdgeInsets.only(top: 10, bottom: 10),
+                decoration: BoxDecoration(
+                  color: Colors.grey,
+                  borderRadius: BorderRadius.circular(2.5),
+                ),
               ),
-            ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 10.0),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.water_drop,
+                      size: _buttonsSize + 15,
+                      color: assignColorToBubblerVotes(waterBubbler.upvoteCount, waterBubbler.downvoteCount),
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(utf8.decode((waterBubbler.name ?? 'Water Bubbler').codeUnits),
+                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          Text(
+                              "Distance: ${distanceBetweenBubblerAndCurrent != null ? '~${distanceToDisplay(distanceBetweenBubblerAndCurrent)}' : "UNKNOWN"}",
+                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal)),
+                        ],
+                      ),
+                    ),
+                    NavigationButton(waterBubbler: waterBubbler, size: _buttonsSize),
+                    FavoriteBubblerButton(
+                        waterBubbler: waterBubbler,
+                        size: _buttonsSize,
+                        key: ValueKey(waterBubbler.id ?? waterBubbler.osmId)),
+                    MaintainBubblerButton(waterBubbler: waterBubbler, size: _buttonsSize),
+                  ].expand((x) => [const SizedBox(width: 5), x]).skip(1).toList(),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ], // column children
     );
   }
 }

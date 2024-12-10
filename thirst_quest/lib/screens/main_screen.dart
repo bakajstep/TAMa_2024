@@ -17,12 +17,12 @@ import 'package:thirst_quest/utils/double_compare.dart';
 import 'package:thirst_quest/utils/route_observer_provider.dart';
 import 'package:thirst_quest/widgets/city_search_widget.dart';
 import 'package:thirst_quest/widgets/draggable_sheet.dart';
-import 'package:thirst_quest/widgets/full_detail_sheet_child.dart';
+import 'package:thirst_quest/widgets/full_detail.dart';
 import 'package:thirst_quest/widgets/location_map.dart';
 import 'package:thirst_quest/widgets/map_controls.dart';
 import 'package:thirst_quest/assets/constants.dart' as constants;
 import 'package:thirst_quest/widgets/nearest_bubblers.dart';
-import 'package:thirst_quest/widgets/small_detail_sheet_child.dart';
+import 'package:thirst_quest/widgets/small_detail.dart';
 
 class MainScreen extends StatefulWidget {
   final LatLng? initialPosition;
@@ -345,8 +345,8 @@ class MainScreenState extends State<MainScreen> with RouteAware {
                             child: switch (_mainActionController.currentAction) {
                               MainScreenAction.nearestBubblers => (controller, scrollController) =>
                                   NearestBubblers.build(controller, scrollController, _closeNearestBubblers),
-                              MainScreenAction.fullDetail => FullDetailSheetChild.build,
-                              MainScreenAction.smallDetail => SmallDetailSheetChild.build,
+                              MainScreenAction.fullDetail => FullDetail.build,
+                              MainScreenAction.smallDetail => SmallDetail.build,
                               _ => _buildEmptyDraggableSheet,
                             },
                           ),

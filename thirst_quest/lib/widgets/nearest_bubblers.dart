@@ -73,7 +73,7 @@ class NearestBubblersState extends State<NearestBubblers> {
     final nearestBubblers =
         await bubblerService.getNearestBubblers(currentPosition, LatLngBounds(leftBottomCorner, rightTopCorner));
 
-    final nearestFilteredBubblers = bubblerMapState.getFilteredBubblers(nearestBubblers).take(10).toList();
+    final nearestFilteredBubblers = bubblerMapState.filterBubblers(nearestBubblers).take(10).toList();
 
     if (nearestFilteredBubblers.isNotEmpty) {
       final waterBubbler = nearestFilteredBubblers[0];
