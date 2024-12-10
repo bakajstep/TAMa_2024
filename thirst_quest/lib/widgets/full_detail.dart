@@ -8,6 +8,7 @@ import 'package:thirst_quest/di.dart';
 import 'package:thirst_quest/services/photo_service.dart';
 import 'package:thirst_quest/states/bubbler_map_state.dart';
 import 'package:provider/provider.dart';
+import 'package:thirst_quest/states/global_state.dart';
 import 'package:thirst_quest/utils/distance_convertor.dart';
 import 'package:thirst_quest/assets/assign_color_to_bubbler_votes.dart';
 import 'package:thirst_quest/widgets/favorite_bubbler_button.dart';
@@ -78,6 +79,8 @@ class _FullDetailState extends State<FullDetail> {
   @override
   Widget build(BuildContext context) {
     final mapState = context.watch<BubblerMapState>();
+    final globalState = context.watch<GlobalState>();
+    final user = globalState.user;
     final selectedBubbler = mapState.selectedBubbler!;
     final currentLocation = mapState.currentPosition!;
     final bubblerName = utf8.decode((selectedBubbler.name ?? 'Water Bubbler').codeUnits);
@@ -240,44 +243,45 @@ class _FullDetailState extends State<FullDetail> {
         Stack(
           children: [
             ImageGallery(key: ValueKey(images.length), imageUrls: images),
-            Align(
-              alignment: Alignment.topRight,
-              child: Transform.translate(
-                offset: Offset(-_buttonsSize / 2, -5),
-                child: Material(
-                  shape: const CircleBorder(),
-                  // color: Colors.grey[200],
-                  color: Colors.blue[50],
-                  child: IconButton(
-                    onPressed: () async {
-                      await _pickImages();
+            if (user.isLoggedIn)
+              Align(
+                alignment: Alignment.topRight,
+                child: Transform.translate(
+                  offset: Offset(-_buttonsSize / 2, -5),
+                  child: Material(
+                    shape: const CircleBorder(),
+                    // color: Colors.grey[200],
+                    color: Colors.blue[50],
+                    child: IconButton(
+                      onPressed: () async {
+                        await _pickImages();
 
-                      if (_selectedImages != null && _selectedImages!.isNotEmpty) {
-                        final uploadFutures = _selectedImages!.map((imageFile) async {
-                          final uploadedImageUrl = await photoService.uploadBubblerPhoto(
-                            imageFile,
-                            selectedBubbler.id,
-                            selectedBubbler.osmId,
-                          );
-                          return uploadedImageUrl;
-                        });
+                        if (_selectedImages != null && _selectedImages!.isNotEmpty) {
+                          final uploadFutures = _selectedImages!.map((imageFile) async {
+                            final uploadedImageUrl = await photoService.uploadBubblerPhoto(
+                              imageFile,
+                              selectedBubbler.id,
+                              selectedBubbler.osmId,
+                            );
+                            return uploadedImageUrl;
+                          });
 
-                        final newPhotos = await Future.wait(uploadFutures);
+                          final newPhotos = await Future.wait(uploadFutures);
 
-                        images.addAll(newPhotos.map((photo) => photo!.url));
-                        selectedBubbler.photos.addAll(newPhotos.where((photo) => photo != null).cast<Photo>());
-                        mapState.selectedBubbler = selectedBubbler;
-                      }
-                    },
-                    iconSize: _buttonsSize,
-                    padding: EdgeInsets.all(5),
-                    constraints: BoxConstraints(),
-                    style: const ButtonStyle(tapTargetSize: MaterialTapTargetSize.shrinkWrap),
-                    icon: const Icon(Icons.add_photo_alternate, color: Colors.black),
+                          images.addAll(newPhotos.map((photo) => photo!.url));
+                          selectedBubbler.photos.addAll(newPhotos.where((photo) => photo != null).cast<Photo>());
+                          mapState.selectedBubbler = selectedBubbler;
+                        }
+                      },
+                      iconSize: _buttonsSize,
+                      padding: EdgeInsets.all(5),
+                      constraints: BoxConstraints(),
+                      style: const ButtonStyle(tapTargetSize: MaterialTapTargetSize.shrinkWrap),
+                      icon: const Icon(Icons.add_photo_alternate, color: Colors.black),
+                    ),
                   ),
                 ),
               ),
-            ),
           ],
         ),
 
