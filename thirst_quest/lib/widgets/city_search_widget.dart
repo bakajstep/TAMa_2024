@@ -27,7 +27,7 @@ class CitySearchWidget extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: Text(
           _searchController.text.length < constants.minCharsForSearch
-              ? 'Type at least 2 characters to search.'
+              ? 'Type at least ${constants.minCharsForSearch} characters to search.'
               : 'No cities found. Please try again.',
           style: TextStyle(color: Colors.grey),
         ),
