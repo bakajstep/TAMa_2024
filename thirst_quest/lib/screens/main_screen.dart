@@ -242,9 +242,13 @@ class MainScreenState extends State<MainScreen> with RouteAware {
           create: (context) => _bubblerMapState,
           child: NotificationListener<BubblerSelected>(
             onNotification: (notification) {
-              notification.showFullDetail
-                  ? _showFullDetail(selectedBubbler: notification.selectedWaterBubbler)
-                  : _showBubblerSmallDetail(notification.selectedWaterBubbler);
+              if (notification.showFullDetail) {
+                _showFullDetail(selectedBubbler: notification.selectedWaterBubbler);
+              }
+              else {
+                _mainActionController.pushAction(MainScreenAction.none);
+                _showBubblerSmallDetail(notification.selectedWaterBubbler);
+              }
               return true;
             },
             child: NotificationListener<BubblersReload>(
