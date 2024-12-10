@@ -19,7 +19,12 @@ class ImageGallery extends StatelessWidget {
           itemBuilder: (BuildContext context, int index) {
             return ClipRRect(
               borderRadius: BorderRadius.circular(10),
-              child: NetworkImageWithLoading(imageUrl: imageUrls[index]),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade300,
+                ),
+                child: NetworkImageWithLoading(imageUrl: imageUrls[index]),
+              ),
             );
           },
           staggeredTileBuilder: (int index) => StaggeredTile.count(1, index.isEven ? 1.5 : 1),
