@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:thirst_quest/api/models/water_bubbler.dart';
 import 'package:thirst_quest/di.dart';
+import 'package:thirst_quest/screens/update_bubbler_screen.dart';
 import 'package:thirst_quest/services/water_bubbler_service.dart';
 
 class MyBubblerScreen extends StatefulWidget {
@@ -58,6 +59,12 @@ class MyBubblerScreenState extends State<MyBubblerScreen> {
     }
   }
 
+  void _editBubbler(WaterBubbler bubbler) {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => 
+      UpdateBubblerDetailsScreen(bubbler: bubbler)))
+      .then((v) => setState(() {}));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -108,6 +115,10 @@ class MyBubblerScreenState extends State<MyBubblerScreen> {
                                     const SizedBox(height: 5),
                                   ],
                                 ),
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.edit, color: Colors.black),
+                                onPressed: () => _editBubbler(bubbler),
                               ),
                               IconButton(
                                 icon: const Icon(
