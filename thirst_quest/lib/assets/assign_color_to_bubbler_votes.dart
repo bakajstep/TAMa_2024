@@ -26,7 +26,7 @@ bool isInHappinessLevel(int level, int upvoteCount, int downvoteCount) {
   final totalVotes = upvoteCount + downvoteCount;
   final upvotePercentage = totalVotes == 0 ? 0.6 : upvoteCount / totalVotes; // neutral for no votes
 
-  return doubleLessThanOrEquals(level * 0.2, upvotePercentage);
+  return doubleLessThan((level - 1) * 0.2, upvotePercentage);
 }
 
 Color getColorByLevel(int level) {
