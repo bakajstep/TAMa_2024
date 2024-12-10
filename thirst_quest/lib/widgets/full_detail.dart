@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:thirst_quest/screens/update_bubbler_screen.dart';
 import 'package:thirst_quest/states/bubbler_map_state.dart';
 import 'package:provider/provider.dart';
 import 'package:thirst_quest/utils/distance_convertor.dart';
@@ -15,12 +16,6 @@ class FullDetail extends StatelessWidget {
     final mapState = context.watch<BubblerMapState>();
     final selectedBubbler = mapState.selectedBubbler!;
     final currentLocation = mapState.currentPosition!;
-    final List<Image> carouselItems = [
-      Image.network('https://d34-a.sdn.cz/d_34/c_img_QK_3/IYU6je.mpo?fl=res,,500,1'),
-      Image.network('https://d34-a.sdn.cz/d_34/c_img_G_p/oFQQ2j.jpeg?fl=res,,500,1'),
-      Image.network('https://d34-a.sdn.cz/d_34/c_img_QM_x/mtXrCt.mpo?fl=res,,500,1'),
-      Image.network('https://d34-a.sdn.cz/d_34/c_img_QJ_u/4mnrGE.mpo?fl=res,,500,1'),
-    ];
 
     return Container(
       padding: EdgeInsets.all(16),
