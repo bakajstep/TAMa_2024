@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -37,8 +38,12 @@ class UpdateBubblerDetailsScreenState extends State<UpdateBubblerDetailsScreen> 
   void initState() {
     super.initState();
     _location = LatLng(widget.bubbler.latitude, widget.bubbler.longitude);
-    _nameController = TextEditingController(text: widget.bubbler.name);
-    _descriptionController = TextEditingController(text: widget.bubbler.description);
+    final name = widget.bubbler.name;
+    print(name);
+    _nameController = TextEditingController(text: name == null ? null : utf8.decode((name).codeUnits));
+    final description = widget.bubbler.description;
+    print(description);
+    _descriptionController = TextEditingController(text: description == null ? null : utf8.decode((description).codeUnits));
   }
 
   Future<void> _pickImages() async {
@@ -216,6 +221,10 @@ class UpdateBubblerDetailsScreenState extends State<UpdateBubblerDetailsScreen> 
                       });
                       await Future.wait(uploadFutures);
                     }
+
+                    // fix encoding for local copy (dart interprets json strings as latin1)
+                    widget.bubbler.name = latin1.decode(utf8.encode(_nameController.text));
+                    widget.bubbler.description = latin1.decode(utf8.encode(_descriptionController.text));
 
                     Navigator.pop(context, widget.bubbler);
                   },
