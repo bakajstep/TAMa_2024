@@ -68,6 +68,19 @@ class MapWidget extends StatelessWidget {
           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
           userAgentPackageName: 'com.src.app',
         ),
+        MarkerLayer(markers: [
+          if (showPositionMarker)
+            Marker(
+              width: 50.0,
+              height: 50.0,
+              point: currentPosition,
+              child: Icon(
+                Icons.my_location,
+                color: Theme.of(context).colorScheme.primary,
+                size: 40.0,
+              ),
+            ),
+        ]),
         MarkerClusterLayerWidget(
           options: MarkerClusterLayerOptions(
             maxClusterRadius: 45,
@@ -95,19 +108,6 @@ class MapWidget extends StatelessWidget {
             },
           ),
         ),
-        MarkerLayer(markers: [
-          if (showPositionMarker)
-            Marker(
-              width: 50.0,
-              height: 50.0,
-              point: currentPosition,
-              child: Icon(
-                Icons.my_location,
-                color: Theme.of(context).colorScheme.primary,
-                size: 40.0,
-              ),
-            ),
-        ]),
         RichAttributionWidget(
           attributions: [
             TextSourceAttribution(
