@@ -171,8 +171,8 @@ class LikeDislikeButtonState extends State<LikeDislikeButton> {
             child: Row(
               children: [
                 Icon(
-                  Icons.thumb_up,
-                  color: isLiked ? Colors.green : Colors.grey,
+                  Icons.thumb_up_alt_outlined,
+                  color: isLiked ? Colors.green : Colors.black,
                 ),
                 // SizedBox(width: 8),
                 // Text(
@@ -228,8 +228,8 @@ class LikeDislikeButtonState extends State<LikeDislikeButton> {
             child: Row(
               children: [
                 Icon(
-                  Icons.thumb_down,
-                  color: isDisliked ? Colors.red : Colors.grey,
+                  Icons.thumb_down_alt_outlined,
+                  color: isDisliked ? Colors.red : Colors.black,
                 ),
                 // SizedBox(width: 8),
                 // Text(

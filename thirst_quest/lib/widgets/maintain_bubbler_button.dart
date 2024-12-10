@@ -28,7 +28,7 @@ class MaintainBubblerButton extends StatelessWidget {
     final String role = globalState.user.identity == null ? "" : globalState.user.identity!.roles[0];
     final String? bubblerOwnerId = waterBubbler.userId;
     final String? userId = role == "" ? null : globalState.user.identity!.id;
-    final invisibleCondition = (role == "ROLE_ADMIN") || (userId == bubblerOwnerId);
+    final invisibleCondition = ((role == "ROLE_ADMIN") || (userId == bubblerOwnerId)) && (waterBubbler.osmId == null);
 
     if (!invisibleCondition) return SizedBox.shrink();
 
@@ -36,7 +36,10 @@ class MaintainBubblerButton extends StatelessWidget {
       shape: const CircleBorder(),
       color: Colors.black.withOpacity(0.1),
       child: PopupMenuButton<int>(
-        icon: const Icon(Icons.settings_sharp, color: Colors.black),
+        icon: Icon(Icons.settings_sharp, color: Colors.black, size: size),
+        style: ButtonStyle(
+          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        ),
         iconSize: 24.0, 
         padding: const EdgeInsets.all(5),
         constraints: const BoxConstraints(),
