@@ -38,7 +38,7 @@ class UpdateBubblerDetailsScreenState extends State<UpdateBubblerDetailsScreen> 
     super.initState();
     _location = LatLng(widget.bubbler.latitude, widget.bubbler.longitude);
     _nameController = TextEditingController(text: widget.bubbler.name);
-    _descriptionController = TextEditingController(text: "Your prefilled description");
+    _descriptionController = TextEditingController(text: widget.bubbler.description);
   }
 
   Future<void> _pickImages() async {
@@ -55,15 +55,15 @@ class UpdateBubblerDetailsScreenState extends State<UpdateBubblerDetailsScreen> 
   }
 
   void _changeLocation() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => 
-        AddBubblerMapScreen(location: _location, popOnSuccess: true))
-      ).then((value) {
-        if (value != null) {
-          setState(() {
-            _location = value;
-          });
-        }
-      });
+    Navigator.push(context,
+            MaterialPageRoute(builder: (context) => AddBubblerMapScreen(location: _location, popOnSuccess: true)))
+        .then((value) {
+      if (value != null) {
+        setState(() {
+          _location = value;
+        });
+      }
+    });
   }
 
   @override
@@ -73,12 +73,11 @@ class UpdateBubblerDetailsScreenState extends State<UpdateBubblerDetailsScreen> 
         title: Text("Edit Bubbler"),
       ),
       body: Center(
-        child:
-        SingleChildScrollView(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize:MainAxisSize.min,
+            mainAxisSize: MainAxisSize.min,
             children: [
               SizedBox(height: 20),
               TextField(
@@ -87,7 +86,7 @@ class UpdateBubblerDetailsScreenState extends State<UpdateBubblerDetailsScreen> 
                 decoration: InputDecoration(
                   labelText: "Bubbler's name",
                   errorText: _valid ? null : "Please enter the bubbler's name.",
-                  ),
+                ),
               ),
               SizedBox(height: 10),
               TextField(
@@ -116,35 +115,30 @@ class UpdateBubblerDetailsScreenState extends State<UpdateBubblerDetailsScreen> 
                 child: FlutterMap(
                   mapController: _mapController,
                   options: MapOptions(
-                    initialCenter: _location,
-                    initialZoom: 15,
-                    interactionOptions: InteractionOptions(
-                      flags: InteractiveFlag.none
-                    )
-                  ),
+                      initialCenter: _location,
+                      initialZoom: 15,
+                      interactionOptions: InteractionOptions(flags: InteractiveFlag.none)),
                   children: [
                     TileLayer(
                       urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                     ),
-                    MarkerLayer(
-                      markers: [
-                        Marker(
-                          width: constants.markerSize + (constants.markerPadding * 2),
-                          height: constants.markerSize + (constants.markerPadding * 2),
-                          point: _location,
-                          alignment: Alignment.topCenter,
-                          rotate: true,
-                          child: Transform.translate(
-                            offset: Offset(0.0, constants.markerPadding),
-                            child: Icon(
-                              ThirstQuestIcons.bubblerReflection,
-                              color: Colors.indigoAccent,
-                              size: constants.markerSize,
-                            ),
+                    MarkerLayer(markers: [
+                      Marker(
+                        width: constants.markerSize + (constants.markerPadding * 2),
+                        height: constants.markerSize + (constants.markerPadding * 2),
+                        point: _location,
+                        alignment: Alignment.topCenter,
+                        rotate: true,
+                        child: Transform.translate(
+                          offset: Offset(0.0, constants.markerPadding),
+                          child: Icon(
+                            ThirstQuestIcons.bubblerReflection,
+                            color: Colors.indigoAccent,
+                            size: constants.markerSize,
                           ),
                         ),
-                      ]
-                    ),
+                      ),
+                    ]),
                   ],
                 ),
               ),
@@ -202,27 +196,27 @@ class UpdateBubblerDetailsScreenState extends State<UpdateBubblerDetailsScreen> 
                       });
                       return;
                     }
-                    
+
                     widget.bubbler.latitude = _location.latitude;
                     widget.bubbler.longitude = _location.longitude;
                     widget.bubbler.name = _nameController.text;
                     widget.bubbler.description = _descriptionController.text;
-                    
-                    final WaterBubbler tmp = WaterBubbler.fromLatLng(
-                      latLng: _location,
-                      name: _nameController.text,
-                      description: _descriptionController.text,
-                      favorite: widget.bubbler.favorite,
-                    );
 
-                    await bubblerService.updateWaterBubbler(widget.bubbler);                    
+                    // final WaterBubbler tmp = WaterBubbler.fromLatLng(
+                    //   latLng: _location,
+                    //   name: _nameController.text,
+                    //   description: _descriptionController.text,
+                    //   favorite: widget.bubbler.favorite,
+                    // );
+
+                    await bubblerService.updateWaterBubbler(widget.bubbler);
                     if (_selectedImages != null && _selectedImages!.isNotEmpty) {
-                      final uploadFutures = _selectedImages!.map((imageFile)  {
+                      final uploadFutures = _selectedImages!.map((imageFile) {
                         return photoService.uploadBubblerPhoto(imageFile, widget.bubbler.id, widget.bubbler.osmId);
                       });
                       await Future.wait(uploadFutures);
-                    } 
-                    
+                    }
+
                     Navigator.pop(context, widget.bubbler);
                   },
                   style: ElevatedButton.styleFrom(

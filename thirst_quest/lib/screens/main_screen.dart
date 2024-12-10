@@ -13,7 +13,7 @@ import 'package:thirst_quest/notifications/draggable_sheet_changed_size.dart';
 import 'package:thirst_quest/states/bubbler_map_state.dart';
 import 'package:thirst_quest/states/global_state.dart';
 import 'package:thirst_quest/states/main_screen_action.dart';
-import 'package:thirst_quest/utils/double_equals.dart';
+import 'package:thirst_quest/utils/double_compare.dart';
 import 'package:thirst_quest/utils/route_observer_provider.dart';
 import 'package:thirst_quest/widgets/city_search_widget.dart';
 import 'package:thirst_quest/widgets/draggable_sheet.dart';
@@ -248,7 +248,7 @@ class MainScreenState extends State<MainScreen> with RouteAware {
               return true;
             },
             child: NotificationListener<BubblersReload>(
-              onNotification:(notification) {
+              onNotification: (notification) {
                 didPopNext();
                 return true;
               },

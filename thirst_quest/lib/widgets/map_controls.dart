@@ -145,7 +145,7 @@ class MapControls extends StatelessWidget {
                         child: Row(
                           children: [
                             Icon(
-                                (state.filterFavorites || state.minHappinessLevel != constants.maxHappinessLevel)
+                                (state.filterFavorites || state.minHappinessLevel != constants.minHappinessLevel)
                                     ? Icons.filter_alt_off
                                     : Icons.filter_alt,
                                 color: Colors.white),
