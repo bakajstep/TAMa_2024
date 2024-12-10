@@ -151,4 +151,13 @@ class BubblerMapState extends ChangeNotifier {
 
     controller.forward();
   }
+
+  List<WaterBubbler> getFilteredBubblers(List<WaterBubbler> waterBubblers) {
+    return waterBubblers
+        .where((b) =>
+            (b.favorite || !_filterFavorites) &&
+            (_minHappinessLevel == constants.minHappinessLevel ||
+                isInHappinessLevel(_minHappinessLevel, b.upvoteCount, b.downvoteCount)))
+        .toList();
+  }
 }

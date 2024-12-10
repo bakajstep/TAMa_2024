@@ -23,7 +23,7 @@ class MaintainBubblerButton extends StatelessWidget {
       if (context.mounted) {
         BubblersReload().dispatch(context);
       }
-  }
+    }
 
     final String role = globalState.user.identity == null ? "" : globalState.user.identity!.roles[0];
     final String? bubblerOwnerId = waterBubbler.userId;

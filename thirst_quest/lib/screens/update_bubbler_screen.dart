@@ -39,10 +39,8 @@ class UpdateBubblerDetailsScreenState extends State<UpdateBubblerDetailsScreen> 
     super.initState();
     _location = LatLng(widget.bubbler.latitude, widget.bubbler.longitude);
     final name = widget.bubbler.name;
-    print(name);
     _nameController = TextEditingController(text: name == null ? null : utf8.decode((name).codeUnits));
     final description = widget.bubbler.description;
-    print(description);
     _descriptionController = TextEditingController(text: description == null ? null : utf8.decode((description).codeUnits));
   }
 
@@ -226,7 +224,7 @@ class UpdateBubblerDetailsScreenState extends State<UpdateBubblerDetailsScreen> 
                     widget.bubbler.name = latin1.decode(utf8.encode(_nameController.text));
                     widget.bubbler.description = latin1.decode(utf8.encode(_descriptionController.text));
 
-                    Navigator.pop(context, widget.bubbler);
+                    Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.indigo,

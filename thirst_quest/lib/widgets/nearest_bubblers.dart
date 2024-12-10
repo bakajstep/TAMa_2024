@@ -71,20 +71,22 @@ class NearestBubblersState extends State<NearestBubblers> {
     final rightTopCorner = LatLng(currentPosition.latitude + delta, currentPosition.longitude + delta);
 
     final nearestBubblers =
-        await bubblerService.getXNearestBubblers(currentPosition, 10, LatLngBounds(leftBottomCorner, rightTopCorner));
+        await bubblerService.getXNearestBubblers(currentPosition, 20, LatLngBounds(leftBottomCorner, rightTopCorner));
 
-    if (nearestBubblers.isNotEmpty) {
-      final waterBubbler = nearestBubblers[0];
+    final nearestFilteredBubblers = bubblerMapState.getFilteredBubblers(nearestBubblers).take(10).toList();
+
+    if (nearestFilteredBubblers.isNotEmpty) {
+      final waterBubbler = nearestFilteredBubblers[0];
       bubblerMapState.mapPixelOffset =
           mounted ? -(MediaQuery.of(context).size.height * constants.bigInfoCardHeight / 2) : 0;
       bubblerMapState.mapMove(waterBubbler.position);
 
       bubblerMapState.selectedBubbler = waterBubbler;
-      bubblerMapState.waterBubblers = nearestBubblers;
+      bubblerMapState.waterBubblers = nearestFilteredBubblers;
     }
 
     setState(() {
-      this.nearestBubblers = nearestBubblers;
+      this.nearestBubblers = nearestFilteredBubblers;
       isLoading = false;
     });
   }
