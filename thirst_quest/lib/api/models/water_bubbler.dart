@@ -10,10 +10,10 @@ part 'water_bubbler.g.dart';
 class WaterBubbler {
   final String? id;
   final int? osmId;
-  final String? name;
-  final String? description;
-  final double latitude;
-  final double longitude;
+  String? name;
+  String? description;
+  double latitude;
+  double longitude;
   final List<Photo> photos;
   final LatLng position;
   final String? userId;

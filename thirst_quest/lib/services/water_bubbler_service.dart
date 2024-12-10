@@ -80,6 +80,11 @@ class WaterBubblerService {
     return apiClient.createWaterBubbler(token, bubbler);
   }
 
+  Future<void> updateWaterBubbler(WaterBubbler bubbler) async {
+    final token = await authService.getToken();
+    return apiClient.updateWaterBubbler(token, bubbler);
+  }
+
   LatLngBounds _extendBounds(LatLngBounds bounds) {
     final latDiff = bounds.north - bounds.south;
     final lonDiff = bounds.east - bounds.west;

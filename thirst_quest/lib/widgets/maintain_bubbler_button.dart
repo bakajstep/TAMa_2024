@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:thirst_quest/api/models/water_bubbler.dart';
 import 'package:thirst_quest/di.dart';
 import 'package:thirst_quest/notifications/bubblers_reload.dart';
+import 'package:thirst_quest/screens/update_bubbler_screen.dart';
 import 'package:thirst_quest/services/water_bubbler_service.dart';
 import 'package:thirst_quest/states/global_state.dart';
 
@@ -44,7 +45,8 @@ class MaintainBubblerButton extends StatelessWidget {
         ),
         onSelected: (int value) {
           if (value == 1) {
-            // TODO: Redirect to bubbbler edit page
+            Navigator.push(context, MaterialPageRoute(builder: (context) => 
+              UpdateBubblerDetailsScreen(bubbler: waterBubbler)));
           } else if (value == 2) {
             showDialog(
               context: context,

@@ -114,6 +114,38 @@ class ThirstQuestApiClient {
     }
   }
 
+    Future<void> updateWaterBubbler(String token, WaterBubbler bubbler) async {
+    final uri = Uri.parse('$baseUrl/api/waterbubblers/${bubbler.id}');
+
+    final body = json.encode({
+      "name": bubbler.name,
+      "description": bubbler.description,
+      "latitude": bubbler.latitude,
+      "longitude": bubbler.longitude,
+    });
+
+    try {
+      final response = await http.put(
+        uri,
+        headers: {
+          "Content-Type": "application/json",
+          ..._addAuthHeader(token),
+        },
+        body: body,
+      );
+
+      if (response.statusCode == 200) {
+        return;
+      } else {
+        throw Exception('Failed to create bubbler: ${response.statusCode}, ${response.body}');
+      }
+    } on SocketException {
+      throw Exception('No Internet connection');
+    } catch (e) {
+      throw Exception('Failed to create bubbler: $e');
+    }
+  }
+
   /////////////////////////////////////////////////////////////////
   // FAVORITE WATER BUBBLERS
   /////////////////////////////////////////////////////////////////
