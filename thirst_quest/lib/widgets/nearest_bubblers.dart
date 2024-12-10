@@ -71,7 +71,7 @@ class NearestBubblersState extends State<NearestBubblers> {
     final rightTopCorner = LatLng(currentPosition.latitude + delta, currentPosition.longitude + delta);
 
     final nearestBubblers =
-        await bubblerService.getXNearestBubblers(currentPosition, 20, LatLngBounds(leftBottomCorner, rightTopCorner));
+        await bubblerService.getNearestBubblers(currentPosition, LatLngBounds(leftBottomCorner, rightTopCorner));
 
     final nearestFilteredBubblers = bubblerMapState.getFilteredBubblers(nearestBubblers).take(10).toList();
 

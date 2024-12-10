@@ -28,10 +28,10 @@ class WaterBubblerService {
     return _filterBubblersInBounds(await _loadBubblers(bounds, extendBounds), bounds);
   }
 
-  Future<List<WaterBubbler>> getXNearestBubblers(LatLng position, int count, LatLngBounds bounds) async {
+  Future<List<WaterBubbler>> getNearestBubblers(LatLng position, LatLngBounds bounds) async {
     return (await getWaterBubblersByBBox(bounds: bounds, extendBounds: false))
       ..sort((a, b) => a.distanceTo(position).compareTo(b.distanceTo(position)))
-      ..take(count).toList();
+      ..toList();
   }
 
   Future<void> toggleFavorite(WaterBubbler waterBubbler) async {
