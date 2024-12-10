@@ -88,7 +88,7 @@ class FilterDialogState extends State<FilterDialog> {
                       constraints: BoxConstraints(),
                       style: const ButtonStyle(tapTargetSize: MaterialTapTargetSize.shrinkWrap),
                       icon: Icon(_getHappinessIcon(level),
-                          color: getColorByLevel(_minHappinessLevel >= level ? level : 0)),
+                          color: getColorByLevel(_minHappinessLevel <= level ? level : 0)),
                       onPressed: () {
                         setState(() {
                           _minHappinessLevel = level;

@@ -1,23 +1,5 @@
-// import 'package:flutter/material.dart';
-
-// Color assignColorToBubblerVotes(int upvoteCount, int downvoteCount) {
-//   if (upvoteCount == 0 && downvoteCount == 0) {
-//     return Colors.grey;
-//   }
-
-//   final totalVotes = upvoteCount + downvoteCount;
-//   final upvotePercentage = upvoteCount / totalVotes;
-
-//   if (upvotePercentage > 0.55) {
-//     return Colors.green;
-//   } else if (upvotePercentage > 0.45) {
-//     return Colors.grey;
-//   } else {
-//     return Colors.red;
-//   }
-// }
-
 import 'package:flutter/material.dart';
+import 'package:thirst_quest/utils/double_compare.dart';
 
 Color assignColorToBubblerVotes(int upvoteCount, int downvoteCount) {
   if (upvoteCount == 0 && downvoteCount == 0) {
@@ -44,7 +26,7 @@ bool isInHappinessLevel(int level, int upvoteCount, int downvoteCount) {
   final totalVotes = upvoteCount + downvoteCount;
   final upvotePercentage = totalVotes == 0 ? 0.6 : upvoteCount / totalVotes; // neutral for no votes
 
-  return level * 0.2 >= upvotePercentage;
+  return doubleLessThanOrEquals(level * 0.2, upvotePercentage);
 }
 
 Color getColorByLevel(int level) {

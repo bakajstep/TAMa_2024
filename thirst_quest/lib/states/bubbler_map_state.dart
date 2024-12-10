@@ -15,7 +15,7 @@ class BubblerMapState extends ChangeNotifier {
   double _mapPixelOffset = 0.0;
 
   bool _filterFavorites = false;
-  int _minHappinessLevel = constants.maxHappinessLevel;
+  int _minHappinessLevel = constants.minHappinessLevel;
   bool _trackPosition = true;
   bool _showPositionMarker = false;
   LatLng? _currentPosition;
@@ -36,11 +36,11 @@ class BubblerMapState extends ChangeNotifier {
 
   WaterBubbler? get selectedBubbler => _selectedBubbler;
 
-  List<WaterBubbler> get waterBubblers => _filterFavorites || _minHappinessLevel != constants.maxHappinessLevel
+  List<WaterBubbler> get waterBubblers => _filterFavorites || _minHappinessLevel != constants.minHappinessLevel
       ? _waterBubblers
           .where((b) =>
               (b.favorite || !_filterFavorites) &&
-              (_minHappinessLevel == constants.maxHappinessLevel ||
+              (_minHappinessLevel == constants.minHappinessLevel ||
                   isInHappinessLevel(_minHappinessLevel, b.upvoteCount, b.downvoteCount)))
           .toList()
       : _waterBubblers;

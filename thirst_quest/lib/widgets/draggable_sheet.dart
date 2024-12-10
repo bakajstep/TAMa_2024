@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:thirst_quest/assets/constants.dart' as constants;
 import 'package:thirst_quest/controllers/draggable_sheet_child_controller.dart';
 import 'package:thirst_quest/notifications/draggable_sheet_changed_size.dart';
-import 'package:thirst_quest/utils/double_equals.dart';
+import 'package:thirst_quest/utils/double_compare.dart';
 
 class DraggableSheet extends StatefulWidget {
   final DraggableScrollableController controller;
@@ -10,7 +10,8 @@ class DraggableSheet extends StatefulWidget {
   final double initialSize;
   final Widget Function(DraggableSheetChildController childController, ScrollController scrollController) child;
 
-  const DraggableSheet({required this.controller, required this.snapSizes, required this.initialSize, required this.child, super.key});
+  const DraggableSheet(
+      {required this.controller, required this.snapSizes, required this.initialSize, required this.child, super.key});
 
   @override
   DraggableSheetState createState() => DraggableSheetState();
@@ -36,7 +37,7 @@ class DraggableSheetState extends State<DraggableSheet> {
 
   void _onChanged() {
     final currentSize = widget.controller.size;
-    if (doubleInList(widget.snapSizes, currentSize)) { 
+    if (doubleInList(widget.snapSizes, currentSize)) {
       if (!doubleEquals(currentSize, widget.initialSize)) {
         DraggableSheetChangedSize(newSize: currentSize).dispatch(context);
         _childController.onHeightChanged!();
@@ -62,23 +63,20 @@ class DraggableSheetState extends State<DraggableSheet> {
       controller: widget.controller,
       builder: (BuildContext context, ScrollController scrollController) {
         return Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: _borderRadius,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black26,
-                blurRadius: 10,
-              ),
-            ],
-          ),
-          child:
-            ClipRRect(
+            decoration: BoxDecoration(
+              color: Colors.white,
               borderRadius: _borderRadius,
-              child: Container(
-                  child: widget.child(_childController, scrollController)),
-            )
-        );
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 10,
+                ),
+              ],
+            ),
+            child: ClipRRect(
+              borderRadius: _borderRadius,
+              child: Container(child: widget.child(_childController, scrollController)),
+            ));
       },
     );
   }
