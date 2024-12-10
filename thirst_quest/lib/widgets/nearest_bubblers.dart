@@ -131,8 +131,8 @@ class NearestBubblersState extends State<NearestBubblers> {
                         style: TextStyle(fontWeight: FontWeight.bold)),
                     subtitle: Text('Distance: ~${distanceToDisplay(waterBubbler.distanceTo(positionOnLoad!))}'),
                     leading: Icon(
+                      Icons.water_drop,
                       size: _buttonSize + 10,
-                      Icons.circle,
                       color: assignColorToBubblerVotes(waterBubbler.upvoteCount, waterBubbler.downvoteCount),
                     ),
                     trailing: Row(mainAxisSize: MainAxisSize.min, children: [
