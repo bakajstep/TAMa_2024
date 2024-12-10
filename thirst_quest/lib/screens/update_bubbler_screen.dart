@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:thirst_quest/api/models/photo.dart';
 import 'package:thirst_quest/api/models/water_bubbler.dart';
 import 'package:thirst_quest/assets/thirst_quest_icons.dart';
 import 'package:thirst_quest/di.dart';
@@ -41,7 +42,8 @@ class UpdateBubblerDetailsScreenState extends State<UpdateBubblerDetailsScreen> 
     final name = widget.bubbler.name;
     _nameController = TextEditingController(text: name == null ? null : utf8.decode((name).codeUnits));
     final description = widget.bubbler.description;
-    _descriptionController = TextEditingController(text: description == null ? null : utf8.decode((description).codeUnits));
+    _descriptionController =
+        TextEditingController(text: description == null ? null : utf8.decode((description).codeUnits));
   }
 
   Future<void> _pickImages() async {
@@ -223,8 +225,14 @@ class UpdateBubblerDetailsScreenState extends State<UpdateBubblerDetailsScreen> 
                     // fix encoding for local copy (dart interprets json strings as latin1)
                     widget.bubbler.name = latin1.decode(utf8.encode(_nameController.text));
                     widget.bubbler.description = latin1.decode(utf8.encode(_descriptionController.text));
+                    if (_selectedImages != null && _selectedImages!.isNotEmpty) {
+                      widget.bubbler.photos.addAll(
+                          _selectedImages!.map((image) => Photo(id: null, name: image.name, url: image.path)).toList());
+                    }
 
-                    Navigator.pop(context);
+                    if (context.mounted) {
+                      Navigator.pop(context);
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.indigo,
